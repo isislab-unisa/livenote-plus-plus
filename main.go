@@ -22,6 +22,7 @@ var store = sessions.NewCookieStore([]byte("top-secret"))
 
 func main() {
 
+	//comment
 	utils.LoadTemplates("templates/*.html")
 	//templates = template.Must(template.ParseGlob("templates/*.html"))
 	r := mux.NewRouter()
