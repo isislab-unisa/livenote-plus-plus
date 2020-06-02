@@ -61,10 +61,11 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		guid := xid.New()
 
-		//change max age to 86400 to have 1 day session until expire
+		//change max age to 86400 * i(time in seconds)to have i days until cookie expire
+		//max age = 0 means that the cookie will be deleted after browser session ends
 		session.Options = &sessions.Options{
 			Path:     "/",
-			MaxAge:   3000,
+			MaxAge:   0,
 			HttpOnly: true,
 		}
 
@@ -128,6 +129,13 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// if you upload successfully, your cookie will expire in one day
+	session.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400,
+		HttpOnly: true,
+	}
+
 	link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
 	session.Values["link"] = link
 	session.Save(r, w)
@@ -179,6 +187,13 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 }
+
+/*
+	from
+	here
+	not
+	used
+*/
 
 //AuthRequired is bla
 func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
