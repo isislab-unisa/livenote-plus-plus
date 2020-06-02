@@ -24,7 +24,6 @@ var store = sessions.NewCookieStore([]byte("top-secret"))
 
 func main() {
 
-	//comment
 	utils.LoadTemplates("templates/*.html")
 	//templates = template.Must(template.ParseGlob("templates/*.html"))
 	r := mux.NewRouter()
@@ -47,19 +46,22 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+//entry page
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, err := store.Get(r, "session")
 
 	_, ok := session.Values["id"]
 
-	//controllo se c'è già una sessione
+	//check if another session is alive
 	if !ok {
 		if err != nil {
 			utils.InternalServerError(w)
 			return
 		}
 		guid := xid.New()
+
+		//change max age to 86400 to have 1 day session until expire
 		session.Options = &sessions.Options{
 			Path:     "/",
 			MaxAge:   3000,
@@ -137,11 +139,19 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
+	session, _ := store.Get(r, "session")
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 	file := vars["file"]
 
-	fmt.Fprintf(w, "hello %+v %+v", id, file)
+	fmt.Fprintf(w, "hello %+v %+v\n\n", id, file)
+
+	if session.Values["id"] == id {
+		fmt.Fprintf(w, "hello master")
+	} else {
+		fmt.Fprintf(w, "hello client")
+	}
 
 }
 
