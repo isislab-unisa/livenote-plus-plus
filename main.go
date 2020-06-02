@@ -12,6 +12,8 @@ import (
 	"github.com/gorilla/sessions"
 	"golang.org/x/net/context"
 
+	"github.com/rs/xid"
+
 	"gorillaproj/utils"
 )
 
@@ -27,12 +29,14 @@ func main() {
 	//templates = template.Must(template.ParseGlob("templates/*.html"))
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", AuthRequired(indexGetHandler)).Methods("GET")
-	r.HandleFunc("/", AuthRequired(indexPostHandler)).Methods("POST")
-	r.HandleFunc("/login", loginGetHandler).Methods("GET")
-	r.HandleFunc("/login", loginPostHandler).Methods("POST")
+	//r.HandleFunc("/", AuthRequired(indexGetHandler)).Methods("GET")
+
+	r.HandleFunc("/", indexGetHandler).Methods("GET")
+	r.HandleFunc("/", indexPostHandler).Methods("POST")
+	//r.HandleFunc("/login", loginGetHandler).Methods("GET")
+	//r.HandleFunc("/login", loginPostHandler).Methods("POST")
 	r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
-	r.HandleFunc("/{titolo}/{nomeSlide}", AuthRequired(userGetHandler)).Methods("GET")
+	r.HandleFunc("/{id}/{file}", userGetHandler).Methods("GET")
 	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
 
 	fs := http.FileServer(http.Dir("./static/"))
@@ -44,7 +48,30 @@ func main() {
 }
 
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "index.html", nil)
+
+	session, err := store.Get(r, "session")
+
+	_, ok := session.Values["id"]
+
+	//controllo se c'è già una sessione
+	if !ok {
+		if err != nil {
+			utils.InternalServerError(w)
+			return
+		}
+		guid := xid.New()
+		session.Options = &sessions.Options{
+			Path:     "/",
+			MaxAge:   3000,
+			HttpOnly: true,
+		}
+
+		codice := guid.String()
+		session.Values["id"] = codice
+		session.Save(r, w)
+	}
+
+	utils.ExecuteTemplate(w, "index.html", session.Values)
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +102,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("name of file %+v\n", tempFile.Name())
 	path := tempFile.Name()
-	session.Values["path"] = tempFile.Name()
+	session.Values["pathfile"] = tempFile.Name()
 	session.Save(r, w)
 	defer tempFile.Close()
 
@@ -87,22 +114,73 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	tempFile.Write(fileBytes)
 
-	untyped, ok := session.Values["username"]
+	untyped, ok := session.Values["id"]
 	if !ok {
 		utils.InternalServerError(w)
 		return
 	}
 
-	username, ok := untyped.(string)
+	id, ok := untyped.(string)
 	if !ok {
 		utils.InternalServerError(w)
 		return
 	}
 
-	link := "http://localhost:8080/" + username + "/" + strings.Trim(filepath.Base(path), ".pdf")
-	fmt.Fprintf(w, "success upload\n")
-	fmt.Fprintf(w, "your link is: %s", link)
-	//http.Redirect(w, r, "/", 302)
+	link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
+	session.Values["link"] = link
+	session.Save(r, w)
+	//fmt.Fprintf(w, "success upload\n")
+	//fmt.Fprintf(w, "your link is: %s", link)
+
+	http.Redirect(w, r, "/", 302)
+}
+
+func userGetHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+	file := vars["file"]
+
+	fmt.Fprintf(w, "hello %+v %+v", id, file)
+
+}
+
+func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
+
+	session, _ := store.Get(r, "session")
+	untyped, _ := session.Values["pathfile"]
+	path, ok := untyped.(string)
+
+	if !ok {
+		utils.InternalServerError(w)
+		return
+	}
+
+	err := os.Remove(path)
+
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	delete(session.Values, "id")
+	delete(session.Values, "pathfile")
+	delete(session.Values, "link")
+	session.Save(r, w)
+	http.Redirect(w, r, "/", 302)
+}
+
+//AuthRequired is bla
+func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, "session")
+		_, ok := session.Values["username"]
+		if !ok {
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		handler.ServeHTTP(w, r)
+	}
 }
 
 func loginGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -121,29 +199,6 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 
-}
-
-func userGetHandler(w http.ResponseWriter, r *http.Request) {
-
-	vars := mux.Vars(r)
-	titolo := vars["titolo"]
-	slide := vars["nomeSlide"]
-
-	fmt.Fprintf(w, "hello %+v %+v", titolo, slide)
-
-}
-
-//AuthRequired is bla
-func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session, _ := store.Get(r, "session")
-		_, ok := session.Values["username"]
-		if !ok {
-			http.Redirect(w, r, "/login", 302)
-			return
-		}
-		handler.ServeHTTP(w, r)
-	}
 }
 
 func testGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -184,27 +239,4 @@ func testGetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(username))
 	w.Write([]byte(password))
 	w.Write([]byte(path))
-}
-
-func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
-
-	session, _ := store.Get(r, "session")
-	untyped, _ := session.Values["path"]
-	path, ok := untyped.(string)
-
-	if !ok {
-		utils.InternalServerError(w)
-		return
-	}
-
-	err := os.Remove(path)
-
-	if err != nil {
-		utils.InternalServerError(w)
-		return
-	}
-
-	delete(session.Values, "username")
-	session.Save(r, w)
-	http.Redirect(w, r, "/login", 302)
 }
