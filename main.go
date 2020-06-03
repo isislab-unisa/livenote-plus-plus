@@ -35,7 +35,7 @@ func main() {
 	//r.HandleFunc("/login", loginGetHandler).Methods("GET")
 	//r.HandleFunc("/login", loginPostHandler).Methods("POST")
 	r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
-	r.HandleFunc("/{id}/{file}", userGetHandler).Methods("GET")
+	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
 	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
 
 	fs := http.FileServer(http.Dir("./static/"))
@@ -49,29 +49,40 @@ func main() {
 //entry page
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, err := store.Get(r, "session")
+	session, _ := store.Get(r, "session")
 
 	_, ok := session.Values["id"]
 
 	//check if another session is alive
+	// if !ok {
+	// 	if err != nil {
+	// 		utils.InternalServerError(w)
+	// 		return
+	// 	}
+	// 	guid := xid.New()
+
+	// 	//change max age to 86400 * i(time in seconds)to have i days until cookie expire
+	// 	//max age = 0 means that the cookie will be deleted after browser session ends
+	// 	session.Options = &sessions.Options{
+	// 		Path:     "/",
+	// 		MaxAge:   0,
+	// 		HttpOnly: true,
+	// 	}
+
+	// 	codice := guid.String()
+	// 	session.Values["id"] = codice
+	// 	session.Save(r, w)
+	// }
+
 	if !ok {
+		//delete session
+		session.Options.MaxAge = -1
+		err := session.Save(r, w)
 		if err != nil {
 			utils.InternalServerError(w)
 			return
 		}
-		guid := xid.New()
-
-		//change max age to 86400 * i(time in seconds)to have i days until cookie expire
-		//max age = 0 means that the cookie will be deleted after browser session ends
-		session.Options = &sessions.Options{
-			Path:     "/",
-			MaxAge:   0,
-			HttpOnly: true,
-		}
-
-		codice := guid.String()
-		session.Values["id"] = codice
-		session.Save(r, w)
+		//utils.ExecuteTemplate(w, "index.html", nil)
 	}
 
 	utils.ExecuteTemplate(w, "index.html", session.Values)
@@ -80,6 +91,11 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "session")
+
+	guid := xid.New()
+	codice := guid.String()
+	session.Values["id"] = codice
+	session.Save(r, w)
 
 	//max 10 MB files
 	r.ParseMultipartForm(10 << 20)
@@ -130,6 +146,8 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if you upload successfully, your cookie will expire in one day
+	//	change max age to 86400 * i(time in seconds)to have i days until cookie expire
+	// 	max age = 0 means that the cookie will be deleted after browser session ends
 	session.Options = &sessions.Options{
 		Path:     "/",
 		MaxAge:   86400,
@@ -142,7 +160,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "success upload\n")
 	//fmt.Fprintf(w, "your link is: %s", link)
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, "/"+id, 302)
 }
 
 func userGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -151,9 +169,8 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	id := vars["id"]
-	file := vars["file"]
 
-	fmt.Fprintf(w, "hello %+v %+v\n\n", id, file)
+	fmt.Fprintf(w, "hello %+v\n\n", id)
 
 	if session.Values["id"] == id {
 		fmt.Fprintf(w, "hello master")
