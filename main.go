@@ -38,6 +38,8 @@ func main() {
 	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
 	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
 
+	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET")
+
 	fs := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
@@ -110,6 +112,21 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("uploaded file %+v\n", handler.Filename)
 	fmt.Printf("file size: %+v\n", handler.Size)
 	fmt.Printf("main handler: %+v\n", handler.Header)
+
+	//create directory for session
+
+	// tmpDir := os.TempDir()
+	// pathprova := tmpDir + "/" + codice
+	// err = os.MkdirAll(pathprova, os.ModeDir)
+	// if err != nil {
+	// 	utils.InternalServerError(w)
+	// 	return
+	// }
+
+	// tempo, _ := ioutil.TempFile(pathprova, "tempo-*.pdf")
+	// tempoBytes, _ := ioutil.ReadAll(file)
+
+	// tempo.Write(tempoBytes)
 
 	//write temporary files
 	tempFile, err := ioutil.TempFile("temp-pdf", "upload-*.pdf")
@@ -211,6 +228,10 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	not
 	used
 */
+
+func pdfGetHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "pdfview.html", nil)
+}
 
 //AuthRequired is bla
 func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
