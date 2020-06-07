@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -80,7 +78,6 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 			utils.InternalServerError(w)
 			return
 		}
-		//utils.ExecuteTemplate(w, "index.html", nil)
 	}
 
 	utils.ExecuteTemplate(w, "index.html", session.Values)
@@ -111,6 +108,11 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//create directory for session
 
+	os.Mkdir("./"+codice, os.ModePerm)
+	tempoFile, _ := ioutil.TempFile(codice, "prova-*.pdf")
+	filoBytes, _ := ioutil.ReadAll(file)
+	tempoFile.Write(filoBytes)
+
 	// tmpDir := os.TempDir()
 	// pathprova := tmpDir + "/" + codice
 	// err = os.MkdirAll(pathprova, os.ModeDir)
@@ -134,7 +136,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("name of file %+v\n", tempFile.Name())
 	path := tempFile.Name()
-	session.Values["pathfile"] = tempFile.Name()
+	session.Values["pathfile"] = path
 	session.Save(r, w)
 	defer tempFile.Close()
 
@@ -167,7 +169,8 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	}
 
-	link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
+	//link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
+	link := "http://localhost:8080/" + id
 	session.Values["link"] = link
 	session.Save(r, w)
 	//fmt.Fprintf(w, "success upload\n")
@@ -183,7 +186,7 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	fmt.Fprintf(w, "hello %+v\n\n", id)
+	//fmt.Fprintf(w, "hello %+v\n\n", id)
 
 	if session.Values["id"] == id {
 		fmt.Fprintf(w, "hello master")
@@ -205,6 +208,25 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := os.Remove(path)
+
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	untyped, ok = session.Values["id"]
+	if !ok {
+		utils.InternalServerError(w)
+		return
+	}
+
+	id, ok := untyped.(string)
+	if !ok {
+		utils.InternalServerError(w)
+		return
+	}
+
+	err = os.RemoveAll("./" + id)
 
 	if err != nil {
 		utils.InternalServerError(w)
