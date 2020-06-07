@@ -25,15 +25,11 @@ var store = sessions.NewCookieStore([]byte("top-secret"))
 func main() {
 
 	utils.LoadTemplates("templates/*.html")
-	//templates = template.Must(template.ParseGlob("templates/*.html"))
-	r := mux.NewRouter()
 
-	//r.HandleFunc("/", AuthRequired(indexGetHandler)).Methods("GET")
+	r := mux.NewRouter()
 
 	r.HandleFunc("/", indexGetHandler).Methods("GET")
 	r.HandleFunc("/", indexPostHandler).Methods("POST")
-	//r.HandleFunc("/login", loginGetHandler).Methods("GET")
-	//r.HandleFunc("/login", loginPostHandler).Methods("POST")
 	r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
 	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
 	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
@@ -244,24 +240,6 @@ func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
 		}
 		handler.ServeHTTP(w, r)
 	}
-}
-
-func loginGetHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "login.html", nil)
-}
-
-func loginPostHandler(w http.ResponseWriter, r *http.Request) {
-
-	r.ParseForm()
-	username := r.PostForm.Get("username")
-	password := r.PostForm.Get("password")
-
-	session, _ := store.Get(r, "session")
-	session.Values["username"] = username
-	session.Values["password"] = password
-	session.Save(r, w)
-	http.Redirect(w, r, "/", 302)
-
 }
 
 func testGetHandler(w http.ResponseWriter, r *http.Request) {
