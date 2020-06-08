@@ -75,6 +75,7 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 		session.Options.MaxAge = -1
 		err := session.Save(r, w)
 		if err != nil {
+			fmt.Printf("error deleting session for client")
 			utils.InternalServerError(w)
 			return
 		}
@@ -97,6 +98,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	file, handler, err := r.FormFile("myFile")
 
 	if err != nil {
+		fmt.Printf("error parsing file")
 		utils.InternalServerError(w)
 		return
 	}
@@ -109,27 +111,13 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	//create directory for session
 
 	os.Mkdir("./"+codice, os.ModePerm)
-	tempoFile, _ := ioutil.TempFile(codice, "prova-*.pdf")
-	filoBytes, _ := ioutil.ReadAll(file)
-	tempoFile.Write(filoBytes)
-
-	// tmpDir := os.TempDir()
-	// pathprova := tmpDir + "/" + codice
-	// err = os.MkdirAll(pathprova, os.ModeDir)
-	// if err != nil {
-	// 	utils.InternalServerError(w)
-	// 	return
-	// }
-
-	// tempo, _ := ioutil.TempFile(pathprova, "tempo-*.pdf")
-	// tempoBytes, _ := ioutil.ReadAll(file)
-
-	// tempo.Write(tempoBytes)
+	tempFile, err := ioutil.TempFile(codice, "pdf-*.pdf")
 
 	//write temporary files
-	tempFile, err := ioutil.TempFile("temp-pdf", "upload-*.pdf")
+	// tempFile, err := ioutil.TempFile("temp-pdf", "upload-*.pdf")
 
 	if err != nil {
+		fmt.Printf("error creating file in the new folder")
 		utils.InternalServerError(w)
 		return
 	}
@@ -142,6 +130,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
+		fmt.Printf("error reading file")
 		utils.InternalServerError(w)
 		return
 	}
@@ -150,12 +139,14 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	untyped, ok := session.Values["id"]
 	if !ok {
+		fmt.Printf("error reading id value from session")
 		utils.InternalServerError(w)
 		return
 	}
 
 	id, ok := untyped.(string)
 	if !ok {
+		fmt.Printf("error casting id to string")
 		utils.InternalServerError(w)
 		return
 	}
@@ -203,6 +194,7 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	path, ok := untyped.(string)
 
 	if !ok {
+		fmt.Printf("error retrieving path")
 		utils.InternalServerError(w)
 		return
 	}
@@ -210,18 +202,21 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	err := os.Remove(path)
 
 	if err != nil {
+		fmt.Printf("error removing path")
 		utils.InternalServerError(w)
 		return
 	}
 
 	untyped, ok = session.Values["id"]
 	if !ok {
+		fmt.Printf("error retrieving id")
 		utils.InternalServerError(w)
 		return
 	}
 
 	id, ok := untyped.(string)
 	if !ok {
+		fmt.Printf("error casting id to string")
 		utils.InternalServerError(w)
 		return
 	}
@@ -229,6 +224,7 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 	err = os.RemoveAll("./" + id)
 
 	if err != nil {
+		fmt.Printf("error removing dynamic folder")
 		utils.InternalServerError(w)
 		return
 	}
