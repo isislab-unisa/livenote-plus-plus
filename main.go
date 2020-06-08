@@ -195,16 +195,18 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !ok {
 		fmt.Printf("error retrieving path")
-		utils.InternalServerError(w)
-		return
+		//utils.InternalServerError(w)
+		//return
+		http.Redirect(w, r, "/", 302)
 	}
 
 	err := os.Remove(path)
 
 	if err != nil {
 		fmt.Printf("error removing path")
-		utils.InternalServerError(w)
-		return
+		//utils.InternalServerError(w)
+		//return
+		http.Redirect(w, r, "/", 302)
 	}
 
 	untyped, ok = session.Values["id"]
