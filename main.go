@@ -32,7 +32,7 @@ func main() {
 	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
 
 	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
-	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET")
+	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET", "OPTIONS")
 
 	fs := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
@@ -110,11 +110,11 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//create directory for session
 
-	os.Mkdir("./"+codice, os.ModePerm)
-	tempFile, err := ioutil.TempFile(codice, "pdf-*.pdf")
+	//	os.Mkdir("./"+codice, os.ModePerm)
+	os.Mkdir("./static/sessions/"+codice, os.ModePerm)
 
-	//write temporary files
-	// tempFile, err := ioutil.TempFile("temp-pdf", "upload-*.pdf")
+	//tempFile, err := ioutil.TempFile(codice, "pdf-*.pdf")
+	tempFile, err := ioutil.TempFile("./static/sessions/"+codice, "pdf-*.pdf")
 
 	if err != nil {
 		fmt.Printf("error creating file in the new folder")
@@ -223,7 +223,7 @@ func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = os.RemoveAll("./" + id)
+	err = os.RemoveAll("./static/sessions/" + id)
 
 	if err != nil {
 		fmt.Printf("error removing dynamic folder")

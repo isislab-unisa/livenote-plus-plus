@@ -1,4 +1,4 @@
-const url = '../temp-pdf/sciotproposal.pdf';
+const url = 'http://localhost:8080/static/sciotproposal.pdf';
 
 let pdfDoc = null,
   pageNum = 1,
