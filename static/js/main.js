@@ -1,4 +1,4 @@
-const url = '/temp-pdf/upload-720591557.pdf';
+const url = '../temp-pdf/sciotproposal.pdf';
 
 let pdfDoc = null,
   pageNum = 1,

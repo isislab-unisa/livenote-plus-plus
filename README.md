@@ -4,7 +4,7 @@ go get github.com/gorilla/mux
 
 go get github.com/gorilla/sessions
 
-go github.com/rs/xid
+go get github.com/rs/xid
 
 # launch
 

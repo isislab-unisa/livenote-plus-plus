@@ -30,8 +30,8 @@ func main() {
 	r.HandleFunc("/", indexPostHandler).Methods("POST")
 	r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
 	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
-	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
 
+	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
 	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET")
 
 	fs := http.FileServer(http.Dir("./static/"))
