@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -20,6 +21,17 @@ var ctx context.Context
 //secret key -- random generate
 var store = sessions.NewCookieStore([]byte("top-secret"))
 
+//Person is a struct
+type Person struct {
+	Name     string
+	Pathfile []string
+	Link     []string
+}
+
+func init() {
+	gob.Register(&Person{})
+}
+
 func main() {
 
 	utils.LoadTemplates("templates/*.html")
@@ -31,7 +43,8 @@ func main() {
 	r.HandleFunc("/logout", logoutGetHandler).Methods("GET")
 	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
 
-	r.HandleFunc("/test", AuthRequired(testGetHandler)).Methods("GET")
+	r.HandleFunc("/test/test", testGetHandler).Methods("GET")
+	r.HandleFunc("/test/test/test", testtestGetHandler).Methods("GET")
 	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET", "OPTIONS")
 
 	fs := http.FileServer(http.Dir("./static/"))
@@ -45,9 +58,22 @@ func main() {
 //entry page
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := store.Get(r, "session")
+	session, _ := store.Get(r, "session-prova")
 
-	_, ok := session.Values["id"]
+	// val := session.Values["person"]
+
+	// var person = &Person{}
+	// person, ok := val.(*Person)
+
+	// if !ok {
+	// 	fmt.Printf("error retrieving struct")
+	// 	//utils.InternalServerError(w)
+	// 	//return
+	// 	http.Redirect(w, r, "/", 302)
+	// } else {
+	// 	fmt.Printf(person.Name)
+	// }
+	//_, ok := session.Values["id"]
 
 	//check if another session is alive
 	// if !ok {
@@ -70,116 +96,155 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 	// 	session.Save(r, w)
 	// }
 
-	if !ok {
-		//delete session
-		session.Options.MaxAge = -1
-		err := session.Save(r, w)
-		if err != nil {
-			fmt.Printf("error deleting session for client")
-			utils.InternalServerError(w)
-			return
-		}
-	}
+	// if !ok {
+	// 	//delete session
+	// 	session.Options.MaxAge = -1
+	// 	err := session.Save(r, w)
+	// 	if err != nil {
+	// 		fmt.Printf("error deleting session for client")
+	// 		utils.InternalServerError(w)
+	// 		return
+	// 	}
+	// }
 
 	utils.ExecuteTemplate(w, "index.html", session.Values)
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := store.Get(r, "session")
+	session, _ := store.Get(r, "session-prova")
 
-	guid := xid.New()
-	codice := guid.String()
-	session.Values["id"] = codice
-	session.Save(r, w)
+	val := session.Values["person"]
 
-	//max 10 MB files
-	r.ParseMultipartForm(10 << 20)
-	file, handler, err := r.FormFile("myFile")
+	var person = &Person{}
+	person, ok := val.(*Person)
 
-	if err != nil {
-		fmt.Printf("error parsing file")
-		utils.InternalServerError(w)
-		return
-	}
-
-	defer file.Close()
-	fmt.Printf("uploaded file %+v\n", handler.Filename)
-	fmt.Printf("file size: %+v\n", handler.Size)
-	fmt.Printf("main handler: %+v\n", handler.Header)
-
-	//create directory for session
-
-	//	os.Mkdir("./"+codice, os.ModePerm)
-	os.Mkdir("./static/sessions/"+codice, os.ModePerm)
-
-	//tempFile, err := ioutil.TempFile(codice, "pdf-*.pdf")
-	tempFile, err := ioutil.TempFile("./static/sessions/"+codice, "pdf-*.pdf")
-
-	if err != nil {
-		fmt.Printf("error creating file in the new folder")
-		utils.InternalServerError(w)
-		return
-	}
-
-	fmt.Printf("name of file %+v\n", tempFile.Name())
-	path := tempFile.Name()
-	session.Values["pathfile"] = path
-	session.Save(r, w)
-	defer tempFile.Close()
-
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Printf("error reading file")
-		utils.InternalServerError(w)
-		return
-	}
-
-	tempFile.Write(fileBytes)
-
-	untyped, ok := session.Values["id"]
 	if !ok {
-		fmt.Printf("error reading id value from session")
-		utils.InternalServerError(w)
-		return
+		fmt.Printf("first time uploading\n")
+
+		guid := xid.New()
+		codice := guid.String()
+
+		//max 10 MB files
+		r.ParseMultipartForm(10 << 20)
+		file, handler, err := r.FormFile("myFile")
+
+		if err != nil {
+			fmt.Printf("error parsing file")
+			utils.InternalServerError(w)
+			return
+		}
+
+		defer file.Close()
+		fmt.Printf("uploaded file %+v\n", handler.Filename)
+		fmt.Printf("file size: %+v\n", handler.Size)
+		fmt.Printf("main handler: %+v\n", handler.Header)
+
+		os.Mkdir("./static/sessions/"+codice, os.ModePerm)
+
+		//tempFile, err := ioutil.TempFile(codice, "pdf-*.pdf")
+		tempFile, err := ioutil.TempFile("./static/sessions/"+codice, "pdf-*.pdf")
+
+		if err != nil {
+			fmt.Printf("error creating file in the new folder")
+			utils.InternalServerError(w)
+			return
+		}
+
+		fmt.Printf("name of file %+v\n", tempFile.Name())
+		path := tempFile.Name()
+		defer tempFile.Close()
+
+		fileBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			fmt.Printf("error reading file")
+			utils.InternalServerError(w)
+			return
+		}
+
+		tempFile.Write(fileBytes)
+
+		//link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
+		link := "http://localhost:8080/" + codice
+
+		session.Options = &sessions.Options{
+			Path:     "/",
+			MaxAge:   86400,
+			HttpOnly: true,
+		}
+
+		person := &Person{
+			Name:     codice,
+			Pathfile: []string{path},
+			Link:     []string{link},
+		}
+
+		session.Values["person"] = person
+		err = session.Save(r, w)
+		if err != nil {
+			fmt.Printf("error saving session")
+		}
+
+		http.Redirect(w, r, "/"+codice, 302)
+
+	} else {
+		fmt.Printf(person.Name)
+
+		r.ParseMultipartForm(10 << 20)
+		file, handler, err := r.FormFile("myFile")
+
+		if err != nil {
+			fmt.Printf("error parsing file")
+			utils.InternalServerError(w)
+			return
+		}
+
+		defer file.Close()
+		fmt.Printf("uploaded file %+v\n", handler.Filename)
+		fmt.Printf("file size: %+v\n", handler.Size)
+		fmt.Printf("main handler: %+v\n", handler.Header)
+
+		tempFile, err := ioutil.TempFile("./static/sessions/"+person.Name, "pdf-*.pdf")
+
+		if err != nil {
+			fmt.Printf("error creating file in the new folder")
+			utils.InternalServerError(w)
+			return
+		}
+
+		fmt.Printf("name of file %+v\n", tempFile.Name())
+		path := tempFile.Name()
+		defer tempFile.Close()
+
+		fileBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			fmt.Printf("error reading file")
+			utils.InternalServerError(w)
+			return
+		}
+
+		tempFile.Write(fileBytes)
+		person.Pathfile = append(person.Pathfile, path)
+		session.Save(r, w)
+
+		http.Redirect(w, r, "/"+person.Name, 302)
 	}
 
-	id, ok := untyped.(string)
-	if !ok {
-		fmt.Printf("error casting id to string")
-		utils.InternalServerError(w)
-		return
-	}
-
-	// if you upload successfully, your cookie will expire in one day
-	//	change max age to 86400 * i(time in seconds)to have i days until cookie expire
-	// 	max age = 0 means that the cookie will be deleted after browser session ends
-	session.Options = &sessions.Options{
-		Path:     "/",
-		MaxAge:   86400,
-		HttpOnly: true,
-	}
-
-	//link := "http://localhost:8080/" + id + "/" + strings.Trim(filepath.Base(path), ".pdf")
-	link := "http://localhost:8080/" + id
-	session.Values["link"] = link
-	session.Save(r, w)
-	//fmt.Fprintf(w, "success upload\n")
-	//fmt.Fprintf(w, "your link is: %s", link)
-
-	http.Redirect(w, r, "/"+id, 302)
 }
 
 func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := store.Get(r, "session")
-
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	//fmt.Fprintf(w, "hello %+v\n\n", id)
+	session, _ := store.Get(r, "session-prova")
 
-	if session.Values["id"] == id {
+	val := session.Values["person"]
+
+	var person = &Person{}
+	person, _ = val.(*Person)
+
+	if person.Name == id {
 		fmt.Fprintf(w, "hello master")
 	} else {
 		fmt.Fprintf(w, "hello client")
@@ -189,52 +254,47 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
 func logoutGetHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := store.Get(r, "session")
-	untyped, _ := session.Values["pathfile"]
-	path, ok := untyped.(string)
+	session, _ := store.Get(r, "session-prova")
+
+	val := session.Values["person"]
+
+	var person = &Person{}
+	person, ok := val.(*Person)
 
 	if !ok {
-		fmt.Printf("error retrieving path")
+		fmt.Printf("error retrieving struct")
 		//utils.InternalServerError(w)
 		//return
 		http.Redirect(w, r, "/", 302)
+	} else {
+		for i := 0; i < len(person.Pathfile); i++ {
+			err := os.Remove(person.Pathfile[i])
+
+			if err != nil {
+				fmt.Printf("error iterating removing path")
+				//utils.InternalServerError(w)
+				//return
+				http.Redirect(w, r, "/", 302)
+			}
+		}
+
+		err := os.RemoveAll("./static/sessions/" + person.Name)
+
+		if err != nil {
+			fmt.Printf("error removing dynamic folder")
+			utils.InternalServerError(w)
+			return
+		}
+
+		delete(session.Values, "person")
+		err = session.Save(r, w)
+		if err != nil {
+			fmt.Printf("error saving session")
+		} else {
+			fmt.Printf("session deleted")
+		}
 	}
 
-	err := os.Remove(path)
-
-	if err != nil {
-		fmt.Printf("error removing path")
-		//utils.InternalServerError(w)
-		//return
-		http.Redirect(w, r, "/", 302)
-	}
-
-	untyped, ok = session.Values["id"]
-	if !ok {
-		fmt.Printf("error retrieving id")
-		utils.InternalServerError(w)
-		return
-	}
-
-	id, ok := untyped.(string)
-	if !ok {
-		fmt.Printf("error casting id to string")
-		utils.InternalServerError(w)
-		return
-	}
-
-	err = os.RemoveAll("./static/sessions/" + id)
-
-	if err != nil {
-		fmt.Printf("error removing dynamic folder")
-		utils.InternalServerError(w)
-		return
-	}
-
-	delete(session.Values, "id")
-	delete(session.Values, "pathfile")
-	delete(session.Values, "link")
-	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 }
 
@@ -263,41 +323,35 @@ func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
 }
 
 func testGetHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	untyped, ok := session.Values["username"]
+	session, _ := store.Get(r, "session-prova")
 
-	if !ok {
-		utils.InternalServerError(w)
-		return
+	person := &Person{
+		Name:     "daniele",
+		Pathfile: []string{""},
+		Link:     []string{""},
 	}
 
-	username, ok := untyped.(string)
-	if !ok {
-		utils.InternalServerError(w)
-		return
+	session.Values["person"] = person
+	err := session.Save(r, w)
+	if err != nil {
+		fmt.Printf("error saving session")
 	}
 
-	untyped, ok = session.Values["password"]
+	w.Write([]byte(person.Name))
+}
+
+func testtestGetHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session-prova")
+
+	val := session.Values["person"]
+
+	var person = &Person{}
+	person, ok := val.(*Person)
 
 	if !ok {
+		fmt.Printf("error readin person")
 		utils.InternalServerError(w)
-		return
 	}
 
-	password, ok := untyped.(string)
-	if !ok {
-		utils.InternalServerError(w)
-		return
-	}
-
-	untyped, _ = session.Values["path"]
-	path, ok := untyped.(string)
-	if !ok {
-		utils.InternalServerError(w)
-		return
-	}
-
-	w.Write([]byte(username))
-	w.Write([]byte(password))
-	w.Write([]byte(path))
+	w.Write([]byte(person.Link[0]))
 }
