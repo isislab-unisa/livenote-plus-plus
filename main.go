@@ -242,12 +242,13 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	val := session.Values["person"]
 
 	var person = &Person{}
-	person, _ = val.(*Person)
+	person, ok := val.(*Person)
 
-	if person.Name == id {
-		fmt.Fprintf(w, "hello master")
-	} else {
+	if !ok {
 		fmt.Fprintf(w, "hello client")
+	} else if person.Name == id {
+		fmt.Fprintf(w, "hello master")
+
 	}
 
 }

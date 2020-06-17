@@ -19,5 +19,9 @@
     {{ range . }}
     <div> {{ . }}</div>
     {{ end }}
+
+    {{if .person }}
+    <div>{{ .person.Name}}</div>
+    {{end}}
 </body>
 </html>
