@@ -34,13 +34,24 @@ type User struct {
 	Codes []string //this is the unique code to generate the correspondig url
 }
 
+//Presentation is a struct
+type Presentation struct {
+	Mode  int
+	Path  string
+	Slide int
+}
+
 func init() {
 	gob.Register(&User{})
 }
 
+//LayoutDir is a layout
+var LayoutDir = "templates/*.gohtml"
+
 func main() {
 
-	utils.LoadTemplates("templates/*.html")
+	utils.LoadTemplates(LayoutDir)
+	utils.LoadDB()
 
 	r := mux.NewRouter()
 
@@ -79,7 +90,8 @@ func main() {
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "user-session")
-	utils.ExecuteTemplate(w, "index.html", session.Values)
+	//TODO make template to change the ip and the port of the configured server (line 14 of index.html)
+	utils.ExecuteTemplate(w, "index", session.Values)
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -134,9 +146,14 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	guid := xid.New()
 	fileid := guid.String()
 
-	uFile, err := ioutil.TempFile("./static/sessions/"+workingDir+"/"+fileid, "pdf-*.pdf")
+	fmt.Printf("Loading session for user " + user.ID + " \n")
+
+	//FIXME variabile di sistema
+	uFile, err := os.Create("./static/sessions/" + workingDir + "/" + fileid + ".pdf")
+
 	if err != nil {
-		fmt.Printf("error creating file in the new folder")
+		fmt.Printf("error creating file in the user session folder")
+		log.Fatal(err)
 		utils.InternalServerError(w)
 		return
 	}
@@ -154,16 +171,19 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	defer uFile.Close()
 	defer file.Close()
 
-	user.Files = append(user.Files, uFile.Name())
+	var url = "http://" + IP + ":" + PORT + "/static/sessions/" + workingDir + "/" + fileid + ".pdf"
+	user.Files = append(user.Files, url)
 	user.Codes = append(user.Codes, fileid)
 	session.Save(r, w)
 	fmt.Printf("redirect on .." + " http://" + IP + ":" + PORT + "/" + fileid)
 
-	http.Redirect(w, r, "http://"+IP+":"+PORT+"/"+fileid, 302)
+	utils.SavePresentation(fileid, url)
+	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
+
 }
 
 //checkid is a func
-func checkid(slice []string, val string) (int, bool) {
+func contains(slice []string, val string) (int, bool) {
 	for i, item := range slice {
 		if item == val {
 			return i, true
@@ -185,13 +205,22 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	var user = &User{}
 	user, ok := val.(*User)
 
+	fmt.Printf("Load id:" + code + " for user session " + user.ID)
+
+	var p = &Presentation{}
+
 	if !ok {
 		fmt.Fprintf(w, "hello client")
-	} else if _, err := checkid(user.Codes, code); !err {
-		fmt.Fprintf(w, "hello master")
+		p.Mode = 1
+		p.Path = utils.LoadPresentation(code)
+		p.Slide = 1
 
+	} else if index, check := contains(user.Codes, code); check {
+		p.Mode = 0
+		p.Path = user.Files[index]
+		p.Slide = 1
 	}
-
+	utils.ExecuteTemplate(w, "presenter", p)
 }
 
 /*

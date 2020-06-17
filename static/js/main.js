@@ -99,25 +99,7 @@ document.onkeydown = function(e) {
   }
 }
 
-// Get Document
-pdfjsLib
-  .getDocument(url)
-  .promise.then(pdfDoc_ => {
-    pdfDoc = pdfDoc_;
 
-    document.querySelector('#page-count').textContent = pdfDoc.numPages;
-
-    renderPage(pageNum);
-  })
-  .catch(err => {
-    // Display error
-    const div = document.createElement('div');
-    div.className = 'error';
-    div.appendChild(document.createTextNode(err.message));
-    document.querySelector('body').insertBefore(div, canvas);
-    // Remove top bar
-    document.querySelector('.top-bar').style.display = 'none';
-  });
 
 // Button Events
 document.querySelector('#prev-page').addEventListener('click', showPrevPage);
@@ -132,9 +114,9 @@ var mousePressed = false;
 var lastX, lastY;
 //var ctx;
 
-function InitThis() {
+function InitThis(mode, path, slide) {
     //ctx = document.getElementById('#pdf-render').getContext("2d");
-
+    console.log(mode, path, slide)
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
         Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
@@ -151,6 +133,26 @@ function InitThis() {
     });
 	    $('#pdf-render').mouseleave(function (e) {
         mousePressed = false;
+    });
+
+    // Get Document
+    pdfjsLib
+    .getDocument(path)
+    .promise.then(pdfDoc_ => {
+      pdfDoc = pdfDoc_;
+
+      document.querySelector('#page-count').textContent = pdfDoc.numPages;
+
+      renderPage(slide);
+    })
+    .catch(err => {
+      // Display error
+      const div = document.createElement('div');
+      div.className = 'error';
+      div.appendChild(document.createTextNode(err.message));
+      document.querySelector('body').insertBefore(div, canvas);
+      // Remove top bar
+      document.querySelector('.top-bar').style.display = 'none';
     });
 }
 

@@ -1,3 +1,4 @@
+{{define "presenter"}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,7 +14,13 @@
     <link rel="stylesheet" href="/static/style.css" />
     <title>PDF Viewer</title>
   </head>
-  <body onload="InitThis();">
+  <script>
+    const mode = {{ .Mode }};
+    const path = {{ .Path }};
+    const slide = {{ .Slide }};
+  </script>
+
+  <body onload="InitThis(mode,path,slide);">
     <div class="top-bar">
       <button class="btn" id="prev-page">
         <i class="fas fa-arrow-circle-left"></i> Prev Page
@@ -36,3 +43,4 @@
     <script src="/static/js/main.js" type="application/javascript"></script>
   </body>
 </html>
+{{end}}
