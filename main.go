@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
-	"gorillaproj/utils"
+	"./utils"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,7 +17,7 @@ import (
 )
 
 //IP is bla
-const IP = "192.168.1.118"
+const IP = "127.0.0.1"
 
 //PORT is bla
 const PORT = "8080"
