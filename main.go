@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
-	"./utils"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"./utils"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -51,14 +52,14 @@ var LayoutDir = "templates/*.gohtml"
 func main() {
 
 	utils.LoadTemplates(LayoutDir)
-	utils.LoadDB()
+	//utils.LoadDB()
 
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", indexGetHandler).Methods("GET")
 	r.HandleFunc("/", indexPostHandler).Methods("POST")
 	//start pdf presentation master/client according to a loaded file
-	r.HandleFunc("/{id}", userGetHandler).Methods("GET")
+	r.HandleFunc("/{user-session-id}-{id}", userGetHandler).Methods("GET")
 
 	//TODO just for dev
 	/*r.HandleFunc("/test/test", testGetHandler).Methods("GET")
@@ -177,7 +178,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 	fmt.Printf("redirect on .." + " http://" + IP + ":" + PORT + "/" + fileid)
 
-	utils.SavePresentation(fileid, url)
+	//utils.SavePresentation(fileid, url)
 	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
 
 }
@@ -197,6 +198,7 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	code := vars["id"]
+	userSessionId := vars["user-session-id"]
 
 	session, _ := store.Get(r, "user-session")
 
@@ -205,14 +207,30 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	var user = &User{}
 	user, ok := val.(*User)
 
-	fmt.Printf("Load id:" + code + " for user session " + user.ID)
+	fmt.Printf("Load id:" + code + " for user session " + userSessionId)
 
 	var p = &Presentation{}
 
 	if !ok {
-		fmt.Fprintf(w, "hello client")
+		fmt.Println("./static/sessions/" + userSessionId + "/")
+		files, err := ioutil.ReadDir("./static/sessions/" + userSessionId + "/")
+		if err != nil {
+			utils.ExecuteTemplate(w, "error", p)
+			return
+		}
+		var path = ""
+		for _, f := range files {
+			if f.Name() == code+".pdf" {
+				path = "/static/sessions/" + userSessionId + "/" + f.Name()
+				break
+			}
+		}
+		if path == "" {
+			utils.ExecuteTemplate(w, "error", p)
+			return
+		}
 		p.Mode = 1
-		p.Path = utils.LoadPresentation(code)
+		p.Path = path
 		p.Slide = 1
 
 	} else if index, check := contains(user.Codes, code); check {

@@ -13,17 +13,34 @@
         <input type="file" name="file">
         <input type="submit" value="upload file...">
     </form>
-
+ 
     {{if .user }}
         <div>User ID: {{ .user.ID}}</div>
-        <div>Presentation Links:
-            <ul>
-                {{range .user.Codes}}
-                <li> <a href="{{.}}"> {{.}} </a></li> 
-                {{end}}
+        <div>Presentation Links:  
+            <ul id="plist">
             </ul>
         </div>
     {{end}}
+       <script>
+      var links = [];
+      var user_id = {{ .user.ID}};
+      {{range .user.Codes}}
+      links.push(user_id+"-"+{{.}}); 
+      {{end}}
+      var ul = document.getElementById("plist");
+      for( var i = 0; i < links.length; i++ )
+        { 
+            o = links[i];
+            var li = document.createElement("li");
+            var a = document.createElement('a');  
+            a.appendChild(document.createTextNode(o));
+            a.setAttribute('target', '_blank');
+            a.title = o;  
+            a.href = "/"+o;  
+            li.appendChild(a);
+            ul.appendChild(li);     
+        } 
+    </script>
 
 </body>
 </html>
