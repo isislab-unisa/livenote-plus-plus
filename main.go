@@ -11,6 +11,7 @@ import (
 
 	"./utils"
 
+	socketio "github.com/googollee/go-socket.io"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/rs/xid"
@@ -52,7 +53,6 @@ var LayoutDir = "templates/*.gohtml"
 func main() {
 
 	utils.LoadTemplates(LayoutDir)
-	//utils.LoadDB()
 
 	r := mux.NewRouter()
 
@@ -61,19 +61,44 @@ func main() {
 	//start pdf presentation master/client according to a loaded file
 	r.HandleFunc("/{user-session-id}-{id}", userGetHandler).Methods("GET")
 
-	//TODO just for dev
-	/*r.HandleFunc("/test/test", testGetHandler).Methods("GET")
-	r.HandleFunc("/test/test/test", testtestGetHandler).Methods("GET")
-	r.HandleFunc("/pdfview/prova", pdfGetHandler).Methods("GET", "OPTIONS")*/
-	//TODO end jsut for dev (we remove it soon)
-
 	//TODO serve static files
 	staticDirFiles := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticDirFiles))
 
-	//use r as default handler
-	//TODO we do not need this, for now we remove it
-	//http.Handle("/", r)
+	server, err := socketio.NewServer(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	server.OnConnect("/", func(s socketio.Conn) error {
+		s.SetContext("")
+		fmt.Println("connected:", s.ID())
+		return nil
+	})
+	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
+		fmt.Println("notice:", msg)
+		s.Emit("reply", "have "+msg)
+	})
+	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
+		s.SetContext(msg)
+		return "recv " + msg
+	})
+	server.OnEvent("/", "bye", func(s socketio.Conn) string {
+		last := s.Context().(string)
+		s.Emit("bye", last)
+		s.Close()
+		return last
+	})
+	server.OnError("/", func(s socketio.Conn, e error) {
+		fmt.Println("meet error:", e)
+	})
+	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
+		fmt.Println("closed", reason)
+	})
+
+	go server.Serve()
+	defer server.Close()
+
+	r.Handle("/socket.io/", server)
 
 	srv := &http.Server{
 		Handler: r,
@@ -240,62 +265,3 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.ExecuteTemplate(w, "presenter", p)
 }
-
-/*
-	from
-	here
-	not
-	used
-*/
-/*
-func pdfGetHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "pdfview.html", nil)
-}
-
-//AuthRequired is bla
-func AuthRequired(handler http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session, _ := store.Get(r, "session")
-		_, ok := session.Values["username"]
-		if !ok {
-			http.Redirect(w, r, "http://"+IP+":"+PORT+"/login", 302)
-			return
-		}
-		handler.ServeHTTP(w, r)
-	}
-}
-
-func testGetHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "user-session")
-
-	person := &Person{
-		Name:     "daniele",
-		Pathfile: []string{""},
-		Link:     []string{""},
-	}
-
-	session.Values["person"] = person
-	err := session.Save(r, w)
-	if err != nil {
-		fmt.Printf("error saving session")
-	}
-
-	w.Write([]byte(person.Name))
-}
-
-func testtestGetHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "user-session")
-
-	val := session.Values["person"]
-
-	var person = &Person{}
-	person, ok := val.(*Person)
-
-	if !ok {
-		fmt.Printf("error readin person")
-		utils.InternalServerError(w)
-	}
-
-	w.Write([]byte(person.Link[0]))
-}
-*/

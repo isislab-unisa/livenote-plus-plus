@@ -1,5 +1,9 @@
+body{
+    font-family: 'Jost'; font-size: 22px;
+}
 body > div {
     padding: 0.5em;
     background: #ccc;
     border: 1px solid #aaa;
+    font-family: 'Jost'; font-size: 22px;
 }

@@ -17,10 +17,14 @@
   cursor: pointer;
   padding: 0.7rem 2rem;
 }
-
+body{
+  width: 100%;
+  font-family: 'Jost';font-size: 22px;
+}
 .pdf-canvas {
-  width: 50%;
+  width: 100%;
   margin: auto;
+ 
 }
 
 .btn:hover {

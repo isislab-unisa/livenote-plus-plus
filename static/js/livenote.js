@@ -99,14 +99,10 @@ document.onkeydown = function(e) {
   }
 }
 
-
-
 // Button Events
 document.querySelector('#prev-page').addEventListener('click', showPrevPage);
 document.querySelector('#next-page').addEventListener('click', showNextPage);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
-
-
 
 
 // draw on canvas 
@@ -116,7 +112,19 @@ var lastX, lastY;
 
 function InitThis(mode, path, slide) {
     //ctx = document.getElementById('#pdf-render').getContext("2d");
-    console.log(mode, path, slide)
+    var socket = io.connect('ws://127.0.0.1:8080', { transports: ['websocket'] });
+
+    socket.on('connect', function () {
+
+      console.log('socket connected');
+
+      //send something
+      socket.emit('send', {name: "my name", message: "hello"}, function(result) {
+
+          console.log('sended successfully');
+          console.log(result);
+      });
+  });
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
         Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
