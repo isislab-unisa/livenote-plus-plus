@@ -114,17 +114,24 @@ function InitThis(mode, path, slide) {
     //ctx = document.getElementById('#pdf-render').getContext("2d");
     var socket = io.connect('ws://127.0.0.1:8080', { transports: ['websocket'] });
 
-    socket.on('connect', function () {
+    socket.on('connect',function(){
+      if (mode == 1) {
+          var info = window.location.pathname.split('/')[1].split("-");
+          socket.on(info[0]+':event', function (msg) {
+          console.log("client receive"); 
+          //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
+        });
+      }else{
+        var info = window.location.pathname.split('/')[1].split("-");
+        console.log("Master for "+info[0]+':master')
 
-      console.log('socket connected');
-
-      //send something
-      socket.emit('send', {name: "my name", message: "hello"}, function(result) {
-
-          console.log('sended successfully');
-          console.log(result);
-      });
-  });
+        socket.emit(info[0]+':master',"message", function (data) {
+          
+            console.log('Message sent!');
+        
+        });
+      }
+    });
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
         Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);

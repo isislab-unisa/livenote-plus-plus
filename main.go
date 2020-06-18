@@ -49,6 +49,7 @@ func init() {
 
 //LayoutDir is a layout
 var LayoutDir = "templates/*.gohtml"
+var server *socketio.Server
 
 func main() {
 
@@ -65,7 +66,16 @@ func main() {
 	staticDirFiles := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticDirFiles))
 
-	server, err := socketio.NewServer(nil)
+	srv := &http.Server{
+		Handler: r,
+		Addr:    IP + ":" + PORT,
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	s, err := socketio.NewServer(nil)
+	server = s
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -99,14 +109,6 @@ func main() {
 	defer server.Close()
 
 	r.Handle("/socket.io/", server)
-
-	srv := &http.Server{
-		Handler: r,
-		Addr:    IP + ":" + PORT,
-		// Good practice: enforce timeouts for servers you create!
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
 
 	log.Fatal(srv.ListenAndServe())
 	//http.ListenAndServe("http://"+IP+":"+PORT, nil)
@@ -262,6 +264,14 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		p.Mode = 0
 		p.Path = user.Files[index]
 		p.Slide = 1
+		fmt.Printf("Listing for %s", code+":master")
+		server.OnEvent("/", code+":master", func(s socketio.Conn, msg string) string {
+			s.SetContext(msg)
+			fmt.Printf("Message from master node ", msg)
+			s.Emit(code+":event", msg)
+
+			return ""
+		})
 	}
 	utils.ExecuteTemplate(w, "presenter", p)
 }
