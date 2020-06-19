@@ -5,9 +5,12 @@ let pdfDoc = null,
 
 
 const scale = 2,
-  canvas = document.querySelector('#pdf-render'),
-  ctx = canvas.getContext('2d');
+canvas = document.querySelector('#pdf-render'),
+ctx = canvas.getContext('2d');
 
+function resize(){
+  renderPage(pageNum);
+}
 // Render the page
 const renderPage = num => {
   pageIsRendering = true;
@@ -16,9 +19,17 @@ const renderPage = num => {
   pdfDoc.getPage(num).then(page => {
     // Set scale
     // console.log(page);
-    const viewport = page.getViewport({ scale });
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+    
+ //  const viewport = page.getViewport({ scale });
+   
+
+   var desiredWidth = $(window).width();
+   var viewport = page.getViewport({ scale: 1, });
+   var scale = desiredWidth / viewport.width;
+   var viewport = page.getViewport({ scale: scale, });
+
+   canvas.height = viewport.height;
+   canvas.width = viewport.width;
 
     const renderCtx = {
       canvasContext: ctx,
@@ -122,6 +133,28 @@ function loadStatus(s){
   status = s
   queueRenderPage(s.nslide);
 }
+function loadShape(s){
+  nwidth = $(window).width()
+  nheight = $(window).height()
+  if (s.data.length == 0) return 
+  lastX = (s.data[0].x * nwidth) / s.width;
+  lastY = (s.data[0].y * nheight) / s.height;
+  for (point in s.data) {
+    ctx.beginPath();
+    ctx.strokeStyle = $('#selColor').val();
+    ctx.lineWidth = $('#selWidth').val();
+    ctx.lineJoin = "round";
+    ctx.moveTo(lastX, lastY);
+    x = (s.data[point].x * nwidth) / s.width;
+    y = (s.data[point].y * nheight) / s.height;
+    ctx.lineTo(x,y);
+    ctx.closePath();
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
+    console.log(nwidth+ " "+nheight+" "+s.width+" "+s.height)
+  }
+}
 
 function InitThis(mode, path, slide) {
     socket = io('ws://'+window.location.host+'/'+pID, { reconnect: true, transports: ['websocket'], 'force new connection': true });
@@ -140,6 +173,12 @@ function InitThis(mode, path, slide) {
           s = JSON.parse(msg)
           loadStatus(s);
         });
+        socket.on( "event:slide:shape", function (msg) {
+          console.log("NEW SHAPE BABY"); 
+          s = JSON.parse(msg)
+          loadShape(s)
+         
+        });
     }});
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
@@ -148,17 +187,28 @@ function InitThis(mode, path, slide) {
 
     $('#pdf-render').mousemove(function (e) {
         if (mousePressed) {
-            Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true);
+          x =  e.pageX - $(this).offset().left
+          y =  e.pageY - $(this).offset().top
+          Draw(x, y, true);
+          shape['data'].push({"x":x, "y":y});
         }
     });
 
     $('#pdf-render').mouseup(function (e) {
         mousePressed = false;
+        socket.emit("event:master:shape", JSON.stringify(shape), function (data) {      
+          console.log('Message shape sent! ');
+        });
+        shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
     });
 	    $('#pdf-render').mouseleave(function (e) {
         mousePressed = false;
+        socket.emit("event:master:shape", JSON.stringify(shape), function (data) {      
+          console.log('Message shape sent! ');
+        });
+        shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
     });
-
+    var shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
     // Get Document
     pdfjsLib
     .getDocument(path)

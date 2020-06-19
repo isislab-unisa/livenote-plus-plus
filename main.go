@@ -374,6 +374,12 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 			server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:slide", msg)
 			return ""
 		})
+
+		server.OnEvent("/"+userSessionId+"-"+code, "event:master:shape", func(s socketio.Conn, msg string) string {
+			fmt.Println("event:master for " + "/" + userSessionId + "-" + code)
+			server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:slide:shape", msg)
+			return ""
+		})
 	}
 	utils.ExecuteTemplate(w, "presenter", p)
 }
