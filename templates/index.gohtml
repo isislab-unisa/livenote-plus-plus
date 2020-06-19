@@ -39,6 +39,15 @@
             a.title = o;  
             a.href = "/"+o;  
             li.appendChild(a);
+            var da = document.createElement('form');  
+            da.action = "/delete-presentation";
+            da.method = "post";
+            var bd = document.createElement('button');  
+            bd.name = "delete"
+            bd.value = o;
+            bd.innerHTML = "delete"
+            da.appendChild(bd);
+            li.appendChild(da);
             ul.appendChild(li);     
         } 
     </script>

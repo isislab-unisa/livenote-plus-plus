@@ -63,6 +63,7 @@ func main() {
 	//start pdf presentation master/client according to a loaded file
 	r.HandleFunc("/{user-session-id}-{id}", userGetHandler).Methods("GET")
 
+	r.HandleFunc("/delete-presentation", deletePostHandler).Methods("POST")
 	//TODO serve static files
 	staticDirFiles := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticDirFiles))
@@ -98,6 +99,40 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "user-session")
 	//TODO make template to change the ip and the port of the configured server (line 14 of index.html)
 	utils.ExecuteTemplate(w, "index", session.Values)
+}
+
+func deletePostHandler(w http.ResponseWriter, r *http.Request) {
+
+	session, _ := store.Get(r, "user-session")
+	val := session.Values["user"]
+	var user = &User{}
+	user, ok := val.(*User)
+
+	if !ok {
+		return
+	}
+	var p = strings.Split(r.FormValue("delete"), "-")
+	var usersession = p[0]
+	var file = p[1]
+
+	err := os.Remove("./static/sessions/" + usersession + "/" + file + ".pdf")
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	index, check := contains(user.Codes, file)
+	if check {
+		user.Codes = RemoveIndex(user.Codes, index)
+		user.Files = RemoveIndex(user.Files, index)
+		err = session.Save(r, w)
+		if err != nil {
+			fmt.Printf("error saving session")
+			return
+		}
+	}
+
+	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -241,6 +276,10 @@ func contains(slice []string, val string) (int, bool) {
 		}
 	}
 	return -1, false
+}
+
+func RemoveIndex(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
 }
 
 //FIXME contains
