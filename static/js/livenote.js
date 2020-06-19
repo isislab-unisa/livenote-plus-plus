@@ -3,8 +3,7 @@ let pdfDoc = null,
   pageIsRendering = false,
   pageNumIsPending = null;
 
-let status = { "pID": undefined, "nslide":1 };  
-let pmode = -1;
+
 const scale = 2,
   canvas = document.querySelector('#pdf-render'),
   ctx = canvas.getContext('2d');
@@ -112,11 +111,12 @@ document.querySelector('#next-page').addEventListener('click', showNextPage);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
 
-// draw on canvas 
 var mousePressed = false;
 var lastX, lastY;
-var socket = io.connect('ws://127.0.0.1:8080', { transports: ['websocket'] });
-var pID = -1;
+var socket = undefined;
+var pID = window.location.pathname.split('/')[1];
+let status = { "nslide":1 };  
+let pmode = -1;
 
 function loadStatus(s){
   status = s
@@ -124,30 +124,22 @@ function loadStatus(s){
 }
 
 function InitThis(mode, path, slide) {
-    var info = window.location.pathname.split('/')[1].split("-");
-    pID = info[1];
-    userSessionID = info[0];
+    socket = io('ws://127.0.0.1:8080/'+pID, { reconnect: true, transports: ['websocket'], 'force new connection': true });
     pmode = mode;
-    status.pID = pID;
+    console.log("try to connect: "+'ws://127.0.0.1:8080/'+pID)
     socket.on('connect', function(){
-      socket.emit("event:enter", userSessionID)
-      console.log("client connected to "+userSessionID)
+    //socket.emit("event:enter", "userSessionID")
+     console.log("client connected to "+pID)
       if (mode == 1) {
         socket.on( "event:start", function (msg) {
           s = JSON.parse(msg)
-          if (s.pID == status.pID){
-            console.log("Presentation start "+msg); 
-          }
+          console.log("Presentation start "+msg); 
         });
         socket.on( "event:slide", function (msg) {
           console.log("Presentation Change "+msg); 
           s = JSON.parse(msg)
-          if (s.pID == status.pID){
-            loadStatus(s);
-          }
-        
-        //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
-      });
+          loadStatus(s);
+        });
     }});
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;

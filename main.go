@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"./utils"
@@ -79,23 +80,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	server.OnConnect("/", func(s socketio.Conn) error {
-		s.SetContext("")
-		fmt.Println("connected:", s.ID())
-		return nil
-	})
 
-	server.OnEvent("/", "event:enter", func(s socketio.Conn, userSessionID string) {
-		fmt.Println("Enter in session: ", userSessionID)
-		s.Join(userSessionID)
-	})
-	server.OnError("/", func(s socketio.Conn, e error) {
-		s.LeaveAll()
-	})
-	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		s.LeaveAll()
-		s.Close()
-	})
+	LoadActiveSessions()
 
 	go server.Serve()
 	defer server.Close()
@@ -195,11 +181,56 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	user.Files = append(user.Files, url)
 	user.Codes = append(user.Codes, fileid)
 	session.Save(r, w)
-	fmt.Printf("redirect on .." + " http://" + IP + ":" + PORT + "/" + fileid)
+
+	NewLiveNote("/" + workingDir + "-" + fileid)
 
 	//utils.SavePresentation(fileid, url)
 	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
 
+}
+
+func LoadActiveSessions() {
+
+	sessions, err := ioutil.ReadDir("./static/sessions/")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	for _, s := range sessions {
+		files, err2 := ioutil.ReadDir("./static/sessions/" + s.Name())
+		if err2 != nil {
+			log.Fatal(err)
+			return
+		}
+		for _, f := range files {
+			ns := s.Name() + "-" + strings.Trim(f.Name(), ".pdf")
+			NewLiveNote("/" + ns)
+
+		}
+	}
+
+}
+func NewLiveNote(id string) {
+	fmt.Printf("Create live note %s\n", id)
+
+	server.OnConnect("/", func(s socketio.Conn) error {
+		s.SetContext("")
+		fmt.Println("connected :", s.ID())
+		return nil
+	})
+	server.OnConnect(id, func(s socketio.Conn) error {
+		s.SetContext("")
+		s.Join("bcast")
+		fmt.Println("connected and entering :", s.ID())
+		return nil
+	})
+	server.OnError(id, func(s socketio.Conn, e error) {
+		s.LeaveAll()
+	})
+	server.OnDisconnect(id, func(s socketio.Conn, reason string) {
+		s.LeaveAll()
+		s.Close()
+	})
 }
 
 //checkid is a func
@@ -257,11 +288,11 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		p.Path = user.Files[index]
 		p.Slide = 1
 
-		server.BroadcastToRoom("", userSessionId, "event:start", "{\"pID\":\""+code+"\"}")
+		server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:start", "{\"pID\":\""+code+"\"}")
 
-		server.OnEvent("/", "event:master", func(s socketio.Conn, msg string) string {
-
-			server.BroadcastToRoom("", userSessionId, "event:slide", msg)
+		server.OnEvent("/"+userSessionId+"-"+code, "event:master", func(s socketio.Conn, msg string) string {
+			fmt.Println("event:master for " + "/" + userSessionId + "-" + code)
+			server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:slide", msg)
 			return ""
 		})
 	}
