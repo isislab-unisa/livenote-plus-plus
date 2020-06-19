@@ -3,8 +3,8 @@ let pdfDoc = null,
   pageIsRendering = false,
   pageNumIsPending = null;
 
-let status = { "nslide":1 };  
-
+let status = { "pID": undefined, "nslide":1 };  
+let pmode = -1;
 const scale = 2,
   canvas = document.querySelector('#pdf-render'),
   ctx = canvas.getContext('2d');
@@ -55,6 +55,7 @@ const showPrevPage = () => {
     return;
   }
   pageNum--;
+ (pmode == 0) && sendMasterStatus(pageNum);
   queueRenderPage(pageNum);
 };
 
@@ -64,16 +65,15 @@ const showNextPage = () => {
     return;
   }
   pageNum++;
+  (pmode == 0) && sendMasterStatus(pageNum);
+  queueRenderPage(pageNum);
+};
+function sendMasterStatus(pageNum){
   status.nslide = pageNum;
-
   socket.emit("event:master", JSON.stringify(status), function (data) {      
     console.log('Message next page sent! '+ status.nslide);
   });
-  
-  queueRenderPage(pageNum);
-
-};
-
+}
 // Go FullScreen when clicked on the button
 const goFullScreen = () => {
   document.getElementById("pdf-render").requestFullscreen();
@@ -120,23 +120,32 @@ var pID = -1;
 
 function loadStatus(s){
   status = s
-  
   queueRenderPage(s.nslide);
 }
 
 function InitThis(mode, path, slide) {
     var info = window.location.pathname.split('/')[1].split("-");
     pID = info[1];
+    userSessionID = info[0];
+    pmode = mode;
+    status.pID = pID;
     socket.on('connect', function(){
-      socket.emit("addToPresentation", pID)
+      socket.emit("event:enter", userSessionID)
+      console.log("client connected to "+userSessionID)
       if (mode == 1) {
         socket.on( "event:start", function (msg) {
+          s = JSON.parse(msg)
+          if (s.pID == status.pID){
             console.log("Presentation start "+msg); 
-          //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
+          }
         });
         socket.on( "event:slide", function (msg) {
           console.log("Presentation Change "+msg); 
-          loadStatus(JSON.parse(msg));
+          s = JSON.parse(msg)
+          if (s.pID == status.pID){
+            loadStatus(s);
+          }
+        
         //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
       });
     }});

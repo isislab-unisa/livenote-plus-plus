@@ -82,34 +82,19 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
 		fmt.Println("connected:", s.ID())
-
 		return nil
 	})
 
-	server.OnEvent("/", "addToPresentation", func(s socketio.Conn, pID string) {
-		fmt.Println("addToPresentation:", pID)
-		s.Join(pID)
-	})
-
-	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
-		fmt.Println("notice:", msg)
-		s.Emit("reply", "have "+msg)
-	})
-	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
-		s.SetContext(msg)
-		return "recv " + msg
-	})
-	server.OnEvent("/", "bye", func(s socketio.Conn) string {
-		last := s.Context().(string)
-		s.Emit("bye", last)
-		s.Close()
-		return last
+	server.OnEvent("/", "event:enter", func(s socketio.Conn, userSessionID string) {
+		fmt.Println("Enter in session: ", userSessionID)
+		s.Join(userSessionID)
 	})
 	server.OnError("/", func(s socketio.Conn, e error) {
-		fmt.Println("meet error:", e)
+		s.LeaveAll()
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		fmt.Println("closed", reason)
+		s.LeaveAll()
+		s.Close()
 	})
 
 	go server.Serve()
@@ -272,11 +257,11 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		p.Path = user.Files[index]
 		p.Slide = 1
 
-		server.BroadcastToRoom("", code, "event:start", "")
+		server.BroadcastToRoom("", userSessionId, "event:start", "{\"pID\":\""+code+"\"}")
 
 		server.OnEvent("/", "event:master", func(s socketio.Conn, msg string) string {
 
-			server.BroadcastToRoom("", code, "event:slide", msg)
+			server.BroadcastToRoom("", userSessionId, "event:slide", msg)
 			return ""
 		})
 	}
