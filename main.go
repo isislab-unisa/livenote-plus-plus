@@ -97,7 +97,44 @@ func main() {
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "user-session")
-	//TODO make template to change the ip and the port of the configured server (line 14 of index.html)
+
+	val := session.Values["user"]
+	var user = &User{}
+	user, ok := val.(*User)
+
+	if ok {
+		files, err2 := ioutil.ReadDir("./static/sessions/" + user.ID)
+		if err2 != nil {
+			fmt.Printf("create new dir...")
+			os.Mkdir("./static/sessions/"+user.ID, os.ModePerm)
+			user.Codes = user.Codes[:0]
+			user.Files = user.Files[:0]
+			session.Save(r, w)
+			utils.ExecuteTemplate(w, "index", session.Values)
+			return
+		}
+		var localFiles []string
+		for _, f := range files {
+			localFiles = append(localFiles, f.Name())
+		}
+
+		for _, sf := range user.Codes {
+			_, check := contains(localFiles, sf+".pdf")
+
+			if !check {
+				fmt.Printf("remove...")
+				index, _ := contains(user.Codes, sf)
+				user.Codes = RemoveIndex(user.Codes, index)
+				user.Files = RemoveIndex(user.Files, index)
+			}
+		}
+		err := session.Save(r, w)
+		if err != nil {
+			fmt.Printf("error saving session")
+			return
+		}
+
+	}
 	utils.ExecuteTemplate(w, "index", session.Values)
 }
 
@@ -122,6 +159,7 @@ func deletePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	index, check := contains(user.Codes, file)
+	fmt.Printf("Check remove %d \n", index)
 	if check {
 		user.Codes = RemoveIndex(user.Codes, index)
 		user.Files = RemoveIndex(user.Files, index)
@@ -188,6 +226,8 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	fileid := guid.String()
 
 	fmt.Printf("Loading session for user " + user.ID + " \n")
+
+	os.Mkdir("./static/sessions/"+user.ID, os.ModePerm)
 
 	//FIXME variabile di sistema
 	uFile, err := os.Create("./static/sessions/" + workingDir + "/" + fileid + ".pdf")
