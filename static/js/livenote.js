@@ -1,9 +1,9 @@
-const url = 'http://localhost:8080/static/sciotproposal.pdf';
-
 let pdfDoc = null,
   pageNum = 1,
   pageIsRendering = false,
   pageNumIsPending = null;
+
+let status = { "nslide":1 };  
 
 const scale = 2,
   canvas = document.querySelector('#pdf-render'),
@@ -64,7 +64,14 @@ const showNextPage = () => {
     return;
   }
   pageNum++;
+  status.nslide = pageNum;
+
+  socket.emit("event:master", JSON.stringify(status), function (data) {      
+    console.log('Message next page sent! '+ status.nslide);
+  });
+  
   queueRenderPage(pageNum);
+
 };
 
 // Go FullScreen when clicked on the button
@@ -108,30 +115,31 @@ document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 // draw on canvas 
 var mousePressed = false;
 var lastX, lastY;
-//var ctx;
+var socket = io.connect('ws://127.0.0.1:8080', { transports: ['websocket'] });
+var pID = -1;
+
+function loadStatus(s){
+  status = s
+  
+  queueRenderPage(s.nslide);
+}
 
 function InitThis(mode, path, slide) {
-    //ctx = document.getElementById('#pdf-render').getContext("2d");
-    var socket = io.connect('ws://127.0.0.1:8080', { transports: ['websocket'] });
-
-    socket.on('connect',function(){
+    var info = window.location.pathname.split('/')[1].split("-");
+    pID = info[1];
+    socket.on('connect', function(){
+      socket.emit("addToPresentation", pID)
       if (mode == 1) {
-          var info = window.location.pathname.split('/')[1].split("-");
-          socket.on(info[0]+':event', function (msg) {
-          console.log("client receive"); 
+        socket.on( "event:start", function (msg) {
+            console.log("Presentation start "+msg); 
           //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
         });
-      }else{
-        var info = window.location.pathname.split('/')[1].split("-");
-        console.log("Master for "+info[0]+':master')
-
-        socket.emit(info[0]+':master',"message", function (data) {
-          
-            console.log('Message sent!');
-        
-        });
-      }
-    });
+        socket.on( "event:slide", function (msg) {
+          console.log("Presentation Change "+msg); 
+          loadStatus(JSON.parse(msg));
+        //  socket.emit('presentation:client',  JSON.stringify({mode:mode, sessionid: info[0], presentation:  }), function(result) {});
+      });
+    }});
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
         Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);

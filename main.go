@@ -82,8 +82,15 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
 		fmt.Println("connected:", s.ID())
+
 		return nil
 	})
+
+	server.OnEvent("/", "addToPresentation", func(s socketio.Conn, pID string) {
+		fmt.Println("addToPresentation:", pID)
+		s.Join(pID)
+	})
+
 	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
 		fmt.Println("notice:", msg)
 		s.Emit("reply", "have "+msg)
@@ -264,12 +271,12 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		p.Mode = 0
 		p.Path = user.Files[index]
 		p.Slide = 1
-		fmt.Printf("Listing for %s", code+":master")
-		server.OnEvent("/", code+":master", func(s socketio.Conn, msg string) string {
-			s.SetContext(msg)
-			fmt.Printf("Message from master node ", msg)
-			s.Emit(code+":event", msg)
 
+		server.BroadcastToRoom("", code, "event:start", "")
+
+		server.OnEvent("/", "event:master", func(s socketio.Conn, msg string) string {
+
+			server.BroadcastToRoom("", code, "event:slide", msg)
 			return ""
 		})
 	}
