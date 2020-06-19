@@ -124,7 +124,7 @@ function loadStatus(s){
 }
 
 function InitThis(mode, path, slide) {
-    socket = io('ws://127.0.0.1:8080/'+pID, { reconnect: true, transports: ['websocket'], 'force new connection': true });
+    socket = io('ws://'+window.location.host+'/'+pID, { reconnect: true, transports: ['websocket'], 'force new connection': true });
     pmode = mode;
     console.log("try to connect: "+'ws://127.0.0.1:8080/'+pID)
     socket.on('connect', function(){
