@@ -211,6 +211,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 			Path:     "/",
 			MaxAge:   86400,
 			HttpOnly: true,
+			//Secure:   true,
 		}
 
 		u := &User{
