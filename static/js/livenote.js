@@ -3,7 +3,6 @@ let pdfDoc = null,
   pageIsRendering = false,
   pageNumIsPending = null;
 
-
 const scale = 2,
 canvas = document.querySelector('#pdf-render'),
 ctx = canvas.getContext('2d');
@@ -177,12 +176,14 @@ function InitThis(mode, path, slide) {
           console.log("NEW SHAPE BABY"); 
           s = JSON.parse(msg)
           loadShape(s)
-         
         });
     }});
+
     $('#pdf-render').mousedown(function (e) {
         mousePressed = true;
-        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false);
+        x =  e.pageX - $(this).offset().left
+        y =  e.pageY - $(this).offset().top
+        Draw(x, y, false);
     });
 
     $('#pdf-render').mousemove(function (e) {
@@ -201,7 +202,7 @@ function InitThis(mode, path, slide) {
         });
         shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
     });
-	    $('#pdf-render').mouseleave(function (e) {
+	  $('#pdf-render').mouseleave(function (e) {
         mousePressed = false;
         socket.emit("event:master:shape", JSON.stringify(shape), function (data) {      
           console.log('Message shape sent! ');

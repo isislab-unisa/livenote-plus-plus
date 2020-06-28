@@ -8,6 +8,6 @@
 
     go run main.go
 
-and then open localhost:8080/
+and then open 127.0.0.1:8080/
 
 

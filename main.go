@@ -10,42 +10,47 @@ import (
 	"strings"
 	"time"
 
-	"./utils"
+	"livenote/utils"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/rs/xid"
-	"golang.org/x/net/context"
 )
 
-//IP is bla
+// IP adress
 const IP = "127.0.0.1"
 
-//PORT is bla
+// PORT local
 const PORT = "8080"
 
-var ctx context.Context
-
-//secret key -- random generate
+// Generate a random key
 var store = sessions.NewCookieStore([]byte("top-secret"))
 
-//User is a struct
+// User struct for session
+// ID: unique identifier.
+// Files: this is the file path uploaded in the static folder.
+// Code: this is the unique code to generate the correspondig url.
 type User struct {
 	ID    string
-	Files []string //this the file path uploaded in the static folder
-	Codes []string //this is the unique code to generate the correspondig url
+	Files []string
+	Codes []string
 }
 
-//Presentation is a struct
+// Presentation struct for identify which pdf we are presenting
+// Mode: 0 Master - 1 Client
+// Path: file path
+// Slide: # of current slide
 type Presentation struct {
 	Mode  int
 	Path  string
 	Slide int
 }
 
+//init function to initialize the structs and allow serialise/deserialise
 func init() {
 	gob.Register(&User{})
+	gob.Register(&Presentation{})
 }
 
 //LayoutDir is a layout
@@ -79,6 +84,7 @@ func main() {
 	s, err := socketio.NewServer(nil)
 	server = s
 	if err != nil {
+		fmt.Printf("error creatin server\n")
 		log.Fatal(err)
 	}
 
@@ -93,11 +99,12 @@ func main() {
 	//http.ListenAndServe("http://"+IP+":"+PORT, nil)
 }
 
-//entry page
+// indexGetHandler load entry page
+// if there is some value in session we retrieve it, otherwise we just execute the template
+// we check that all items are correct, if not we are removing them
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "user-session")
-
 	val := session.Values["user"]
 	var user = &User{}
 	user, ok := val.(*User)
@@ -138,6 +145,7 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 	utils.ExecuteTemplate(w, "index", session.Values)
 }
 
+// deletePostHandler when click on button delete happens, we are removing all references to path and deleting the file
 func deletePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "user-session")
@@ -173,12 +181,12 @@ func deletePostHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
 }
 
+// indexPostHandler create a session for the user who upload a file, and save this file in a specific folder
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//max 10 MB files
 	r.ParseMultipartForm(10 << 20)
 	file, _, err := r.FormFile("file")
-
 	if err != nil {
 		fmt.Printf("Error parsing file or not file is present to upload")
 		utils.InternalServerError(w)
@@ -220,14 +228,14 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 		user = u
 	}
 	//now we create new presentation code and load the file in the user session
-	var workingDir = user.ID
+	workingDir := user.ID
 
 	guid := xid.New()
 	fileid := guid.String()
 
-	fmt.Printf("Loading session for user " + user.ID + " \n")
+	fmt.Printf("Loading session for user " + user.ID + "\n")
 
-	os.Mkdir("./static/sessions/"+user.ID, os.ModePerm)
+	os.Mkdir("./static/sessions/"+workingDir, os.ModePerm)
 
 	//FIXME variabile di sistema
 	uFile, err := os.Create("./static/sessions/" + workingDir + "/" + fileid + ".pdf")
@@ -248,7 +256,6 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	uFile.Write(fileBytes)
-
 	defer uFile.Close()
 	defer file.Close()
 
@@ -261,9 +268,9 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//utils.SavePresentation(fileid, url)
 	http.Redirect(w, r, "http://"+IP+":"+PORT, 302)
-
 }
 
+// LoadActiveSessions create the session for all the files uploaded
 func LoadActiveSessions() {
 
 	sessions, err := ioutil.ReadDir("./static/sessions/")
@@ -285,7 +292,11 @@ func LoadActiveSessions() {
 	}
 
 }
+
+// NewLiveNote manage the socket.io connection for each livenote
+// we connect on the parent directory, then we join a room with specific id
 func NewLiveNote(id string) {
+
 	fmt.Printf("Create live note %s\n", id)
 
 	server.OnConnect("/", func(s socketio.Conn) error {
@@ -300,6 +311,7 @@ func NewLiveNote(id string) {
 		return nil
 	})
 	server.OnError(id, func(s socketio.Conn, e error) {
+		fmt.Printf("error on socket server\n")
 		s.LeaveAll()
 	})
 	server.OnDisconnect(id, func(s socketio.Conn, reason string) {
@@ -308,7 +320,7 @@ func NewLiveNote(id string) {
 	})
 }
 
-//checkid is a func
+//contains check if an array of string contains a specific string
 func contains(slice []string, val string) (int, bool) {
 	for i, item := range slice {
 		if item == val {
@@ -318,31 +330,31 @@ func contains(slice []string, val string) (int, bool) {
 	return -1, false
 }
 
+//RemoveIndex delete an element at defined position in a string array
 func RemoveIndex(s []string, index int) []string {
 	return append(s[:index], s[index+1:]...)
 }
 
 //FIXME contains
+//userGetHandler manage the presentation for master/client
 func userGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	code := vars["id"]
-	userSessionId := vars["user-session-id"]
+	userSessionID := vars["user-session-id"]
 
 	session, _ := store.Get(r, "user-session")
-
 	val := session.Values["user"]
-
 	var user = &User{}
 	user, ok := val.(*User)
 
-	fmt.Printf("Load id:" + code + " for user session " + userSessionId)
+	fmt.Printf("Load id:" + code + " for user session " + userSessionID)
 
 	var p = &Presentation{}
 
 	if !ok {
-		fmt.Println("./static/sessions/" + userSessionId + "/")
-		files, err := ioutil.ReadDir("./static/sessions/" + userSessionId + "/")
+		fmt.Println("./static/sessions/" + userSessionID + "/")
+		files, err := ioutil.ReadDir("./static/sessions/" + userSessionID + "/")
 		if err != nil {
 			utils.ExecuteTemplate(w, "error", p)
 			return
@@ -350,7 +362,7 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		var path = ""
 		for _, f := range files {
 			if f.Name() == code+".pdf" {
-				path = "/static/sessions/" + userSessionId + "/" + f.Name()
+				path = "/static/sessions/" + userSessionID + "/" + f.Name()
 				break
 			}
 		}
@@ -367,17 +379,17 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		p.Path = user.Files[index]
 		p.Slide = 1
 
-		server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:start", "{\"pID\":\""+code+"\"}")
+		server.BroadcastToRoom("/"+userSessionID+"-"+code, "bcast", "event:start", "{\"pID\":\""+code+"\"}")
 
-		server.OnEvent("/"+userSessionId+"-"+code, "event:master", func(s socketio.Conn, msg string) string {
-			fmt.Println("event:master for " + "/" + userSessionId + "-" + code)
-			server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:slide", msg)
+		server.OnEvent("/"+userSessionID+"-"+code, "event:master", func(s socketio.Conn, msg string) string {
+			fmt.Println("event:master for " + "/" + userSessionID + "-" + code)
+			server.BroadcastToRoom("/"+userSessionID+"-"+code, "bcast", "event:slide", msg)
 			return ""
 		})
 
-		server.OnEvent("/"+userSessionId+"-"+code, "event:master:shape", func(s socketio.Conn, msg string) string {
-			fmt.Println("event:master for " + "/" + userSessionId + "-" + code)
-			server.BroadcastToRoom("/"+userSessionId+"-"+code, "bcast", "event:slide:shape", msg)
+		server.OnEvent("/"+userSessionID+"-"+code, "event:master:shape", func(s socketio.Conn, msg string) string {
+			fmt.Println("event:master for " + "/" + userSessionID + "-" + code)
+			server.BroadcastToRoom("/"+userSessionID+"-"+code, "bcast", "event:slide:shape", msg)
 			return ""
 		})
 	}
