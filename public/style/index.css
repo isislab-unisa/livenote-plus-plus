@@ -1,0 +1,44 @@
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+html { font-size: 15px; }
+body { padding: 1rem; }
+
+.card {
+  padding: 1rem;
+
+}
+#fileDrop {
+  border: 0 !important;
+  background-color: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+  text-align: center;
+  z-index:3;
+}
+
+.card-link {
+  min-width:800px;
+  padding: 1rem;
+}
+@media only screen and (max-width: 800px) {
+  .card-link {
+    min-width:200px;
+    padding: 1rem;
+  }
+}
+#livenotelink{
+  min-height:200px;
+}
+
+.cards {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}

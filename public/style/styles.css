@@ -1,0 +1,264 @@
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+body {
+  background-color: black;
+  margin: 0;
+  
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.top-bar {
+  background: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+#container {
+  width: 100%;
+}
+.pdf-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+#container #next-page {
+  display: inline-block;
+  position: absolute;
+  top: 80%;
+  right: 0%;
+  opacity: 0.5;
+  font-size: 1em;
+  line-height: 0px;
+  width: 6em;
+}
+
+#container #prev-page {
+  display: inline-block;
+  position: absolute;
+  top: 80%;
+  left: 0%;
+  opacity: 0.5;
+  font-size: 1em;
+  line-height: 0px;
+  width: 6em;
+}
+#container #progress-bar {
+  width: 8em;
+  height: 3em;
+  position: absolute;
+  left: calc(50% - 100px);
+  opacity: 0.5;
+  top:85%
+}
+#container #select-audio{
+  width: 8em;
+  position: absolute;
+  top:0%;
+  opacity: 0.5;
+  right:25em;
+}
+#container  #select-video {
+  width: 8em;
+  position: absolute;
+  opacity: 0.5;
+  right:15em;
+  top:0%
+}
+#container #startlive {
+  width: 8em;
+  position: absolute;
+  right:15em;
+  top:1%
+}
+
+#container #full-screen {
+  color: black;
+  display: inline-block;
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  margin: 5px;
+  width: 14em;
+}
+
+#container #text-canvas {
+  color: black;
+  display: inline-block;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+}
+
+
+.small-video{
+  width: 10em;
+  height: 10em;
+}
+.big-video{
+  width: 15em;
+  height: 15em;
+}
+.toleft{
+  left:0%;
+
+}
+.toright{
+  right:0%;
+
+}
+.chat-list {
+    width: 100%;
+    height:90%;
+    overflow-y: scroll;
+    font-size: 0.5em; 
+}
+
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+.chat-input{
+  background-color:#212529; padding: 0.1rem; 
+  height: 5%;
+  width: 100%;
+  font-size: 1em; 
+}
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+#chat {
+  overflow: hidden;
+  top: 0%;
+  right: 0%;
+  position: absolute;
+  width: 50em;
+  height: 50em;
+  z-index: 3;
+  display: none;
+  font-size: 1em;
+}
+.users{
+  height:90%;
+  overflow-y: scroll;
+}
+.nusers{
+  height: 5%;
+
+}
+.table-chat{
+  width: 100%;
+  height: 100%;
+ 
+}
+#info{
+  position: absolute;
+  top:2%;
+  left:0%;
+  width:3em;
+}
+#video-avatar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+#pokemon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-60%, -40%);
+}
+#liveperson{
+  top: 70%;
+  position: absolute;
+}
+#video-balloon-container{
+  width: 100%;
+  height: 100%;
+}
+#play {
+  position: absolute;
+  left:0;
+  z-index: 3;
+}
+#size {
+  position: absolute;
+  bottom:0%;
+  right:0;
+  z-index: 3;
+}
+#vol {
+  position: absolute;
+  right:0;
+  z-index: 3;
+}
+#video {
+  position: absolute;
+  left:0;
+  z-index: 3;
+}
+#audio {
+  position: absolute;
+  right:0;
+  z-index: 3;
+}
+
+.web-cam { 
+  width: 100%;
+  height: 100%;
+  border-radius: 10em;
+  z-index: 1;
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+}
+#pokemon {
+  position: absolute;
+  width: 4em;
+  top: 40%;
+  display: none;
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.page-info {
+  margin-left: 1rem;
+}
+
+.error {
+  background: orangered;
+  color: #fff;
+  padding: 1rem;
+}

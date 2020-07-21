@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Livenote++</title>
+        <link href="/style/index.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+        <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+        <link rel="stylesheet" href="./ext/dropzone-5.7.0/dist/dropzone.css">
+    </head>
+    <body>
+
+    <div class="cards">
+        <div class="nes-container with-title is-centered">
+            <p class="title">Livenote++</p>
+            <p>Welcome to</p>
+            <img src="img/logo.png" alt="logo ISISLab" width="150">
+            <p>live keynote.</p>
+            <p style="font-size:10px;text-align:left;">This project is under development, please be patient with our 🐛, they will grow slowly, and become beautiful features 🦋</p>
+        </div>
+        <div class="nes-container is-dark card with-title is-centered">
+            <p class="title">Drag here or click to select your file</p>
+            <form id="fileDrop" action="/" class="dropzone" enctype="multipart/form-data" method="post"></form>
+        </div>
+        <div id="livenotelink" class="nes-container card-link with-title is-centered">
+            <p class="title">Your Livenote++ Link</p>
+            <div>
+                <%if (element != "") { %>
+                <a style="font-size:14px;" class="center" href="/<%= element %>"  target="_blank"><%= element %></a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="./ext/dropzone-5.7.0/dist/dropzone.js"></script>
+        <script>
+        Dropzone.options.fileDrop = {
+            paramName: 'file',
+            maxFilesize: 100, // MB
+            maxFiles: 1,
+            timeout: 0,
+            uploadMultiple: false,
+            dictDefaultMessage: 'PDF FILE',
+            acceptedFiles: '.pdf',
+            init: function () {
+            this.on("complete", function (file) {
+            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                this.removeFile(file);
+                location.reload();
+            }
+            });
+        }
+        };
+    </script>
+    </body>
+</html>

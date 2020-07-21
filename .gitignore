@@ -1,25 +1,38 @@
+# compiled output
+/dist
+/node_modules
+/data
 
-### Go ###
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# Ignore files related to API keys
+.env
 
-# Test binary, built with `go test -c`
-*.test
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# OS
+.DS_Store
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Tests
+/coverage
+/.nyc_output
 
-### Go Patch ###
-/vendor/
-/Godeps/
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-/static/sessions/*
-
-# End of https://www.toptal.com/developers/gitignore/api/go
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

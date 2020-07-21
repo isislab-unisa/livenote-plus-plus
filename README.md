@@ -1,13 +1,30 @@
-# documentation
+# Livenote++
 
-    go get github.com/gorilla/mux
-    go get github.com/gorilla/sessions
-    go get github.com/rs/xid
+## Getting started
 
-# launch
+Start using Node
 
-    go run main.go
+```bash
+# Install dependencies for server
+npm install
 
-and then open 127.0.0.1:8080/
+# Start turn
+systemctl start coturn
 
+# Run the server
+node server
+```
 
+Start using Docker
+
+```bash
+# Building the image
+docker build --tag livenote++ .
+
+# Run the image in a container
+docker run -d -p 433:433 livenote++
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details

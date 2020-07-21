@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Livenote++</title>
+    <meta charset="UTF-8" />
+    <link href="/style/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="#" />
+    <style>
+       html, body, pre, code, kbd, samp {
+           font-family: 'Press Start 2P';font-size: 1em;
+      }
+    </style>
+  </head>
+  <body onload="">
+    <div id="container">
+      <canvas class="pdf-canvas" id="pdf-render"></canvas>
+      <div id="topButtons">
+        <img id="info"  class="control" style="image-rendering: pixelated;" src="../img/nes.png"/>
+        <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+      </div>
+      <div id="bottomButtons">
+        <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
+      </div>
+    </div>
+    
+    <div id ="liveperson" class="draggable big-video" style="display:none;"> 
+       <div id ="video-balloon-container"> 
+        <video id="video-balloon" class = "web-cam" playsinline></video>
+        <span id="video-avatar" style="" class="nes-bcrikko"></span> 
+        <div id = "pokemon" class = "nes-bcrikko" ></div>
+        <img id = "play" class="nes-avatar is-large" alt="Gravatar image example" src="../img/play.png" style="image-rendering: pixelated;">
+        <img id = "vol"class="nes-avatar is-large" alt="Gravatar image example" src="../img/volume.png" style="image-rendering: pixelated;">
+        <span id="size" class="nes-icon is-medium star"> </span>
+        </section>
+       </div>
+    </div>
+
+    <div  id="chat" class="nes-table-responsive draggable ">
+      <table class=" nes-table  is-bordered is-centered table-chat " style="position: absolute;bottom: 0;  background-color: rgba(255, 255, 255, 0.5);">
+        <tbody>
+          <tr>
+            <td style="width:25%;">
+              <div class="lists users">
+                <ul id="ul-users" class="nes-list is-disc ">
+                </ul>
+              </div>
+              <div class="nusers"> Online: <span id="nusers">0</span> </div>
+            </td>
+            <td style="width:75%">
+              <section id="chat-list" class="message-list chat-list"></section>
+              <div class="nes-field is-inline">
+                <input type="text" id="chat_input" class="nes-input is-dark" placeholder="write a message">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <dialog class="nes-dialog is-rounded center" id="dialog-nickname">
+      <form method="dialog">
+        <p class="title">Enter your nickname:</p>
+        <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
+        <menu class="dialog-menu">
+          <button class="nes-btn is-primary" id="enter" value="default action">Enter</button>
+        </menu>
+      </form>
+    </dialog>
+    <dialog class="nes-dialog is-rounded center is-dark" id="dialog-error-nickname">
+      <form method="dialog">
+        <p class="title">Error you must enter a nickname.</p>
+        <menu class="dialog-menu">
+          <button class="nes-btn is-primary center" id="error-ok" value="default action">ok</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog class="nes-dialog center" id="dialog-info">
+      <form method="dialog">
+        <p class="title">Livenote++</p>
+        <p>Welcome to our presentation system.</p>
+        <p>This is an experimental version a lot of</p>
+        <p>functionalities will not work correctly.</p>
+        <p>We now support only Desktop browser.</p>
+        <p>Commands:</p>
+        <p>CTRL + ALT + c -> Chat</p>
+        <p>CTRL + ALT + m -> Hide controls</p>
+        <p>Presenter commands:</p>
+        <p>CTRL + ALT + l -> Play video and audio</p>
+        <p>CTRL + ALT + p -> Hide video (Avatar mode, only audio is shared)</p>
+        <p>CTRL + ALT + a -> Change avatar</p>
+        <p>CTRL + ALT + q -> Change color of drawing</p>
+        <p>CTRL + ALT + w -> Change line width of drawing</p>
+        <p>Please: consider to refresh your page, if something wrong!</p>
+        <p>Notice: the presentation is totaly stateless,</p>
+        <p>all your changing or messages are not stored.</p>
+        <menu class="dialog-menu">
+          <button class="nes-btn ">Cancel</button>
+        </menu>
+      </form>
+    </dialog>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="module" src="/js/livenote-drag.js" ></script>
+    <script src="/js/common.js" ></script>
+    <script src="/slave/livenote-client.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+    <script>
+      window.onload  = function() {
+       initclient(window.location.pathname)
+       initThis(1,window.location.origin+"/sessions"+window.location.pathname+".pdf",1)
+      }
+      window.onresize = function(){
+          resize()
+      }
+    </script>
+  </body>
+</html>
