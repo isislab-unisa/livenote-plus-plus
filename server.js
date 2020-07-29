@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const fileUpload = require('express-fileupload');
-const https = require("https");
+const http = require("http");
 var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
@@ -13,14 +13,12 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 let broadcaster;
-const port = 443;
+const port = 8080;
 
 /*
 Create https server with certificate
 */
-const server = https.createServer({ 
-  key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/fullchain.pem") 
+const server = http.createServer({ 
 },app);
 
 const io = require("socket.io")(server);

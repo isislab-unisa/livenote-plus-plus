@@ -280,7 +280,7 @@ function initServices(mysocket){
 
   $(document).keydown(function(e){
    
-    if(e.ctrlKey && e.altKey && e.keyCode == 67){
+    if(e.altKey && e.keyCode == 67){
       showChat();
        //CTRL + ALT + t keydown combo
     }else if(e.ctrlKey && e.altKey && e.keyCode == 80){
