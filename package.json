@@ -13,11 +13,12 @@
   "author": "Carmine Spagnuolo and Daniele De Vinco",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.161",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "socket.io": "^2.3.0",
-    "lodash": ">=4.17.19"
+    "lodash": ">=4.17.19",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "bufferutil": "^4.0.1",
