@@ -341,7 +341,6 @@ function loadStatus(s){
 }
 
 function initThis(mode, path, slide) {
-
   pmode = mode;
   if (mode == 1) {
     socket.on( "slidechanged", function (msg) {
