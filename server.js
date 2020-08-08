@@ -41,13 +41,13 @@ Check if the user is new, otherwise render the page with the right informations
 TODO: manage more then 1 file
 */
 app.get('/', function(req, res) {
+  
   var sess = req.session;
   if (sess.isNew){
     res.render('index.ejs', {element: ""});
   }else{
     var session_folder = path.join(__dirname + '/public/sessions/'+ sess.id);
-    if (!fs.existsSync(session_folder)) {
-      
+    if (!fs.existsSync(session_folder)) { 
       sess.links = [];
       sess.ids = [];
       sess.save(function(err) {
@@ -63,6 +63,9 @@ app.get('/', function(req, res) {
 /*
 Dynamic page for presentation - GET
 Check if you are master or slave and render the page
+Prendo la session id e il file id nella richiesta. Faccio il confronto con la session id con l'id memorizzato nella sessione.
+Se sono uguali allora è il master in quanto è colui che ha caricato il file
+Se sono diversi, vuol dire che non si tratta della persona che ha caricato il file quindi un slave. 
 */
 app.get('/:session_id/:file_id', function(req, res) {
   sid = req.params.session_id;
@@ -137,6 +140,7 @@ function createnewlive(name){
 
 /*
 Load a session for each file on the server
+Per il momento non è stato fatto ma lo scopo è quello di caricare un live per ogni sessione che tiene tot file 
 */
 function loadSessions(){
   const directoryPath = path.join(__dirname, 'public/sessions');
@@ -162,22 +166,28 @@ function loadSessions(){
 Create socket connection for each name
 */
 function makeitlive(socket){
+  
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
     socket.broadcast.emit("broadcaster");
   });
+
   socket.on("watcher", () => {
     socket.to(broadcaster).emit("watcher", socket.id);
   });
+
   socket.on("offer", (id, message) => {
     socket.to(id).emit("offer", socket.id, message);
   });
+
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
   });
+
   socket.on("candidate", (id, message) => {
     socket.to(id).emit("candidate", socket.id, message);
   });
+  
   socket.on("disconnect", () => {
     if(chat_users_for_namespaces[socket.nsp.name]!= undefined && chat_users_for_namespaces[socket.nsp.name][socket.id] != undefined){
       delete chat_users_for_namespaces[socket.nsp.name][socket.id];
@@ -185,12 +195,15 @@ function makeitlive(socket){
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.to(broadcaster).emit("disconnectPeer", socket.id);
   });
+
   socket.on("master", (data) => {
     socket.broadcast.emit("slidechanged", data);
   });
+
   socket.on("chat-message", (nickname, message) => {
      socket.broadcast.emit("chat-message", nickname, message);
   });
+
   socket.on("chat-enter", (nickname) => {
     if(chat_users_for_namespaces[socket.nsp.name] == undefined){
     chat_users_for_namespaces[socket.nsp.name] = {}
@@ -199,18 +212,23 @@ function makeitlive(socket){
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
   });
+
   socket.on("pokemon", (status, name) => {
     socket.broadcast.emit("pokemon-update", status, name);
   });
+
   socket.on("shape", (data) => {
     socket.broadcast.emit("shapechanged", data);
   });
+
   socket.on("color", (data) => {
     socket.broadcast.emit("colorchanged", data);
   });
+  
   socket.on("line", (data) => {
     socket.broadcast.emit("linechanged", data);
   });
+  
 }
 var chat_users_for_namespaces = {}
 

@@ -280,6 +280,7 @@ function initServices(mysocket){
 
   $(document).keydown(function(e){
    
+    //CAMBIATO I TASTI
     if(e.altKey && e.keyCode == 67){
       showChat();
        //CTRL + ALT + t keydown combo
@@ -333,7 +334,6 @@ let pmode = -1;
 
 
 function initThis(mode, path, slide) {
-
   pmode = mode;
   if (mode == 1) {
     socket.on( "slidechanged", function (msg) {
