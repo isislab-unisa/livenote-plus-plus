@@ -500,3 +500,56 @@ function clearArea() {
 }
 
 /* END DRAWING */
+
+var jsonProgressOption={};
+function getPollDynamical(data){
+  $("#viewPollDynamical").css("display","inline");
+
+  var jsonData=JSON.parse(data);
+  $("#pollTitleDynamical").text(jsonData.namePoll);
+
+  var optionProgress=document.getElementById("pollDynamical");
+
+  for(var i=0;i<jsonData.dataOption.length;i++){
+    var valore=jsonData.dataOption[i];
+    
+    jsonProgressOption[valore]=0;
+
+    var spanProgresso=document.createElement("span");
+    var testoProgresso=document.createTextNode(valore);
+    spanProgresso.appendChild(testoProgresso);
+
+    optionProgress.appendChild(spanProgresso);
+
+    var divProgress=document.createElement("div");
+    divProgress.setAttribute("id",valore);
+    divProgress.setAttribute("class","progress");
+    divProgress.style.backgroundColor=getColorRandom();
+
+    optionProgress.appendChild(divProgress);
+  }
+  
+}
+
+function getColorRandom(){
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function updatePollDynamical(optionChecked){
+  console.log("parola cercata è:"+optionChecked);
+  
+  var valore=jsonProgressOption[optionChecked];
+  valore+=10;
+  jsonProgressOption[optionChecked]=valore;
+
+  setVotes(optionChecked,valore);
+}
+
+function setVotes(progressId,progressValue){
+  document.getElementById(`${progressId}`).style.width=progressValue+"%";
+}

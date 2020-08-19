@@ -4,6 +4,9 @@
     <link rel="shortcut icon" href="#" />
     <title>Livenote++</title>
     <meta charset="UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="/style/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
@@ -24,9 +27,13 @@
       <div id="topButtons">
         <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated;" src="../img/nes.png"/>
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+
         <span id="startlive" class="nes-logo control" data-toggle="modal" data-target="#dialog-play"></span>
+
+        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">Create Poll</button>
+        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
         <div id="select-audio" class="nes-select is-success select control" style="display:none;">
-          <select id="audioSource"></select>
+          <select id="audioSource"></select> !""
         </div>
         <div id="select-video" class="nes-select is-warning select control" style="display:none;">
           <select id="videoSource"></select>
@@ -81,7 +88,7 @@
     <div id ="liveperson" class="draggable big-video" style="display:none;"> 
       <div id ="video-balloon-container"> 
         <video id = "video-balloon" class = "web-cam" playsinline autoplay muted></video> 
-        <span id="video-avatar" style="" class="nes-bcrikko"></span> 
+        <span id="video-avatar" class="nes-bcrikko"></span> 
         <div id = "pokemon" class = "nes-charmander" ></div>
         <span id="size" class="nes-icon is-medium star"> </span>
         </section>

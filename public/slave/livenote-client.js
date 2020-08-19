@@ -119,6 +119,60 @@ module.exports = {
     initServices(socket);  
   }
 };
+  socket.on("disconnectPeer", () => {
+    peerConnection.close();
+  });
+
+  
+  //Get aggiornamento sondaggio
+  socket.on("poll",(data)=>{
+    createPoll(data);
+    getPollDynamical(data); 
+  });
+  
+  initServices(socket);
+
+}
+
+// funzione per creare il sondaggio
+function createPoll(data){
+  //visualizzo il bottone sondaggio
+  $("#click-poll").css("display", "inline");
+
+  //creazione titolo sondaggio
+  var jsonData=JSON.parse(data);
+  $("#titlePoll").text(jsonData.namePoll);
+
+  //Creazione opzioni del sondaggio in base al messaggio JSON ricevuto
+  var tableOptionPoll=document.getElementById("pollsTable");
+  
+  for(var i=0;i<jsonData.dataOption.length;i++){
+    var radioOption=document.createElement("input");
+    radioOption.setAttribute("type","radio");
+    radioOption.setAttribute("name","option");
+    radioOption.setAttribute("value",`${jsonData.dataOption[i]}`);
+    
+    var spanOption=document.createElement("span");
+    var text=document.createTextNode(jsonData.dataOption[i]);
+    spanOption.appendChild(text);
+    
+    tableOptionPoll.appendChild(radioOption);
+    tableOptionPoll.appendChild(spanOption);
+    tableOptionPoll.appendChild(document.createElement("br"));
+  }
+
+  $("#sendPoll").click(function(){
+    var optionChecked=$("#pollsTable input[type='radio']:checked").val();
+    socket.emit("updatingPoll",optionChecked);
+    updatePollDynamical(optionChecked);
+
+    document.getElementById("click-poll").style.display="none";
+  });
+  
+  socket.on("updatingPoll",(optionChecked)=>{
+    updatePollDynamical(optionChecked);
+  });
+}
 
 const video = document.querySelector("video");
 
