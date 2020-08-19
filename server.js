@@ -48,8 +48,8 @@ app.get('/', function(req, res) {
   }else{
     var session_folder = path.join(__dirname + '/public/sessions/'+ sess.id);
     if (!fs.existsSync(session_folder)) { 
-      sess.links = [];
-      sess.ids = [];
+      sess.links = [];  // un array di sessione dove ogni sessione contiene un tot di file
+      sess.ids = [];    // array di id dei file caricati
       sess.save(function(err) {
         if (err) throw err;
       })
@@ -134,6 +134,7 @@ eg: /abc/def
 function createnewlive(name){
   console.log("New live at "+name)
   const nm = io.of(name);
+  console.log(nm.name);
   nm.on("error", e => console.log(e));
   nm.on("connection", socket => makeitlive(socket));
 }
@@ -166,7 +167,8 @@ function loadSessions(){
 Create socket connection for each name
 */
 function makeitlive(socket){
-  
+    // INIZIO 
+    // OPERAZIONI PER LA CONNESSIONE VIDEO
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
     socket.broadcast.emit("broadcaster");
@@ -187,7 +189,7 @@ function makeitlive(socket){
   socket.on("candidate", (id, message) => {
     socket.to(id).emit("candidate", socket.id, message);
   });
-  
+  // FINE
   socket.on("disconnect", () => {
     if(chat_users_for_namespaces[socket.nsp.name]!= undefined && chat_users_for_namespaces[socket.nsp.name][socket.id] != undefined){
       delete chat_users_for_namespaces[socket.nsp.name][socket.id];
@@ -209,8 +211,10 @@ function makeitlive(socket){
     chat_users_for_namespaces[socket.nsp.name] = {}
     }
     chat_users_for_namespaces[socket.nsp.name][socket.id] = nickname;
+    console.log("socket.nsp.name: "+ socket.nsp.name+" e socket id: "+socket.id);
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
+    console.log("chat_users_for_namespaces"+JSON.stringify(chat_users_for_namespaces));
   });
 
   socket.on("pokemon", (status, name) => {
@@ -228,7 +232,16 @@ function makeitlive(socket){
   socket.on("line", (data) => {
     socket.broadcast.emit("linechanged", data);
   });
-  
+
+  // creazione sondaggio
+  socket.on("poll",(data)=>{
+    socket.broadcast.emit("poll",data);
+  });
+
+  //aggiornamento sondaggio
+  socket.on("updatingPoll",(optionChecked)=>{
+    socket.broadcast.emit("updatingPoll",optionChecked);
+  });
 }
 var chat_users_for_namespaces = {}
 

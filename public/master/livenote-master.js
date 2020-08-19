@@ -1,3 +1,5 @@
+
+
 function hidecontrol(){
   $(".control").each(function (index, element) {
     hide = $(element).is(':hidden');
@@ -244,6 +246,58 @@ function initmaster(namespace){
       }
     });
     initServices(socket);
+
+    /*
+    $('#create-poll').click(function(){
+      var dialSondaggio = document.getElementById('dialog-sondaggio')
+      if (typeof dialSondaggio.showModal === "function") {
+        dialSondaggio.showModal();
+      } else {
+        alert("The <dialog> API is not supported by this browser");
+      }
+    });*/
+
+    $('#addOption').click(function(){
+      //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
+      var listInput=document.getElementById("sondaggio");
+      
+      var input=document.createElement("input");
+      input.setAttribute("type","text");
+      input.setAttribute("name","pollOption");
+      input.setAttribute("placeholder","Insert an option");
+      input.setAttribute("class","nes-input");
+      listInput.insertBefore(input,listInput.childNodes[listInput.childNodes.length-2]);      
+    })
+
+    // create event create-poll
+    $('#createPoll').click(function(){
+
+      $("#create-poll").css("display","none");      
+
+      var dataInput=[];
+      $('input[name="pollOption"]').map(function(){
+        dataInput.push(this.value);
+      });
+
+      var jsonDataInput=JSON.stringify(dataInput);
+
+      var namePoll=$('input[name="namePoll"]').val();
+      
+      var jsonDati=`{"namePoll":"${namePoll}","dataOption":${jsonDataInput}}`;
+
+      socket.emit("poll",jsonDati);
+
+
+      getPollDynamical(jsonDati);
+    });
+
+    socket.on("updatingPoll",(optionChecked)=>{
+      updatePollDynamical(optionChecked);
+    });
+
 }
+
+
+
 
 

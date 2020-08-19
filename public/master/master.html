@@ -4,9 +4,13 @@
     <link rel="shortcut icon" href="#" />
     <title>Livenote++</title>
     <meta charset="UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="/style/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+
     <style>
        html, body, pre, code, kbd, samp {
            font-family: 'Press Start 2P';font-size: 1em;
@@ -19,9 +23,11 @@
       <div id="topButtons">
         <img id="info"  class="control" style="image-rendering: pixelated;" src="../img/nes.png"/>
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">Create Poll</button>
+        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
         <span id="startlive" class="nes-logo control"></span>
         <div id="select-audio" class="nes-select is-success select control" style="display:none;">
-          <select id="audioSource"></select>
+          <select id="audioSource"></select> !""
         </div>
         <div id="select-video" class="nes-select is-warning select control" style="display:none;">
           <select id="videoSource"></select>
@@ -37,7 +43,7 @@
     <div id ="liveperson" class="draggable big-video" style="display:none;"> 
       <div id ="video-balloon-container"> 
         <video id = "video-balloon" class = "web-cam" playsinline autoplay muted></video> 
-        <span id="video-avatar" style="" class="nes-bcrikko"></span> 
+        <span id="video-avatar" class="nes-bcrikko"></span> 
         <div id = "pokemon" class = "nes-charmander" ></div>
         <span id="size" class="nes-icon is-medium star"> </span>
         </section>
@@ -87,7 +93,7 @@
   <dialog class="nes-dialog is-dark is-rounded center"  id="dialog-play">
     <form method="dialog">
       <p class="title">Play audio and video</p>
-      <p>Are you sure?</p>
+      <p>Are you sure?</p><
       <menu class="dialog-menu">
         <button class="nes-btn">Cancel</button>
         <button class="nes-btn is-primary" style="margin-left:50%;" id="play">Play Now!</button>
@@ -103,7 +109,7 @@
       <p>functionalities will not work correctly.</p>
       <p>We now support only Desktop browser.</p>
       <p>Commands:</p>
-      <p>CTRL + ALT + c -> Chat</p>
+      <p>CTRL + ALT + c -> Chat</p>ß
       <p>CTRL + ALT + m -> Hide controls</p>
       <p>Presenter commands:</p>
       <p>CTRL + ALT + l -> Play video and audio</p>
@@ -121,19 +127,85 @@
     </form>
   </dialog>
 
-   
+   <!-- Creazione sondaggio dinamico
+   <div class="nes-dialog center" id="dialog-sondaggio" style="width: 50%; display: none;">
+     <form>
+       <p>Create Poll</p>
+       <input class="nes-input" type=text placeholder="Insert a master name for poll"/>
+       <br>
+       <p> Insert option</p>
+       <input class="nes-input" type=text placeholder="Insert an option"/> 
+       <button class="nes-btn">Add an option</button>
+       <br>
+       <button class="nes-btn">Cancel</button>
+     </form>
+    </div>-->
+    
+    
+
+  <!-- Modal Poll -->
+  <div class="modal fade" id="dialog-sondaggio" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Create a poll</h4>
+            </br>
+            <input type="text" name="namePoll" class="nes-input" placeholder="Insert a name for poll" style="width: 99%;">
+          </div>
+          <div class="modal-body" id="sondaggio">
+            <input type="text" name="pollOption" class="nes-input" placeholder="insert an option"/>
+          </br>
+            <button type="button" class="nes-btn" id="addOption">Add an option</button>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="nes-btn" data-dismiss="modal">Close</button>
+            <button type="button" class="nes-btn" data-dismiss="modal" id="createPoll">Create</button>
+          </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Modal Poll dynamical-->
+  <div class="modal fade" id="dialog-pollDynamical" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 id="pollTitleDynamical" class="modal-title"></h4>
+            </br>
+          </div>
+          <div class="modal-body" id="pollDynamical">
+          </br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="nes-btn" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+    
     
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script type="module" src="/js/livenote-drag.js"></script>
   <script src="/js/common.js" ></script>
    <script src="/master/livenote-master.js" ></script>  
   <!--<script type="module" src="/js/dist/m.bundle.js"></script>-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
   <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
   <script>
     window.onload  = function() {
       initmaster(window.location.pathname)
+      
+      console.log("init master: " + window.location.pathname);
+
       initThis(0,window.location.origin+"/sessions"+window.location.pathname+".pdf",1)
     // console.log(window.location.origin+"/sessions"+window.location.pathname+".pdf")
     }
