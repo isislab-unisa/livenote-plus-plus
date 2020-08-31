@@ -501,36 +501,94 @@ function clearArea() {
 
 /* END DRAWING */
 
-var jsonProgressOption={};
-function getPollDynamical(data){
+//creazione della view del sondaggio, sia per il master che client
+//var jsonProgressOption={}; //{b1=0,b2=0..} per ogni opzione del sondaggio
+var jsonDatiPoll;
+function getPollDynamicalOpen(data,countPeople){
   $("#viewPollDynamical").css("display","inline");
+  console.log("JSON: "+data);
+  jsonDatiPoll=JSON.parse(data);
 
-  var jsonData=JSON.parse(data);
-  $("#pollTitleDynamical").text(jsonData.namePoll);
+  $("#pollTitleDynamical").text(jsonDatiPoll.namePoll);
 
   var optionProgress=document.getElementById("pollDynamical");
 
-  for(var i=0;i<jsonData.dataOption.length;i++){
-    var valore=jsonData.dataOption[i];
-    
-    jsonProgressOption[valore]=0;
-
-    var spanProgresso=document.createElement("span");
-    var testoProgresso=document.createTextNode(valore);
-    spanProgresso.appendChild(testoProgresso);
-
-    optionProgress.appendChild(spanProgresso);
+  for(var i=0;i<jsonDatiPoll.optionPoll.length;i++){
+    var valore=jsonDatiPoll.optionPoll[i];
 
     var divProgress=document.createElement("div");
-    divProgress.setAttribute("id",valore);
-    divProgress.setAttribute("class","progress");
-    divProgress.style.backgroundColor=getColorRandom();
+    divProgress.style.position="relative";
+    
+    var spanProgresso=document.createElement("span");
+    var testoProgresso=document.createTextNode(valore);
+    
+    spanProgresso.appendChild(testoProgresso);
+
+    
+
+    var progressBar=document.createElement("progress");
+    progressBar.setAttribute("id",valore);
+    progressBar.setAttribute("class","nes-progress");
+    progressBar.setAttribute("value","0");
+    progressBar.setAttribute("max","100");
+    
+    var spanNode=document.createElement("span");
+    spanNode.setAttribute("class","percentages");
+    spanNode.setAttribute("id",valore+"Span");
+    var textNode=document.createTextNode("0%");
+    spanNode.appendChild(textNode);
+
+    // nel caso in cui il master fa aggiornamento della pagina
+    if(jsonDatiPoll.valueOption[valore]!=0){
+      var valorePercetange=jsonDatiPoll.valueOption[valore]
+  
+      progressBar.value=(valorePercetange/countPeople)*100;
+      spanNode.textContent=(valorePercetange/countPeople)*100+"%";
+    }
+
+    divProgress.appendChild(spanProgresso);
+    divProgress.appendChild(progressBar)
+    divProgress.appendChild(spanNode);
 
     optionProgress.appendChild(divProgress);
   }
   
 }
 
+function getPollDynamicalMultiple(data){
+  $("#viewPollDynamical").css("display","inline");
+  
+  jsonDatiPoll=JSON.parse(data);
+
+  var optionProgress=document.getElementById("pollDynamical");
+  
+  for(var tmp in jsonDatiPoll.questions_rightanswer){
+    var divProgress=document.createElement("div");
+    divProgress.style.position="relative";
+
+    spanQuestion=document.createElement("span");
+    spanQuestion.appendChild(document.createTextNode(`Question: ${jsonDatiPoll.questions_rightanswer[tmp].question}`));
+
+    spanRightAnswer=document.createElement("span");
+    spanRightAnswer.appendChild(document.createTextNode(`Right answer: ${jsonDatiPoll.questions_rightanswer[tmp].right_answer}`));
+
+    var progressBar=document.createElement("progress");
+    progressBar.setAttribute("id",jsonDatiPoll.questions_rightanswer[tmp].right_answer);
+    progressBar.setAttribute("class","nes-progress");
+    progressBar.setAttribute("value","0");
+    progressBar.setAttribute("max","100");
+
+    divProgress.appendChild(spanQuestion);
+    divProgress.appendChild(document.createElement("br"));
+    divProgress.appendChild(spanRightAnswer);
+    divProgress.appendChild(document.createElement("br"));
+    divProgress.appendChild(progressBar);
+
+    optionProgress.appendChild(divProgress);
+  }
+}
+
+/*
 function getColorRandom(){
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -538,18 +596,10 @@ function getColorRandom(){
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
-}
+}*/
 
-function updatePollDynamical(optionChecked){
-  console.log("parola cercata è:"+optionChecked);
-  
-  var valore=jsonProgressOption[optionChecked];
-  valore+=10;
-  jsonProgressOption[optionChecked]=valore;
+function updatePollDynamical(progressId,progressValue){
+  document.getElementById(`${progressId}`).value=progressValue;
+  document.getElementById(`${progressId}Span`).textContent=progressValue+"%";
 
-  setVotes(optionChecked,valore);
-}
-
-function setVotes(progressId,progressValue){
-  document.getElementById(`${progressId}`).style.width=progressValue+"%";
 }
