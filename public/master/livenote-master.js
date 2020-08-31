@@ -1,5 +1,4 @@
 
-
 function hidecontrol(){
   $(".control").each(function (index, element) {
     hide = $(element).is(':hidden');
@@ -73,6 +72,8 @@ document.onkeydown = function(e) {
 // Button Events
 document.querySelector('#prev-page').addEventListener('click', showPrevPage);
 document.querySelector('#next-page').addEventListener('click', showNextPage);
+
+document.querySelector("#addOptionMultiple").addEventListener("click",addOptionMultiple);
 
 function loadStatus(s){
   status = s
@@ -149,6 +150,18 @@ function initmaster(namespace){
   socket.on("disconnectPeer", id => {
     peerConnections[id].close();
     delete peerConnections[id];
+  });
+
+  // se il master aggiorna la relativa pagina, controlla se il sondaggio è stato creato. In caso
+  // affermativo il pulsante click poll viene nascosto e messo in vista la view poll
+  socket.on("getPoll",(datePoll,countPeople)=>{
+    hideBottonCreatePoll();
+    getPollDynamicalOpen(datePoll,countPeople);
+  });
+  
+  //aggiornamento sondaggio 
+  socket.on("updatingPoll",(optionPoll)=>{
+  updatePollDynamical(optionPoll.optionChecked,optionPoll.value);
   });
 
     // Get camera and microphone
@@ -247,57 +260,304 @@ function initmaster(namespace){
     });
     initServices(socket);
 
-    /*
-    $('#create-poll').click(function(){
-      var dialSondaggio = document.getElementById('dialog-sondaggio')
-      if (typeof dialSondaggio.showModal === "function") {
-        dialSondaggio.showModal();
-      } else {
-        alert("The <dialog> API is not supported by this browser");
-      }
-    });*/
+    
 
-    $('#addOption').click(function(){
-      //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
-      var listInput=document.getElementById("sondaggio");
-      
-      var input=document.createElement("input");
-      input.setAttribute("type","text");
-      input.setAttribute("name","pollOption");
-      input.setAttribute("placeholder","Insert an option");
-      input.setAttribute("class","nes-input");
-      listInput.insertBefore(input,listInput.childNodes[listInput.childNodes.length-2]);      
-    })
+    
 
-    // create event create-poll
+    // manda il sondagggio ai slave quando il master clicca il bottone send poll
     $('#createPoll').click(function(){
-
       $("#create-poll").css("display","none");      
 
-      var dataInput=[];
-      $('input[name="pollOption"]').map(function(){
-        dataInput.push(this.value);
-      });
-
-      var jsonDataInput=JSON.stringify(dataInput);
-
-      var namePoll=$('input[name="namePoll"]').val();
-      
-      var jsonDati=`{"namePoll":"${namePoll}","dataOption":${jsonDataInput}}`;
-
-      socket.emit("poll",jsonDati);
-
-
-      getPollDynamical(jsonDati);
+      if($('input[name="choicePoll"]:checked').val()=="multiple")
+        createJSONPollMultiple();
+      else
+        createJSONPollOpen();
     });
 
-    socket.on("updatingPoll",(optionChecked)=>{
-      updatePollDynamical(optionChecked);
+    $("#close-poll").click(function(){
+      document.getElementById("create-poll").style.display="inline";
+      document.getElementById("viewPollDynamical").style.display="none";
+
+      $("#pollDynamical").empty();
+
+      socket.emit("closePoll");
     });
 
 }
 
+function hideBottonCreatePoll(){
+  document.getElementById("create-poll").style.display="none";
+}
+
+function deleteOption(element){
+  var testo=element.id+"DIV";
+
+  var divOptionRemove=document.getElementById(`${testo}`);
+
+  divOptionRemove.remove();
+}
+
+idOption=1;
+function changeQuestions(element){
+  var question=element.value;
+
+  if(question=="open"){
+    idOption=1;
+    createOpenQuestions();
+  }
+  else if(question=="multiple"){
+    idOption=1;
+    createMultipleQuestions();
+  }
+}
+
+//Crea sondaggi a risposte multiple
+function createMultipleQuestions(){
+  var divOptionPoll=document.getElementById("sondaggio");
+
+  while(divOptionPoll.lastElementChild){
+    divOptionPoll.removeChild(divOptionPoll.lastElementChild);
+  }
+  
+  var titleQuestion=document.createElement("h5");
+  titleQuestion.setAttribute("class","modal-title");
+  titleQuestion.setAttribute("style","style='text-align: center;'");
+  var textQuestion=document.createTextNode("Create a question");
+  titleQuestion.appendChild(textQuestion);
+
+  var inputQuestion=document.createElement("input");
+  inputQuestion.setAttribute("type","text");
+  inputQuestion.setAttribute("class","nes-input");
+  inputQuestion.setAttribute("placeholder","Insert a question");
+  
+  var hrTag=document.createElement("hr");
+
+  var titleOption=document.createElement("h5");
+  titleOption.setAttribute("class","modal-title");
+  titleOption.setAttribute("style","style='text-align: center;'");
+  var textOption=document.createTextNode("Create some options");
+  titleOption.appendChild(textOption);
 
 
 
+  var divDeletePoll=document.createElement("div");
+  divDeletePoll.setAttribute("class","div-delete-option");
+  divDeletePoll.setAttribute("id","option1DIV");
 
+  var inputOptionPoll=document.createElement("input");
+  inputOptionPoll.setAttribute("type","text");
+  inputOptionPoll.setAttribute("name","pollOption");
+  inputOptionPoll.setAttribute("class","nes-input");
+  inputOptionPoll.setAttribute("placeholder","Insert an option");
+
+
+  var brTag=document.createElement("br");
+
+  var buttonAdd=document.createElement("button");
+  buttonAdd.setAttribute("type","button");
+  buttonAdd.setAttribute("class","nes-btn");
+  buttonAdd.setAttribute("id","addOptionMultiple");
+
+  var textNode=document.createTextNode("Add an option");
+
+  buttonAdd.addEventListener("click",addOptionMultiple);
+
+  buttonAdd.appendChild(textNode);
+
+  divDeletePoll.appendChild(inputOptionPoll);
+
+  divOptionPoll.appendChild(titleQuestion);
+  divOptionPoll.appendChild(inputQuestion);
+  divOptionPoll.appendChild(hrTag);
+  divOptionPoll.appendChild(titleOption);
+
+  divOptionPoll.appendChild(divDeletePoll);
+  divOptionPoll.appendChild(brTag);
+  divOptionPoll.appendChild(buttonAdd);
+}
+
+// Crea sondaggi a risposte aperte
+function createOpenQuestions(){
+  var divOptionPoll=document.getElementById("sondaggio");
+
+  while(divOptionPoll.lastElementChild){
+    divOptionPoll.removeChild(divOptionPoll.lastElementChild);
+  }
+  
+  
+  var divDeletePoll=document.createElement("div");
+  divDeletePoll.setAttribute("class","div-delete-option");
+  divDeletePoll.setAttribute("id","option1DIV");
+
+  var titleCreateQuestion=document.createElement("h5");
+  var textCreateQuestion=document.createTextNode("Create a question");
+  titleCreateQuestion.appendChild(textCreateQuestion);
+  
+  var inputQuestionPoll=document.createElement("input");
+  inputQuestionPoll.setAttribute("type","text");
+  inputQuestionPoll.setAttribute("name","pollQuestion");
+  inputQuestionPoll.setAttribute("class","nes-input is-warning");
+  inputQuestionPoll.setAttribute("placeholder","Insert a question");
+
+  var brTag=document.createElement("br");
+
+  var inputRightAnswer=document.createElement("input");
+  inputRightAnswer.setAttribute("type","text");
+  inputRightAnswer.setAttribute("name","pollRightAnswer");
+  inputRightAnswer.setAttribute("class","question-poll nes-input is-success");
+  inputRightAnswer.setAttribute("placeholder","Insert a right answer");
+
+  var buttonAdd=document.createElement("button");
+  buttonAdd.setAttribute("type","button");
+  buttonAdd.setAttribute("class","nes-btn");
+  buttonAdd.setAttribute("id","addOptionOpen");
+
+  buttonAdd.addEventListener("click",addOptionOpen);
+
+  var textNode=document.createTextNode("Add a question");
+
+  buttonAdd.appendChild(textNode);
+
+  divDeletePoll.appendChild(titleCreateQuestion);
+  divDeletePoll.appendChild(inputQuestionPoll);
+  divDeletePoll.appendChild(brTag);
+  divDeletePoll.appendChild(inputRightAnswer);
+
+  
+  divOptionPoll.appendChild(divDeletePoll);
+  divOptionPoll.appendChild(brTag);
+  divOptionPoll.appendChild(buttonAdd);
+}
+
+//creazione del sondaggio con risposte multiple
+var idOption;
+function addOptionMultiple(){
+  //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
+  var listInput=document.getElementById("sondaggio");
+
+  idOption++;
+
+  var divInput=document.createElement("div");
+  divInput.setAttribute("class","div-delete-option");
+  divInput.setAttribute("id",`option${idOption}DIV`);
+
+  var input=document.createElement("input");
+  input.setAttribute("type","text");
+  input.setAttribute("name","pollOption");
+  input.setAttribute("placeholder","Insert an option");
+  input.setAttribute("class","nes-input");
+
+  var iconX=document.createElement("i");
+  iconX.setAttribute("class","delete-option-multiple nes-icon close is-small");
+  iconX.setAttribute("id",`option${idOption}`);
+  iconX.setAttribute("onclick","deleteOption(this)");
+  
+
+  divInput.appendChild(input);
+  divInput.appendChild(iconX);
+
+  listInput.insertBefore(divInput,listInput.childNodes[listInput.childNodes.length-2]);      
+};
+
+//creazione del sondaggio con risposte aperte
+function addOptionOpen(){
+  
+  //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
+  var listInput=document.getElementById("sondaggio");
+
+  idOption++;
+
+  var divInput=document.createElement("div");
+  divInput.setAttribute("class","div-delete-option");
+  divInput.setAttribute("id",`option${idOption}DIV`);
+
+  var titleCreateQuestion=document.createElement("h5");
+  var textCreateQuestion=document.createTextNode("Create a question");
+  titleCreateQuestion.appendChild(textCreateQuestion);
+
+  var inputQuestion=document.createElement("input");
+  inputQuestion.setAttribute("type","text");
+  inputQuestion.setAttribute("name","pollQuestion");
+  inputQuestion.setAttribute("placeholder","Insert a question");
+  inputQuestion.setAttribute("class","nes-input is-warning");
+
+  var brTag=document.createElement("br");
+
+  var inputRightAnswer=document.createElement("input");
+  inputRightAnswer.setAttribute("type","text");
+  inputRightAnswer.setAttribute("class","question-poll nes-input is-success");
+  inputRightAnswer.setAttribute("name","pollRightAnswer");
+  inputRightAnswer.setAttribute("placeholder","Insert a right answer");
+
+  var iconX=document.createElement("i");
+  iconX.setAttribute("class","delete-option-open nes-icon close is-small");
+  iconX.setAttribute("id",`option${idOption}`);
+  iconX.setAttribute("onclick","deleteOption(this)");
+
+  divInput.appendChild(titleCreateQuestion);
+  divInput.appendChild(inputQuestion);
+  divInput.appendChild(brTag);
+  divInput.appendChild(inputRightAnswer);
+  divInput.appendChild(iconX);
+
+  listInput.insertBefore(divInput,listInput.childNodes[listInput.childNodes.length-2]);      
+}
+
+function createJSONPollMultiple(){
+  var jsonOptionInput=[];
+  var jsonValoriOption={}
+  
+  $('input[name="pollOption"]').map(function(){
+    //dataInput.push(this.value);
+    jsonOptionInput.push(this.value);
+    jsonValoriOption[this.value]=0;
+  });
+
+
+  jsonOptionString=JSON.stringify(jsonOptionInput);
+  jsonValoriOptionString=JSON.stringify(jsonValoriOption);
+  console.log(jsonValoriOptionString);
+
+  var namePoll=$('input[name="namePoll"]').val();
+  
+  var jsonFinalDatiString=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString}}`;
+  
+
+  socket.emit("pollMultiple",jsonFinalDatiString);
+  
+  getPollDynamicalOpen(jsonFinalDatiString);
+}
+
+function createJSONPollOpen(){
+  var inputQuestions=[];
+  var inputRightAnswers=[];
+
+  var datePoll={
+    questions_rightanswer:[],
+    value_question_answer:{}
+  };
+
+  $('input[name="pollQuestion"]').map(function(){
+    inputQuestions.push(this.value);
+  });
+
+  $('input[name="pollRightAnswer"]').map(function(){
+    inputRightAnswers.push(this.value);
+  });
+
+  for(var i=0;i<inputQuestions.length;i++){
+    datePoll.questions_rightanswer.push({
+      question: inputQuestions[i],
+      right_answer:inputRightAnswers[i]
+   });
+
+   datePoll.value_question_answer[inputRightAnswers[i]]=0;
+  }
+
+
+  var jsonStringPollOpen=JSON.stringify(datePoll);
+
+  socket.emit("pollOpen",jsonStringPollOpen);
+
+  getPollDynamicalMultiple(jsonStringPollOpen);
+}

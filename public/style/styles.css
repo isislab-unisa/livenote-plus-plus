@@ -284,3 +284,57 @@ body {
     margin-bottom:4px;
     transition: width 1s;  
 }
+
+.nes-input{
+  margin-bottom: 8px !important;
+}
+
+.delete-option-multiple{
+  position: absolute !important;
+  top:34%;
+  right: 2.5%;
+}
+
+.delete-option-open{
+  position: absolute !important;
+  top: 0%;
+  right: 0.5%;
+}
+
+.div-delete-option{
+  position: relative;
+}
+
+
+
+.labelOption{
+  margin-left: 2%;
+}
+
+#choice-poll{
+  margin:auto;
+  margin-top:4px;
+  text-align: center;
+}
+
+.percentages{
+    color:white;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+}
+
+#notice{
+  display:none;
+  top: 45%;
+  left:29%;
+  width: 40%;
+}
+
+.question-poll{
+  margin-bottom:20px !important;
+}
+
+.modal-title{
+  margin-bottom:8px !important;
+}

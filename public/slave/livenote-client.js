@@ -87,17 +87,43 @@ function initclient(namespace) {
 
   
   //Get aggiornamento sondaggio
-  socket.on("poll",(data)=>{
-    createPoll(data);
-    getPollDynamical(data); 
+  socket.on("pollMultiple",(data)=>{
+    createPollMultiple(data);
+    getPollDynamicalOpen(data); 
+  });
+
+  socket.on("pollOpen",(data)=>{
+    createPollOpen(data);
+    getPollDynamicalMultiple(data);
   });
   
+// utente nuovo che prende i dati del sondaggio
+  socket.on("getPoll",(datePoll)=>{
+    getNotice();
+    /*
+    createPoll(datePoll);
+    getPollDynamical(datePoll);
+    */
+  });
+
+  socket.on("closePoll",()=>{
+    document.getElementById("viewPollDynamical").style.display="none";
+    document.getElementById("click-poll").style.display="none";
+
+    $("#pollsTable").empty();
+    $("#pollDynamical").empty();
+  });
+
+  socket.on("updatingPoll",(optionPoll)=>{
+    updatePollDynamical(optionPoll.optionChecked,optionPoll.value);
+  });
+
   initServices(socket);
 
 }
 
 // funzione per creare il sondaggio
-function createPoll(data){
+function createPollMultiple(data){
   //visualizzo il bottone sondaggio
   $("#click-poll").css("display", "inline");
 
@@ -108,36 +134,101 @@ function createPoll(data){
   //Creazione opzioni del sondaggio in base al messaggio JSON ricevuto
   var tableOptionPoll=document.getElementById("pollsTable");
   
-  for(var i=0;i<jsonData.dataOption.length;i++){
+  var someQuestionsH5=document.createElement("h5");
+  someQuestionsH5.appendChild(document.createTextNode("Click one of these options"));
+  someQuestionsH5.setAttribute("style","margin:2%");
+  
+  tableOptionPoll.appendChild(someQuestionsH5);
+  for(var i=0;i<jsonData.optionPoll.length;i++){
+    var label=document.createElement("label");
+    label.setAttribute("class","labelOption");
+
     var radioOption=document.createElement("input");
     radioOption.setAttribute("type","radio");
     radioOption.setAttribute("name","option");
-    radioOption.setAttribute("value",`${jsonData.dataOption[i]}`);
+    radioOption.setAttribute("value",`${jsonData.optionPoll[i]}`);
+    radioOption.setAttribute("class","nes-radio");
     
     var spanOption=document.createElement("span");
-    var text=document.createTextNode(jsonData.dataOption[i]);
+    var text=document.createTextNode(jsonData.optionPoll[i]);
+    spanOption.appendChild(text);
+
+    label.appendChild(radioOption);
+    label.appendChild(spanOption);
+
+    var brTag=document.createElement("br");
+
+    tableOptionPoll.appendChild(label);
+    tableOptionPoll.appendChild(brTag);
+
+
+    /*var radioOption=document.createElement("input");
+    radioOption.setAttribute("type","radio");
+    radioOption.setAttribute("name","option");
+    radioOption.setAttribute("value",`${jsonData.optionPoll[i]}`);
+    
+    var spanOption=document.createElement("span");
+    var text=document.createTextNode(jsonData.optionPoll[i]);
     spanOption.appendChild(text);
     
     tableOptionPoll.appendChild(radioOption);
     tableOptionPoll.appendChild(spanOption);
-    tableOptionPoll.appendChild(document.createElement("br"));
+    tableOptionPoll.appendChild(document.createElement("br"));*/
   }
-
-  $("#sendPoll").click(function(){
-    var optionChecked=$("#pollsTable input[type='radio']:checked").val();
-    socket.emit("updatingPoll",optionChecked);
-    updatePollDynamical(optionChecked);
-
-    document.getElementById("click-poll").style.display="none";
-  });
-  
-  socket.on("updatingPoll",(optionChecked)=>{
-    updatePollDynamical(optionChecked);
-  });
 }
+
+function createPollOpen(data){
+  $("#click-poll").css("display", "inline");
+
+  //creazione titolo sondaggio
+  var jsonDate=JSON.parse(data);
+
+  var tableOptionPoll=document.getElementById("pollsTable");
+
+  for(var tmp in jsonDate.questions_rightanswer){
+    var spanQuestionText=document.createElement("span");
+    spanQuestionText.appendChild(document.createTextNode("Question:"));
+
+    var spanQuestion=document.createElement("span");
+    spanQuestion.appendChild(document.createTextNode(`${jsonDate.questions_rightanswer[tmp].question}`));
+
+    var inputAnswer=document.createElement("input");
+    inputAnswer.setAttribute("type","text");
+    inputAnswer.setAttribute("name","pollQuestion");
+    inputAnswer.setAttribute("placeholder","Insert the right answer");
+    inputAnswer.setAttribute("class","nes-input");
+
+    tableOptionPoll.appendChild(spanQuestionText);
+    tableOptionPoll.appendChild(document.createElement("br"));
+    tableOptionPoll.appendChild(spanQuestion);
+    tableOptionPoll.appendChild(document.createElement("br"));
+    tableOptionPoll.appendChild(inputAnswer);
+
+
+
+  }
+}
+
+$("#sendPoll").click(function(){
+  
+  var optionChecked=$("#pollsTable input[type='radio']:checked").val();
+  socket.emit("updatingPoll",optionChecked);
+
+  document.getElementById("click-poll").style.display="none";
+});
+
 
 const video = document.querySelector("video");
 
 window.onunload = window.onbeforeunload = () => {
   socket.close();
 };
+
+function getNotice(){
+  document.getElementById("notice").style.display="block";
+
+  $("#closeNotice").click(function(){
+    document.getElementById("notice").style.display="none";
+  });
+}
+

@@ -7,6 +7,8 @@ var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
 let ejs = require('ejs');
+const { ifError } = require("assert");
+const { json } = require("express");
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -72,6 +74,7 @@ app.get('/:session_id/:file_id', function(req, res) {
   fid = req.params.file_id;
   var sess = req.session;
   if (sess.isNew || sess.id != sid){
+    
     res.sendFile(path.join(__dirname + '/public/slave/slave.html'))
   }else{
     res.sendFile(path.join(__dirname + '/public/master/master.html'))
@@ -131,6 +134,7 @@ app.post('/', function(req, res) {
 Create livenote for the name specified 
 eg: /abc/def
 */
+
 function createnewlive(name){
   console.log("New live at "+name)
   const nm = io.of(name);
@@ -166,9 +170,15 @@ function loadSessions(){
 /*
 Create socket connection for each name
 */
+
+
 function makeitlive(socket){
     // INIZIO 
     // OPERAZIONI PER LA CONNESSIONE VIDEO
+  countPeopleInLive++;
+  
+  //updatingPollEnteringPerson();
+
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
     socket.broadcast.emit("broadcaster");
@@ -234,17 +244,95 @@ function makeitlive(socket){
   });
 
   // creazione sondaggio
-  socket.on("poll",(data)=>{
-    socket.broadcast.emit("poll",data);
+  socket.on("pollMultiple",(data)=>{
+    countPeopleFixed=countPeopleInLive;
+    datePoll=data;
+    socket.broadcast.emit("pollMultiple",data);
+    
+  });
+
+  socket.on("pollOpen",(data)=>{
+    countPeopleFixed=countPeopleInLive;
+    datePoll=data;
+    socket.broadcast.emit("pollOpen",data);
   });
 
   //aggiornamento sondaggio
   socket.on("updatingPoll",(optionChecked)=>{
-    socket.broadcast.emit("updatingPoll",optionChecked);
+    
+    var value=updatingOptionValue(optionChecked);
+
+    socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
+    socket.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
+    
+   
   });
+
+  // avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
+  socket.on("closePoll",()=>{
+    datePoll=0;
+    
+    socket.broadcast.emit("closePoll");
+  });
+
+  
+  // un nuovo utente che si connette prende i dati del sondaggio
+  if(datePoll){// se il sondaggio è stato creato, l'utente prende altrimenti no
+    socket.emit("getPoll",datePoll,countPeopleFixed);
+  }
+
+  socket.on("disconnect",()=>{
+    countPeopleInLive--;
+  });
+
 }
+var countPeopleFixed;
+var countPeopleInLive=-1;
 var chat_users_for_namespaces = {}
+var datePoll=0;
 
 loadSessions()
 server.listen(port, () => console.log(`Server is running on port ${port}`));
 
+
+// calcolo il valore della percentuale di una determinata opzione in base alle persone che stanno 
+// partecipando al sondaggio e al conteggio del selezionamento di una determinata opzione
+function updatingOptionValue(optionChecked){
+  
+  var value;
+  var jsonDati=JSON.parse(datePoll);
+
+  var countAnswer=jsonDati.valueOption[optionChecked];
+  countAnswer++;
+
+  value=Math.round((countAnswer/countPeopleFixed)*100); // Math.round per fare gli arrotondamenti quando abbiamo i numeri decimali
+
+  jsonDati.valueOption[optionChecked]=countAnswer;
+
+  datePoll=JSON.stringify(jsonDati);
+  
+  return value;
+}
+
+/*
+// funzione che permette di aggiornare i dati del sondaggio quando un nuovo utente entra nel sito
+function updatingPollEnteringPerson(){
+  if(datePoll){
+    var jsonDati=JSON.parse(datePoll);
+
+    console.log(jsonDati);
+
+    for(var i=0;i<jsonDati.optionPoll.length;i++){
+      var text=jsonDati.optionPoll[i];
+      var value=jsonDati.valueOption[text];
+
+      if(value>0){
+        value-=Math.round((1/countPeopleInLive)*100);
+        jsonDati.valueOption[text]=value;
+      }
+    }
+    console.log(jsonDati);
+    
+    datePoll=JSON.stringify(jsonDati);
+  }
+}*/

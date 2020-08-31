@@ -6,6 +6,7 @@
     <meta charset="UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="/style/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
@@ -24,8 +25,10 @@
         <img id="info"  class="control" style="image-rendering: pixelated;" src="../img/nes.png"/>
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
         <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">Create Poll</button>
-        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
+        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical">View Poll</button>
+       
         <span id="startlive" class="nes-logo control"></span>
+        
         <div id="select-audio" class="nes-select is-success select control" style="display:none;">
           <select id="audioSource"></select> !""
         </div>
@@ -127,21 +130,6 @@
     </form>
   </dialog>
 
-   <!-- Creazione sondaggio dinamico
-   <div class="nes-dialog center" id="dialog-sondaggio" style="width: 50%; display: none;">
-     <form>
-       <p>Create Poll</p>
-       <input class="nes-input" type=text placeholder="Insert a master name for poll"/>
-       <br>
-       <p> Insert option</p>
-       <input class="nes-input" type=text placeholder="Insert an option"/> 
-       <button class="nes-btn">Add an option</button>
-       <br>
-       <button class="nes-btn">Cancel</button>
-     </form>
-    </div>-->
-    
-    
 
   <!-- Modal Poll -->
   <div class="modal fade" id="dialog-sondaggio" role="dialog">
@@ -151,18 +139,28 @@
       <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Create a poll</h4>
+            <h4 class="modal-title" style="text-align: center;">Choose the poll</h4>
             </br>
-            <input type="text" name="namePoll" class="nes-input" placeholder="Insert a name for poll" style="width: 99%;">
+            <div id="choice-poll">
+              <label><input type="radio" class="nes-radio" name="choicePoll" value="multiple" checked onclick="changeQuestions(this)"/>
+                <span>Multiple answers</span>
+              </label>
+              <label><input type="radio" class="nes-radio" name="choicePoll" value="open" onclick="changeQuestions(this)"/>
+                <span>Open answers</span>
+              </label>
+            </div>
           </div>
           <div class="modal-body" id="sondaggio">
-            <input type="text" name="pollOption" class="nes-input" placeholder="insert an option"/>
-          </br>
-            <button type="button" class="nes-btn" id="addOption">Add an option</button>
-          
+            <h5 class="modal-title">Create a question</h4>
+            <input type="text"  class="nes-input" name="namePoll" placeholder="Insert a question"/> 
+          <hr>
+          <h5 class="modal-title">Create some options</h4>
+            <div class="div-delete-option" id="option1DIV">
+              <input type="text" name="pollOption" class="nes-input" placeholder="Insert an option"/> 
+            </div>
+            <button type="button" class="nes-btn" id="addOptionMultiple">Add an option</button>          
           </div>
           <div class="modal-footer">
-            <button type="button" class="nes-btn" data-dismiss="modal">Close</button>
             <button type="button" class="nes-btn" data-dismiss="modal" id="createPoll">Create</button>
           </div>
       </div>
@@ -179,13 +177,11 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 id="pollTitleDynamical" class="modal-title"></h4>
-            </br>
           </div>
           <div class="modal-body" id="pollDynamical">
-          </br>
           </div>
           <div class="modal-footer">
-            <button type="button" class="nes-btn" data-dismiss="modal">Close</button>
+            <button type="button" class="nes-btn" data-dismiss="modal" id="close-poll">Close Poll</button>
           </div>
       </div>
     </div>
@@ -195,9 +191,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script type="module" src="/js/livenote-drag.js"></script>
   <script src="/js/common.js" ></script>
-   <script src="/master/livenote-master.js" ></script>  
+   
   <!--<script type="module" src="/js/dist/m.bundle.js"></script>-->
-  
+  <script src="/master/livenote-master.js" ></script>  
   <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
   <script>
@@ -212,6 +208,8 @@
     window.onresize = function(){
         resize()
     }
+
+     
   </script>
   </body>
 </html>
