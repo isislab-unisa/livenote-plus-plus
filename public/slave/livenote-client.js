@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Hide elements on the view
+=======
+
+>>>>>>> Modificato il lato back-end della funzionalità createPollOpen.
 function hidecontrol(){
   $(".control").each(function (index, element) {
     hide = $(element).is(':hidden');
@@ -127,16 +131,16 @@ module.exports = {
   //Get aggiornamento sondaggio
   socket.on("pollMultiple",(data)=>{
     createPollMultiple(data);
-    getPollDynamicalOpen(data); 
+    getPollDynamicalMultiple(data); 
   });
 
   socket.on("pollOpen",(data)=>{
     createPollOpen(data);
-    getPollDynamicalMultiple(data);
+    getPollDynamicalOpen(data);
   });
   
-// utente nuovo che prende i dati del sondaggio
-  socket.on("getPoll",(datePoll)=>{
+// Quando un utente partecipa al canale in ritardo, gli viene mostrato un avviso che attendere il completamento del sondaggio
+  socket.on("getPoll",()=>{
     getNotice();
     /*
     createPoll(datePoll);
@@ -160,9 +164,10 @@ module.exports = {
 
 }
 
-// funzione per creare il sondaggio
+// Crea il sondaggio a risposte multiple
 function createPollMultiple(data){
   //visualizzo il bottone sondaggio
+  
   $("#click-poll").css("display", "inline");
 
   //creazione titolo sondaggio
@@ -199,7 +204,7 @@ function createPollMultiple(data){
     tableOptionPoll.appendChild(label);
     tableOptionPoll.appendChild(brTag);
 
-
+    document.getElementById("sendVotePoll").addEventListener("click", sendVotePollMultiple);
     /*var radioOption=document.createElement("input");
     radioOption.setAttribute("type","radio");
     radioOption.setAttribute("name","option");
@@ -215,6 +220,7 @@ function createPollMultiple(data){
   }
 }
 
+// Crea il sondaggio a risposte aperte
 function createPollOpen(data){
   $("#click-poll").css("display", "inline");
 
@@ -232,28 +238,44 @@ function createPollOpen(data){
 
     var inputAnswer=document.createElement("input");
     inputAnswer.setAttribute("type","text");
-    inputAnswer.setAttribute("name","pollQuestion");
+    inputAnswer.setAttribute("name","pollAnswer");
     inputAnswer.setAttribute("placeholder","Insert the right answer");
     inputAnswer.setAttribute("class","nes-input");
+
+    var inputRightAnswerHidden=document.createElement("input");
+    inputRightAnswerHidden.setAttribute("type","hidden");
+    inputRightAnswerHidden.setAttribute("name","rightAnswer");
+    inputRightAnswerHidden.setAttribute("value",`${jsonDate.questions_rightanswer[tmp].right_answer}`);
 
     tableOptionPoll.appendChild(spanQuestionText);
     tableOptionPoll.appendChild(document.createElement("br"));
     tableOptionPoll.appendChild(spanQuestion);
     tableOptionPoll.appendChild(document.createElement("br"));
     tableOptionPoll.appendChild(inputAnswer);
+    tableOptionPoll.appendChild(inputRightAnswerHidden);
 
-
+    document.getElementById("sendVotePoll").addEventListener("click",sendVotePollOpen);
 
   }
 }
 
-$("#sendPoll").click(function(){
-  
+function sendVotePollMultiple(){
   var optionChecked=$("#pollsTable input[type='radio']:checked").val();
   socket.emit("updatingPoll",optionChecked);
 
   document.getElementById("click-poll").style.display="none";
-});
+};
+
+function sendVotePollOpen(){
+
+  $('input[name="pollAnswer"]').map(function(){
+    var valueAnswer=this.value;
+    var rightAnswer=this.nextSibling.value;
+    alert(ignoreCase.equals(valueAnswer,rightAnswer));
+  });
+
+  document.getElementById("click-poll").style.display="none";
+};
 
 
 const video = document.querySelector("video");
@@ -269,4 +291,5 @@ function getNotice(){
     document.getElementById("notice").style.display="none";
   });
 }
+
 

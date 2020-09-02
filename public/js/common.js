@@ -431,7 +431,6 @@ function initThis(mode, path, slide) {
   .getDocument(path)
   .promise.then(pdfDoc_ => {
     pdfDoc = pdfDoc_;
-
     document.getElementById("progress-bar").setAttribute("max", pdfDoc.numPages);
     renderPage(slide);
     /*
@@ -444,12 +443,16 @@ function initThis(mode, path, slide) {
   })
   .catch(err => {
     // Display error
+    alert("errore nel prendere il file");
+    //problema con la riga 449. Da aggiustare
+
+    /*
     const div = document.createElement('div');
     div.className = 'error';
     div.appendChild(document.createTextNode(err.message));
     document.querySelector('body').insertBefore(div, canvas);
     // Remove top bar
-    document.querySelector('.top-bar').style.display = 'none';
+    document.querySelector('.top-bar').style.display = 'none';*/
   });
 
 }
@@ -504,7 +507,7 @@ function clearArea() {
 //creazione della view del sondaggio, sia per il master che client
 //var jsonProgressOption={}; //{b1=0,b2=0..} per ogni opzione del sondaggio
 var jsonDatiPoll;
-function getPollDynamicalOpen(data,countPeople){
+function getPollDynamicalMultiple(data,countPeople){
   $("#viewPollDynamical").css("display","inline");
   console.log("JSON: "+data);
   jsonDatiPoll=JSON.parse(data);
@@ -555,7 +558,7 @@ function getPollDynamicalOpen(data,countPeople){
   
 }
 
-function getPollDynamicalMultiple(data){
+function getPollDynamicalOpen(data){
   $("#viewPollDynamical").css("display","inline");
   
   jsonDatiPoll=JSON.parse(data);
