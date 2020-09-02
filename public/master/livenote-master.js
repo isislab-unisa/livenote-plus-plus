@@ -328,6 +328,7 @@ function createMultipleQuestions(){
   var inputQuestion=document.createElement("input");
   inputQuestion.setAttribute("type","text");
   inputQuestion.setAttribute("class","nes-input");
+  inputQuestion.setAttribute("name","namePoll");
   inputQuestion.setAttribute("placeholder","Insert a question");
   
   var hrTag=document.createElement("hr");
@@ -520,12 +521,12 @@ function createJSONPollMultiple(){
 
   var namePoll=$('input[name="namePoll"]').val();
   
-  var jsonFinalDatiString=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString}}`;
+  var jsonFinalDatiString=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString},"typePoll":0}`;
   
 
   socket.emit("pollMultiple",jsonFinalDatiString);
   
-  getPollDynamicalOpen(jsonFinalDatiString);
+  getPollDynamicalMultiple(jsonFinalDatiString);
 }
 
 function createJSONPollOpen(){
@@ -534,7 +535,8 @@ function createJSONPollOpen(){
 
   var datePoll={
     questions_rightanswer:[],
-    value_question_answer:{}
+    value_question_answer:{},
+    typePoll:1
   };
 
   $('input[name="pollQuestion"]').map(function(){
@@ -559,5 +561,5 @@ function createJSONPollOpen(){
 
   socket.emit("pollOpen",jsonStringPollOpen);
 
-  getPollDynamicalMultiple(jsonStringPollOpen);
+  getPollDynamicalOpen(jsonStringPollOpen);
 }
