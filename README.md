@@ -1,6 +1,7 @@
 # Livenote++
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Table of contents
 * [Introduction](#Introduction)
   * [Features](#Features)
@@ -57,6 +58,9 @@ Frontend:
 ## Installation
 =======
 https://img.shields.io/discord/693092516286693387
+=======
+![Discord](https://img.shields.io/discord/693092516286693387)
+>>>>>>> Update README.md
 
 ## Getting started
 >>>>>>> Update README.md
