@@ -1,7 +1,5 @@
 # Livenote++
 
-![Discord](https://img.shields.io/discord/693092516286693387)
-
 ## Getting started
 
 Start using Node
