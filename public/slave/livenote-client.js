@@ -35,6 +35,11 @@ function initclient(namespace) {
     reconnectionDelayMax : 5000,
     reconnectionAttempts: 99999
   });
+
+  // counting 
+  socket.emit("connection", true);
+
+  
   socket.on( "slidechanged", function (msg) {
     console.log("Presentation Change "+msg); 
     s = JSON.parse(msg)

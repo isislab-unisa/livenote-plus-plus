@@ -105,6 +105,7 @@ document.getElementById("audio").addEventListener('click', function(event){
 });
 
 var socket;
+var counter=0;
 
 function initmaster(namespace){
   console.log("Connect to "+window.location.origin+namespace)
@@ -113,6 +114,20 @@ function initmaster(namespace){
     reconnectionDelay: 1000,
     reconnectionDelayMax : 5000,
     reconnectionAttempts: 99999
+  });
+
+  socket.on("client_connected", (status) => {
+    if(status) {
+      counter++
+      document.getElementById("counter").innerHTML = counter;
+    }
+  });
+
+  socket.on("client_disconnected", (status) => {
+    if(status) {
+      counter--
+      document.getElementById("counter").innerHTML = counter;
+    }
   });
 
   socket.on("answer", (id, description) => {
@@ -138,6 +153,7 @@ function initmaster(namespace){
       .then(() => {
         socket.emit("offer", id, peerConnection.localDescription);
       });
+
   });
   
   socket.on("candidate", (id, candidate) => {

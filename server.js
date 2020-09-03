@@ -186,6 +186,7 @@ function makeitlive(socket){
      }
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.to(broadcaster).emit("disconnectPeer", socket.id);
+    socket.broadcast.emit("client_disconnected", true);
   });
   socket.on("master", (data) => {
     socket.broadcast.emit("slidechanged", data);
@@ -212,6 +213,9 @@ function makeitlive(socket){
   });
   socket.on("line", (data) => {
     socket.broadcast.emit("linechanged", data);
+  });
+  socket.on("connection", (status) => {
+    socket.broadcast.emit("client_connected", status);
   });
 }
 var chat_users_for_namespaces = {}

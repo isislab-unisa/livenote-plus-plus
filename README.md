@@ -28,3 +28,6 @@ docker run -d -p 433:433 livenote++
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+
+Entra sul nostro canale discord ![Discord](https://img.shields.io/discord/693092516286693387):
+https://discord.gg/BTt5fUp
