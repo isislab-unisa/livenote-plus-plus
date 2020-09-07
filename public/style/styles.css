@@ -366,6 +366,7 @@ body {
   flex-direction: row-reverse;
   display: flex;
   justify-content: flex-end;
+  margin-top:10px;
 }
 
 .div-ranking > input[type="radio"]:hover ~ label img{
@@ -381,6 +382,9 @@ body {
   left: 580px;
 }
 
-
+.questionRanking{
+  margin-bottom:10px;
+  font-size: 18px;
+}
 
 
