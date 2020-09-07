@@ -338,3 +338,49 @@ body {
 .modal-title{
   margin-bottom:8px !important;
 }
+
+.container-select{
+  height: 55px;
+  padding:0px !important;
+}
+
+.container-rank{
+  display: inline-block;
+}
+
+.rankIcon{
+  width: auto;
+  height: 50px;
+  margin-right:15px;
+  opacity: 0.4;
+}
+
+.rankIconFinal{
+  width: auto;
+  height: 50px;
+  margin-right:15px;
+  opacity: 1;
+}
+
+.div-ranking{
+  flex-direction: row-reverse;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.div-ranking > input[type="radio"]:hover ~ label img{
+  opacity: 1;
+}
+
+.div-ranking > input[type="radio"]:checked ~ label img{
+  opacity: 1;
+}
+
+.countVoteRanking{
+  position: absolute;
+  left: 580px;
+}
+
+
+
+

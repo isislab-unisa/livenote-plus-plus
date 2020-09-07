@@ -134,18 +134,16 @@ module.exports = {
     getPollDynamicalMultiple(data); 
   });
 
-  socket.on("pollOpen",(data)=>{
-    createPollOpen(data);
-    getPollDynamicalOpen(data);
+  socket.on("createPollRanking",(data)=>{
+    createPollRanking(data); 
+    getPollDynamicalRanking(data); 
   });
   
-// Quando un utente partecipa al canale in ritardo, gli viene mostrato un avviso che attendere il completamento del sondaggio
-  socket.on("getPoll",()=>{
-    getNotice();
-    /*
-    createPoll(datePoll);
-    getPollDynamical(datePoll);
-    */
+// Quando un utente partecipa al canale in ritardo, prende i dati del sondaggio
+  socket.on("getPollMultiple",(datePoll,countPeople)=>{
+    //getNotice();
+    createPollMultiple(datePoll);
+    getPollDynamicalMultiple(datePoll,countPeople);
   });
 
   socket.on("closePoll",()=>{
@@ -158,6 +156,10 @@ module.exports = {
 
   socket.on("updatingPoll",(optionPoll)=>{
     updatePollDynamical(optionPoll.optionChecked,optionPoll.value);
+  });
+
+  socket.on("updatingPollRanking",(vote)=>{
+    updatePollRankingDynamical(vote);
   });
 
   initServices(socket);
@@ -205,56 +207,61 @@ function createPollMultiple(data){
     tableOptionPoll.appendChild(brTag);
 
     document.getElementById("sendVotePoll").addEventListener("click", sendVotePollMultiple);
-    /*var radioOption=document.createElement("input");
-    radioOption.setAttribute("type","radio");
-    radioOption.setAttribute("name","option");
-    radioOption.setAttribute("value",`${jsonData.optionPoll[i]}`);
-    
-    var spanOption=document.createElement("span");
-    var text=document.createTextNode(jsonData.optionPoll[i]);
-    spanOption.appendChild(text);
-    
-    tableOptionPoll.appendChild(radioOption);
-    tableOptionPoll.appendChild(spanOption);
-    tableOptionPoll.appendChild(document.createElement("br"));*/
   }
 }
 
-// Crea il sondaggio a risposte aperte
-function createPollOpen(data){
+// Crea il sondaggio a tema ranking
+function createPollRanking(date){
   $("#click-poll").css("display", "inline");
-
-  //creazione titolo sondaggio
-  var jsonDate=JSON.parse(data);
+  
+  var jsonDate=JSON.parse(date);
 
   var tableOptionPoll=document.getElementById("pollsTable");
 
   for(var tmp in jsonDate.questions_rightanswer){
-    var spanQuestionText=document.createElement("span");
-    spanQuestionText.appendChild(document.createTextNode("Question:"));
+    // var spanQuestionText=document.createElement("span");
+    // spanQuestionText.appendChild(document.createTextNode("Question:"));
 
     var spanQuestion=document.createElement("span");
     spanQuestion.appendChild(document.createTextNode(`${jsonDate.questions_rightanswer[tmp].question}`));
 
-    var inputAnswer=document.createElement("input");
-    inputAnswer.setAttribute("type","text");
-    inputAnswer.setAttribute("name","pollAnswer");
-    inputAnswer.setAttribute("placeholder","Insert the right answer");
-    inputAnswer.setAttribute("class","nes-input");
-
-    var inputRightAnswerHidden=document.createElement("input");
-    inputRightAnswerHidden.setAttribute("type","hidden");
-    inputRightAnswerHidden.setAttribute("name","rightAnswer");
-    inputRightAnswerHidden.setAttribute("value",`${jsonDate.questions_rightanswer[tmp].right_answer}`);
-
-    tableOptionPoll.appendChild(spanQuestionText);
-    tableOptionPoll.appendChild(document.createElement("br"));
     tableOptionPoll.appendChild(spanQuestion);
     tableOptionPoll.appendChild(document.createElement("br"));
-    tableOptionPoll.appendChild(inputAnswer);
-    tableOptionPoll.appendChild(inputRightAnswerHidden);
 
-    document.getElementById("sendVotePoll").addEventListener("click",sendVotePollOpen);
+    var divRank=document.createElement("div");
+    divRank.setAttribute("class","div-ranking");
+
+    for(var i=4;i>0;i--){
+      
+      
+      var radioRank=document.createElement("input");
+      var label=document.createElement("label");
+
+      radioRank.setAttribute("type","radio");
+      radioRank.setAttribute("name","rank"+jsonDate.questions_rightanswer[tmp].select_rank);
+      radioRank.setAttribute("id",`${jsonDate.questions_rightanswer[tmp].select_rank}_${i}`);
+      radioRank.setAttribute("value",`${jsonDate.questions_rightanswer[tmp].select_rank}_${i}`);
+      radioRank.setAttribute("style","-webkit-appearance: none;");
+
+      label.setAttribute("for",`${jsonDate.questions_rightanswer[tmp].select_rank}_${i}`);
+
+
+      var img=document.createElement("img");
+      img.setAttribute("src",`../img/rankIcon/${jsonDate.questions_rightanswer[tmp].select_rankIMG}.png`);
+      img.setAttribute("class","rankIcon");
+
+      label.appendChild(img);
+      
+      divRank.appendChild(radioRank);
+      divRank.appendChild(label);
+      
+      tableOptionPoll.appendChild(divRank);
+    }
+
+    
+    
+
+    document.getElementById("sendVotePoll").addEventListener("click",sendVotePollRanking);
 
   }
 }
@@ -266,15 +273,22 @@ function sendVotePollMultiple(){
   document.getElementById("click-poll").style.display="none";
 };
 
-function sendVotePollOpen(){
+function sendVotePollRanking(){
+  var arrayValueRank=[];
 
-  $('input[name="pollAnswer"]').map(function(){
-    var valueAnswer=this.value;
-    var rightAnswer=this.nextSibling.value;
-    alert(ignoreCase.equals(valueAnswer,rightAnswer));
+  $(".div-ranking").map(function(){
+    var valueSelectRank=$(this).children('input[type=radio]:checked').attr("value");
+    arrayValueRank.push(valueSelectRank);
   });
 
+  // $('input[name="pollAnswer"]').map(function(){
+  //   var valueAnswer=this.value;
+  //   var rightAnswer=this.nextSibling.value;
+  //   alert(ignoreCase.equals(valueAnswer,rightAnswer));
+  // });
+
   document.getElementById("click-poll").style.display="none";
+  socket.emit("updatingPollRanking",arrayValueRank);
 };
 
 
@@ -284,12 +298,12 @@ window.onunload = window.onbeforeunload = () => {
   socket.close();
 };
 
-function getNotice(){
+/*function getNotice(){
   document.getElementById("notice").style.display="block";
 
   $("#closeNotice").click(function(){
     document.getElementById("notice").style.display="none";
   });
-}
+}*/
 
 

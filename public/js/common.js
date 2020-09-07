@@ -544,7 +544,7 @@ function getPollDynamicalMultiple(data,countPeople){
     // nel caso in cui il master fa aggiornamento della pagina
     if(jsonDatiPoll.valueOption[valore]!=0){
       var valorePercetange=jsonDatiPoll.valueOption[valore]
-  
+      
       progressBar.value=(valorePercetange/countPeople)*100;
       spanNode.textContent=(valorePercetange/countPeople)*100+"%";
     }
@@ -558,51 +558,76 @@ function getPollDynamicalMultiple(data,countPeople){
   
 }
 
-function getPollDynamicalOpen(data){
+
+var countDivSpecificRank=5; // per costruire 5 righe di immagini
+function getPollDynamicalRanking(data){
   $("#viewPollDynamical").css("display","inline");
   
   jsonDatiPoll=JSON.parse(data);
 
-  var optionProgress=document.getElementById("pollDynamical");
+  var tableRanking=document.getElementById("pollDynamical");
   
   for(var tmp in jsonDatiPoll.questions_rightanswer){
-    var divProgress=document.createElement("div");
-    divProgress.style.position="relative";
+    var divRanking=document.createElement("div");
+    divRanking.style.position="relative";
 
     spanQuestion=document.createElement("span");
-    spanQuestion.appendChild(document.createTextNode(`Question: ${jsonDatiPoll.questions_rightanswer[tmp].question}`));
+    spanQuestion.appendChild(document.createTextNode("Question:"));
 
-    spanRightAnswer=document.createElement("span");
-    spanRightAnswer.appendChild(document.createTextNode(`Right answer: ${jsonDatiPoll.questions_rightanswer[tmp].right_answer}`));
 
-    var progressBar=document.createElement("progress");
-    progressBar.setAttribute("id",jsonDatiPoll.questions_rightanswer[tmp].right_answer);
-    progressBar.setAttribute("class","nes-progress");
-    progressBar.setAttribute("value","0");
-    progressBar.setAttribute("max","100");
+    spanTextQuestion=document.createElement("span");
+    spanTextQuestion.appendChild(document.createTextNode(jsonDatiPoll.questions_rightanswer[tmp].question));
 
-    divProgress.appendChild(spanQuestion);
-    divProgress.appendChild(document.createElement("br"));
-    divProgress.appendChild(spanRightAnswer);
-    divProgress.appendChild(document.createElement("br"));
-    divProgress.appendChild(progressBar);
+    spanRanking=document.createElement("span");
+    spanRanking.appendChild(document.createTextNode("Ranking"));
 
-    optionProgress.appendChild(divProgress);
+    divRanking.appendChild(spanQuestion);
+    divRanking.appendChild(spanTextQuestion);
+    divRanking.appendChild(document.createElement("br"));
+    divRanking.appendChild(spanRanking);
+    divRanking.appendChild(document.createElement("br"));
+
+    var countRow=1; // per costruire le 5 colonne di immagini
+
+    for(var i=1;i<countDivSpecificRank;i++){
+      var divSpecificRank=document.createElement("div");
+      
+      
+      for(var z=1;z<countRow+1;z++){
+        var img=document.createElement("img");
+        img.setAttribute("src",`../img/rankIcon/${jsonDatiPoll.questions_rightanswer[tmp].select_rankIMG}.png`);
+        img.setAttribute("class","rankIconFinal");
+
+        divSpecificRank.appendChild(img);
+        
+      }
+
+      var spanCountVote=document.createElement("span");
+      spanCountVote.setAttribute("class","countVoteRanking");
+      spanCountVote.setAttribute("id",`vote_${jsonDatiPoll.questions_rightanswer[tmp].select_rank}_${i}`)
+      spanCountVote.appendChild(document.createTextNode("0"));
+
+      divSpecificRank.appendChild(spanCountVote);
+
+      if(countRow<countDivSpecificRank)
+        countRow++;
+
+      divRanking.appendChild(divSpecificRank);
+    }
+    
+    tableRanking.appendChild(divRanking);
   }
 }
-
-/*
-function getColorRandom(){
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}*/
 
 function updatePollDynamical(progressId,progressValue){
   document.getElementById(`${progressId}`).value=progressValue;
   document.getElementById(`${progressId}Span`).textContent=progressValue+"%";
 
+}
+
+function updatePollRankingDynamical(jsonVote){
+
+  objectVote=JSON.parse(jsonVote);
+  console.log("chiamo: "+objectVote.id +" e voto: "+objectVote.vote);
+  $(`#vote_${objectVote.id}`).text(objectVote.vote);
 }
