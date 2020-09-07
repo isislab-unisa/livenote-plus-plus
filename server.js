@@ -17,6 +17,7 @@ const port = 443;
 
 /*
 Create https server with certificate
+Change with your own if you want https connection
 */
 const server = https.createServer({ 
   key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
@@ -30,6 +31,15 @@ app.use(express.static(__dirname + '/public/sessions'));
 app.use(fileUpload({
   limits: {fileSize: 50 * 1024 * 1024},
 }));
+
+/*
+Manage cookie for the session
+id: unique identifier
+links: unique url link for presentation
+ids: unique id for the presentation
+keys: parameters needed for generate unique cookies
+TODO: links and ids are array, but now for easy of use is managed just one id/link
+*/
 app.use(cookieSession({
   id:'',
   links: [],
@@ -162,6 +172,21 @@ function loadSessions(){
 
 /*
 Create socket connection for each name
+There are different messages that could arrive on socket:
+broadcaster: emit message when master start streaming
+watcher: a client who connect to streaming
+offer: a master offer connection to watcher
+answer: a client response to offer
+candidate: candidate for IceConnection
+disconnect: when a user disconnect from session
+master: when master change slide, send messages to all client with correct page number
+chat-message: when a use write a message in the chat
+chat-enter: when a user enter in the chat
+pokemon: change the pokemon view of the ballon
+shape: send the draw of master
+color: change color of draw line
+line: change widht of draw line
+connection: used to count user connected to the presentation (showed only on master view)
 */
 function makeitlive(socket){
   socket.on("broadcaster", () => {
