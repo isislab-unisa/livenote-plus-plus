@@ -562,10 +562,20 @@ function getPollDynamicalRanking(data){
   jsonDatiPoll=JSON.parse(data);
 
   var tableRanking=document.getElementById("pollDynamical");
-  
+
+  $("#pollTitleDynamical").text("Ranking");
+  $("#pollTitleDynamical").css("text-align","center");
+
+  countHR=0;
   for(var tmp in jsonDatiPoll.questions_rightanswer){
+
     var divRanking=document.createElement("div");
     divRanking.style.position="relative";
+
+    if(countHR==1){
+      var hr=document.createElement("hr");
+      divRanking.appendChild(hr);
+    }
 
     spanQuestion=document.createElement("span");
     spanQuestion.appendChild(document.createTextNode("Question:"));
@@ -574,19 +584,17 @@ function getPollDynamicalRanking(data){
     spanTextQuestion=document.createElement("span");
     spanTextQuestion.appendChild(document.createTextNode(jsonDatiPoll.questions_rightanswer[tmp].question));
 
-    spanRanking=document.createElement("span");
-    spanRanking.appendChild(document.createTextNode("Ranking"));
-
     divRanking.appendChild(spanQuestion);
+    divRanking.appendChild(document.createElement("br"));
     divRanking.appendChild(spanTextQuestion);
     divRanking.appendChild(document.createElement("br"));
-    divRanking.appendChild(spanRanking);
-    divRanking.appendChild(document.createElement("br"));
+  
 
     var countRow=1; // per costruire le 5 colonne di immagini
 
     for(var i=1;i<countDivSpecificRank;i++){
       var divSpecificRank=document.createElement("div");
+      divSpecificRank.setAttribute("style","margin-top:15px");
       
       
       for(var z=1;z<countRow+1;z++){
@@ -609,6 +617,7 @@ function getPollDynamicalRanking(data){
         countRow++;
 
       divRanking.appendChild(divSpecificRank);
+      countHR=1; 
     }
     
     tableRanking.appendChild(divRanking);
@@ -624,6 +633,10 @@ function updatePollDynamical(progressId,progressValue){
 function updatePollRankingDynamical(jsonVote){
 
   objectVote=JSON.parse(jsonVote);
-  console.log("chiamo: "+objectVote.id +" e voto: "+objectVote.vote);
-  $(`#vote_${objectVote.id}`).text(objectVote.vote);
+  for(tmp in objectVote.arrayVote){
+    console.log("chiamo: "+objectVote.arrayVote[tmp].id +" e voto: "+objectVote.arrayVote[tmp].vote);
+    $(`#vote_${objectVote.arrayVote[tmp].id}`).text(objectVote.arrayVote[tmp].vote);
+  }
+  
+  
 }

@@ -106,11 +106,7 @@ function initclient(namespace) {
   });
 
   socket.on("closePoll",()=>{
-    document.getElementById("viewPollDynamical").style.display="none";
-    document.getElementById("click-poll").style.display="none";
-
-    $("#pollsTable").empty();
-    $("#pollDynamical").empty();
+    createNotice();
   });
 
   socket.on("updatingPoll",(optionPoll)=>{
@@ -131,9 +127,13 @@ function createPollMultiple(data){
   
   $("#click-poll").css("display", "inline");
 
+  cleanPoll();
+
   //creazione titolo sondaggio
   var jsonData=JSON.parse(data);
+
   $("#titlePoll").text(jsonData.namePoll);
+  $("#titlePoll").css("text-align","start");
 
   //Creazione opzioni del sondaggio in base al messaggio JSON ricevuto
   var tableOptionPoll=document.getElementById("pollsTable");
@@ -173,17 +173,32 @@ function createPollMultiple(data){
 function createPollRanking(date){
   $("#click-poll").css("display", "inline");
   
+  $("#sendVotePoll").html("Send");
+
   var jsonDate=JSON.parse(date);
 
-  var tableOptionPoll=document.getElementById("pollsTable");
+  $("#titlePoll").text("Select a rank");
+  $("#titlePoll").css("text-align","center");
 
+  cleanPoll();
+
+  var tableOptionPoll=document.getElementById("pollsTable");
+  var countHR=0;
   for(var tmp in jsonDate.questions_rightanswer){
-    // var spanQuestionText=document.createElement("span");
-    // spanQuestionText.appendChild(document.createTextNode("Question:"));
+
+    if(countHR==1){
+      var hr=document.createElement("hr");
+      tableOptionPoll.appendChild(hr);
+    }
+
+    var spanQuestionText=document.createElement("h4");
+    spanQuestionText.appendChild(document.createTextNode("Question:"));
+    spanQuestionText.setAttribute("class","questionRanking");
 
     var spanQuestion=document.createElement("span");
     spanQuestion.appendChild(document.createTextNode(`${jsonDate.questions_rightanswer[tmp].question}`));
 
+    tableOptionPoll.appendChild(spanQuestionText); 
     tableOptionPoll.appendChild(spanQuestion);
     tableOptionPoll.appendChild(document.createElement("br"));
 
@@ -215,6 +230,8 @@ function createPollRanking(date){
       divRank.appendChild(label);
       
       tableOptionPoll.appendChild(divRank);
+
+      countHR=1;
     }
 
     
@@ -253,16 +270,37 @@ function sendVotePollRanking(){
 
 const video = document.querySelector("video");
 
+function cleanPoll(){
+  $("#pollsTable").empty();
+  $("#pollDynamical").empty();
+}
+
+function createNotice(){
+  document.getElementById("viewPollDynamical").style.display="none";
+  document.getElementById("click-poll").style.display="none";
+  document.querySelector("#sendVotePoll").innerHTML="OK";
+  
+
+  cleanPoll();
+
+  var pollsTable=document.getElementById("pollsTable");
+  var pollDynamical=document.getElementById("pollDynamical");
+
+  var notice=document.createElement("h4");
+  notice.setAttribute("class","nes-text is-error");
+  notice.appendChild(document.createTextNode("The poll is closed. Click OK"))
+
+  var noticeAnother=document.createElement("h4");
+  noticeAnother.setAttribute("class","nes-text is-error");
+  noticeAnother.appendChild(document.createTextNode("The poll is closed. Click X"))
+
+  pollsTable.appendChild(notice);
+  pollDynamical.appendChild(noticeAnother);
+}
+
+
 window.onunload = window.onbeforeunload = () => {
   socket.close();
 };
-
-/*function getNotice(){
-  document.getElementById("notice").style.display="block";
-
-  $("#closeNotice").click(function(){
-    document.getElementById("notice").style.display="none";
-  });
-}*/
 
 

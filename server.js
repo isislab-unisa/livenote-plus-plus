@@ -328,7 +328,9 @@ function updatingOptionValue(optionChecked){
 function updatingRanking(dateSelectRank){
 
   jsonVote={
+    arrayVote:[]
   };
+  
 
   console.log("dati originali:" + datePoll);
   var jsonDate=JSON.parse(datePoll);
@@ -338,8 +340,7 @@ function updatingRanking(dateSelectRank){
 
     jsonDate.value_question_rank[rank]++;
 
-    jsonVote["id"]=rank;
-    jsonVote["vote"]=jsonDate.value_question_rank[rank];
+    jsonVote.arrayVote.push({"id":rank,"vote":jsonDate.value_question_rank[rank]});
   });
 
   datePoll=JSON.stringify(jsonDate);
