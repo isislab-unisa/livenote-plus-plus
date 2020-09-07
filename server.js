@@ -251,10 +251,10 @@ function makeitlive(socket){
     
   });
 
-  socket.on("pollOpen",(data)=>{
+  socket.on("createPollRanking",(data)=>{
     countPeopleFixed=countPeopleInLive;
     datePoll=data;
-    socket.broadcast.emit("pollOpen",data);
+    socket.broadcast.emit("createPollRanking",data);
   });
 
   //aggiornamento sondaggio
@@ -264,8 +264,14 @@ function makeitlive(socket){
 
     socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
     socket.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
-    
    
+  });
+
+  socket.on("updatingPollRanking",(dateSelectRank)=>{
+    jsonVote=updatingRanking(dateSelectRank);
+
+    socket.broadcast.emit("updatingPollRanking",jsonVote);
+    socket.emit("updatingPollRanking",jsonVote);
   });
 
   // avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
@@ -278,7 +284,10 @@ function makeitlive(socket){
   
   // un nuovo utente che si connette prende i dati del sondaggio
   if(datePoll){// se il sondaggio è stato creato, l'utente prende altrimenti no
-    socket.emit("getPoll",datePoll,countPeopleFixed);
+    objectJSON=JSON.parse(datePoll);
+    if(objectJSON.typePoll===0)
+      console.log("mando il socket");
+      socket.emit("getPollMultiple",datePoll,countPeopleFixed);
   }
 
   socket.on("disconnect",()=>{
@@ -286,6 +295,8 @@ function makeitlive(socket){
   });
 
 }
+
+
 var countPeopleFixed;
 var countPeopleInLive=-1;
 var chat_users_for_namespaces = {}
@@ -314,6 +325,28 @@ function updatingOptionValue(optionChecked){
   return value;
 }
 
+function updatingRanking(dateSelectRank){
+
+  jsonVote={
+  };
+
+  console.log("dati originali:" + datePoll);
+  var jsonDate=JSON.parse(datePoll);
+
+  dateSelectRank.map(function(rank){
+    console.log("valore preso: "+rank);
+
+    jsonDate.value_question_rank[rank]++;
+
+    jsonVote["id"]=rank;
+    jsonVote["vote"]=jsonDate.value_question_rank[rank];
+  });
+
+  datePoll=JSON.stringify(jsonDate);
+  
+  console.log("JsonVote:"+JSON.stringify(jsonVote));
+  return JSON.stringify(jsonVote);
+}
 /*
 // funzione che permette di aggiornare i dati del sondaggio quando un nuovo utente entra nel sito
 function updatingPollEnteringPerson(){
