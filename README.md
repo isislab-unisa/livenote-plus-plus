@@ -2,17 +2,34 @@
 
 ## Table of contents
 * [Introduction](#Introduction)
-  * [Feature](#Feature)
+  * [Features](#Features)
   * [Technologies](#Technologies)
-* Contributing and development
+* [Contributing and development](#Contributing-and-development)
   * [Installation](#Installation)
   * [How to run on your local environment?](#How-to-run-on-your-local-environment?)
 * [License](#License)
 
 # Introduction
 
-Livenote is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
-The core libraries are:
+Livenote++ is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
+
+Enter in our discord community for suggestions and/or help:
+[Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
+
+## What's Livenote++ for aim?
+
+gif delle immagini
+Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
+![preview](./public/img/preview1.png)
+
+This is the master view with all the possible commands at your hands!
+![preview](./public/img/preview2.png)
+
+
+## Features
+
+We made Livenote using the following tools.
+
 Backend:
 * ![](https://img.shields.io/badge/express-4.17.1-green)
 * ![](https://img.shields.io/badge/socket.io-2.3.0-green)
@@ -21,21 +38,6 @@ Frontend:
 * ![](https://img.shields.io/badge/nes.css-2.3.0-green)
 
 For now, the project is full supported for Chrome
-
-Enter in our discord channel for suggestion or help:
-[Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
-
-gif delle immagini
-
-Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
-![preview](./public/img/preview1.png)
-
-This is the master view with all the possible commands at your hands!
-![preview](./public/img/preview2.png)
-
-## Feature
-
-working on progress
 
 ## Technologies
 
