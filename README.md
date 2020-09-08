@@ -2,13 +2,14 @@
 
 ## Table of contents
 * [Introduction](#Introduction)
-* [Feature](#Feature)
-* [Technologies](#Technologies)
-* [Setup](#Setup)
-* [Local project](#Local-project)
+  * [Feature](#Feature)
+  * [Technologies](#Technologies)
+* Contributing and development
+  * [Installation](#Installation)
+  * [How to run on your local environment?](#How-to-run-on-your-local-environment?)
 * [License](#License)
 
-## Introduction
+# Introduction
 
 Livenote is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
 The core libraries are:
@@ -40,9 +41,9 @@ working on progress
 
 working on progress
 
-## Contributing and Development
+# Contributing and Development
 
-## Setup
+## Installation
 
 Start using Node
 
@@ -69,7 +70,7 @@ docker build --tag livenote++ .
 docker run -d -p 433:433 livenote++
 ```
 
-## Run locally
+## How to run on your local environment?
 
 To run this project in local (no https), apply this changes to the code in server.js
 
@@ -81,6 +82,6 @@ const server = http.createServer({
 },app);
 ```
 
-## License
+# License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
