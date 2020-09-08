@@ -2,23 +2,29 @@
 
 ## Table of contents
 * [Introduction](#Introduction)
+* [Feature](#Feature)
+* [Technologies](#Technologies)
 * [Setup](#Setup)
 * [Local project](#Local-project)
 * [License](#License)
 
 ## Introduction
+
 Livenote is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
 The core libraries are:
-    Backend:
-        ![](https://img.shields.io/badge/express-4.17.1-green)
-        ![](https://img.shields.io/badge/socket.io-2.3.0-green)
-    Frontend:
-        ![](https://img.shields.io/badge/nes.css-2.3.0-green)
+Backend:
+* ![](https://img.shields.io/badge/express-4.17.1-green)
+* ![](https://img.shields.io/badge/socket.io-2.3.0-green)
+
+Frontend:
+* ![](https://img.shields.io/badge/nes.css-2.3.0-green)
 
 For now, the project is full supported for Chrome
 
 Enter in our discord channel for suggestion or help:
 [Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
+
+gif delle immagini
 
 Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
 ![preview](./public/img/preview1.png)
@@ -26,9 +32,20 @@ Here is the index view. You can drag and drop your pdf file into the box, a link
 This is the master view with all the possible commands at your hands!
 ![preview](./public/img/preview2.png)
 
+## Feature
+
+working on progress
+
+## Technologies
+
+working on progress
+
+## Contributing and Development
+
 ## Setup
 
 Start using Node
+
 Remember to change the certificate for https and the address of stun server
 
 ```bash
@@ -52,7 +69,8 @@ docker build --tag livenote++ .
 docker run -d -p 433:433 livenote++
 ```
 
-## Local project
+## Run locally
+
 To run this project in local (no https), apply this changes to the code in server.js
 
 ```js
