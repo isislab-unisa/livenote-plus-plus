@@ -12,11 +12,11 @@
 # Introduction
 
 Livenote++ is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
-
-Enter in our discord community for suggestions and/or help:
-[Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
+The idea was born during the spread of Covid-19. We were looking for a FOSS that could be used by university's teachers to provide regular lessons to the students. Any platform that we've tried, usually have subscrition fees for the Pro functionalities, or have problems about unstable connection, error and bug on high volume of clients and so on. So, like good programmers, we've started to build our own platform.
 
 ## What's Livenote++ for aim?
+
+The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The key principle for this project is to have a lightweight way to present a keynote or some slides. We've achieved this goal mixing some technologies -these techs are listed below- reducing the impact of communications between the clients.
 
 gif delle immagini
 Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
@@ -25,23 +25,34 @@ Here is the index view. You can drag and drop your pdf file into the box, a link
 This is the master view with all the possible commands at your hands!
 ![preview](./public/img/preview2.png)
 
-
 ## Features
 
-We made Livenote using the following tools.
+For now, the project is full supported on Desktop browser (Chrome)
+
+* Stateless -no personal informations are stored-
+* LoadAndPlay -load your pdf and start your presentation-
+* Streaming audio and video for the presenter
+  * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
+* Live chat
+* Real time poll
+* Draw on your slides with your mouse
+  * For now you can also change the color and the width of the drawings!
+
+## Technologies
+
+We made Livenote using the following tools:
 
 Backend:
 * ![](https://img.shields.io/badge/express-4.17.1-green)
 * ![](https://img.shields.io/badge/socket.io-2.3.0-green)
+* ![](https://img.shields.io/badge/dropzone-5.7.0-green)
+* ![](https://img.shields.io/badge/pdf.js-2.5-green)
+* [webrtc](https://webrtc.org/)
+
+If you have problems with TURN server for the RTCconnection, follow this [guide](https://webrtc.org/getting-started/turn-server)
 
 Frontend:
-* ![](https://img.shields.io/badge/nes.css-2.3.0-green)
-
-For now, the project is full supported for Chrome
-
-## Technologies
-
-working on progress
+* ![hello](https://img.shields.io/badge/nes.css-2.3.0-green)
 
 # Contributing and Development
 
@@ -49,13 +60,13 @@ working on progress
 
 Start using Node
 
-Remember to change the certificate for https and the address of stun server
+Remember to change the certificate for https and the address of stun server with your own
 
 ```bash
 # Install dependencies for server
 npm install
 
-# Start turn
+# Start turn on the machine where should run
 systemctl start coturn
 
 # Run the server
@@ -74,15 +85,18 @@ docker run -d -p 433:433 livenote++
 
 ## How to run on your local environment?
 
-To run this project in local (no https), apply this changes to the code in server.js
+If you want to run this project in local (no https), you can apply this changes to the code in server.js
 
 ```js
 // Change port to 8080 or one free of your choice
 const port = 8080;
-// Change instance of server to http
+// Change instance of server to http instead of https
 const server = http.createServer({ 
 },app);
 ```
+
+Enter in our discord community for suggestions and/or help:
+[Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
 
 # License
 

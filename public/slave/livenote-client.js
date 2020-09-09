@@ -33,6 +33,7 @@ const config = {
 };
 
 var socket;
+var counter=0;
 
 /*
 Function called on load of html page
@@ -51,6 +52,19 @@ module.exports = {
     // counting 
     socket.emit("connection", true);
   
+    socket.on("client_connected", (status) => {
+      if(status) {
+        counter++
+        document.getElementById("counter").innerHTML = counter;
+      }
+    });
+  
+    socket.on("client_disconnected", (status) => {
+      if(status) {
+        counter--
+        document.getElementById("counter").innerHTML = counter;
+      }
+    });
     
     socket.on( "slidechanged", function (msg) {
       console.log("Presentation Change "+msg); 
