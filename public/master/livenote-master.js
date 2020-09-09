@@ -133,6 +133,7 @@ module.exports = {
       if(status) {
         counter++
         document.getElementById("counter").innerHTML = counter;
+        socket.emit("counter", counter);
       }
     });
   
@@ -140,6 +141,7 @@ module.exports = {
       if(status) {
         counter--
         document.getElementById("counter").innerHTML = counter;
+        socket.emit("counter", counter);
       }
     });
   

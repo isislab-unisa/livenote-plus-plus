@@ -16,7 +16,7 @@ The idea was born during the spread of Covid-19. We were looking for a FOSS that
 
 ## What's Livenote++ for aim?
 
-The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The key principle for this project is to have a lightweight way to present a keynote or some slides. We've achieved this goal mixing some technologies -these techs are listed below- reducing the impact of communications between the clients.
+The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The key principle for this project is to have a lightweight way to present a keynote or some slides. We've achieved this goal mixing some technologies -these are listed below- reducing the impact of communications or streaming between the clients.
 
 gif delle immagini
 Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!

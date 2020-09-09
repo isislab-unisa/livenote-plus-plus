@@ -186,7 +186,8 @@ pokemon: change the pokemon view of the ballon
 shape: send the draw of master
 color: change color of draw line
 line: change widht of draw line
-connection: used to count user connected to the presentation (showed only on master view)
+connection: when an user connect to the presentation
+counter: keep track of number of partecipants
 */
 function makeitlive(socket){
   socket.on("broadcaster", () => {
@@ -241,6 +242,9 @@ function makeitlive(socket){
   });
   socket.on("connection", (status) => {
     socket.broadcast.emit("client_connected", status);
+  });
+  socket.on("counter", (data) => {
+    socket.broadcast.emit("counter_update", data);
   });
 }
 var chat_users_for_namespaces = {}

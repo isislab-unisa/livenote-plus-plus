@@ -333,7 +333,6 @@ var pID = window.location.pathname.split('/')[1];
 let status = { "nslide":1 };  
 let pmode = -1;
 
-
 function initThis(mode, path, slide) {
 
   pmode = mode;

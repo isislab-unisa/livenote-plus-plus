@@ -4,8 +4,8 @@ module.exports = {
     watch: true,
     mode: 'development',
     entry: { 
-       m: './public/master/livenote-master.js',
-       s: './public/slave/livenote-client.js'
+        m: './public/master/livenote-master.js',
+        s: './public/slave/livenote-client.js'
     },
     output: {
         path: path.resolve(__dirname, 'public/js/dist/'),
