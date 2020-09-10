@@ -11,12 +11,12 @@
 
 # Introduction
 
-Livenote++ is an Open Source tool that could help teachers to deliver lessons and webinar in a fast and scalable way.
-The idea was born during the spread of Covid-19. We were looking for a FOSS that could be used by university's teachers to provide regular lessons to the students. Any platform that we've tried, usually have subscrition fees for the Pro functionalities, or have problems about unstable connection, error and bug on high volume of clients and so on. So, like good programmers, we've started to build our own platform.
+Livenote++ is an Open Source tool that could help people to deliver lessons and webinar in a fast and scalable way.
+The idea was born during the spread of Covid-19. We were looking for a FOSS that could be used by university's teachers to provide regular lessons to the students. Any platform that we've tried had subscrition fees for the Pro functionalities, or have problems about unstable connection, error and bug on high volume of clients and so on. So, like good programmers, we've started to build our own platform.
 
 ## What's Livenote++ for aim?
 
-The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The key principle for this project is to have a lightweight way to present a keynote or some slides. We've achieved this goal mixing some technologies -these are listed below- reducing the impact of communications or streaming between the clients.
+The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The main principle for this project is to have a lightweight platform to present a keynote or some slides. We've achieved this goal mixing some technologies -these are listed below- reducing the impact of communications or streaming between the clients.
 
 gif delle immagini
 Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
@@ -27,16 +27,16 @@ This is the master view with all the possible commands at your hands!
 
 ## Features
 
-For now, the project is full supported on Desktop browser (Chrome)
+For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+)
 
 * Stateless -no personal informations are stored-
 * LoadAndPlay -load your pdf and start your presentation-
 * Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
-* Live chat
-* Real time poll
+* Live chat with your spectators
+* Create Real time poll
 * Draw on your slides with your mouse
-  * For now you can also change the color and the width of the drawings!
+  * You can also change the color and the width of the drawings!
 
 ## Technologies
 
@@ -52,7 +52,7 @@ Backend:
 If you have problems with TURN server for the RTCconnection, follow this [guide](https://webrtc.org/getting-started/turn-server)
 
 Frontend:
-* ![hello](https://img.shields.io/badge/nes.css-2.3.0-green)
+* ![](https://img.shields.io/badge/nes.css-2.3.0-green)
 
 # Contributing and Development
 
