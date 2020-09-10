@@ -18,24 +18,19 @@ The idea was born during the spread of Covid-19. We were looking for a FOSS that
 
 The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The main principle for this project is to have a lightweight platform to present a keynote or some slides. We've achieved this goal mixing some technologies -these are listed below- reducing the impact of communications or streaming between the clients.
 
-gif delle immagini
-Here is the index view. You can drag and drop your pdf file into the box, a link will be generated for your presentation!
-![preview](./public/img/preview1.png)
-
-This is the master view with all the possible commands at your hands!
-![preview](./public/img/preview2.png)
+![preview](./public/img/livegif.gif)
 
 ## Features
 
 For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+)
 
-* Stateless -no personal informations are stored-
-* LoadAndPlay -load your pdf and start your presentation-
-* Streaming audio and video for the presenter
+* :zap: Stateless -no personal informations are stored-
+* :fire: LoadAndPlay -load your pdf and start your presentation-
+* :rocket: Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
-* Live chat with your spectators
-* Create Real time poll
-* Draw on your slides with your mouse
+* :sparkles: Live chat with your spectators
+* :tada: Create Real time poll
+* :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
 
 ## Technologies
@@ -47,11 +42,13 @@ Backend:
 * ![](https://img.shields.io/badge/socket.io-2.3.0-green)
 * ![](https://img.shields.io/badge/dropzone-5.7.0-green)
 * ![](https://img.shields.io/badge/pdf.js-2.5-green)
-* [webrtc](https://webrtc.org/)
+* ![](https://img.shields.io/badge/webrtc-1.0-green)
 
-If you have problems with TURN server for the RTCconnection, follow this [guide](https://webrtc.org/getting-started/turn-server)
+:mag: If you have problems with TURN server for the RTCconnection, follow this [guide](https://webrtc.org/getting-started/turn-server)
 
 Frontend:
+* ![](https://img.shields.io/badge/html-1.0-green)
+* ![](https://img.shields.io/badge/css-1.0-green)
 * ![](https://img.shields.io/badge/nes.css-2.3.0-green)
 
 # Contributing and Development
@@ -60,7 +57,7 @@ Frontend:
 
 Start using Node
 
-Remember to change the certificate for https and the address of stun server with your own
+:see_no_evil: Remember to change the certificate for https and the address of stun server with your own
 
 ```bash
 # Install dependencies for server
@@ -95,9 +92,9 @@ const server = http.createServer({
 },app);
 ```
 
-Enter in our discord community for suggestions and/or help:
-[Discord](https://discord.gg/BTt5fUp) ![Discord](https://img.shields.io/discord/693092516286693387)
+:beers: Enter in our discord community for suggestions and/or help:
+<a href="https://discord.gg/BTt5fUp">![Discord](https://img.shields.io/discord/693092516286693387?logo=discord)</a>
 
 # License
-
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
