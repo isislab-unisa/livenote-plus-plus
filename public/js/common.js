@@ -21,7 +21,7 @@ const renderPage = num => {
 
     var viewport = page.getViewport({ scale: 1, });
     var scale = Math.min((window.innerHeight / viewport.height), (window.innerWidth / viewport.width));
-    console.log(viewport.width +" "+viewport.height+" "+scale)    
+    //console.log(viewport.width +" "+viewport.height+" "+scale)    
     var viewport = page.getViewport({scale: scale,});
    
     canvas.height = window.innerHeight;
@@ -176,7 +176,7 @@ function changepokemon(){
 var nickname = '';
 function showChat(){
   if(nickname == ''){
-    document.getElementById('dialog-nickname').showModal();
+    $('#dialog-nickname').modal('show')
       $('#enter').click( function()
         { 
           //TODO check the lenght of nickname greater then 0
@@ -195,7 +195,7 @@ function showChat(){
               scrollChatList();
             }
           }else {
-            document.getElementById('dialog-error-nickname').showModal();
+            $('#dialog-error-nickname').modal('show')
           }
         }
       );
@@ -282,7 +282,7 @@ function initServices(mysocket){
 
   $(document).keydown(function(e){
    
-    if(e.ctrlKey && e.altKey && e.keyCode == 67){
+    if(e.ctrlKey && e.altKey && e.keyCode == 79){
       showChat();
        //CTRL + ALT + t keydown combo
     }else if(e.ctrlKey && e.altKey && e.keyCode == 80){
@@ -333,13 +333,20 @@ var pID = window.location.pathname.split('/')[1];
 let status = { "nslide":1 };  
 let pmode = -1;
 
+function loadStatus(s){
+  status = s
+  queueRenderPage(s.nslide);
+  pageNum = s.nslide
+  document.getElementById("progress-bar").setAttribute("value", s.nslide);
+}
+
 function initThis(mode, path, slide) {
 
   pmode = mode;
   if (mode == 1) {
     socket.on( "slidechanged", function (msg) {
-      console.log("Presentation Change "+msg); 
-      s = JSON.parse(msg)
+      //console.log("Presentation Change "+msg); 
+      s = JSON.parse(msg);
       loadStatus(s);
     });
     socket.on( "pokemon", function (status, name) {
@@ -347,7 +354,7 @@ function initThis(mode, path, slide) {
     });
     //shape
     socket.on( "shapechanged", function (msg) {
-      console.log("shape arrived"); 
+      //console.log("shape arrived"); 
       s = JSON.parse(msg)
       loadShape(s)
     });
@@ -361,7 +368,6 @@ function initThis(mode, path, slide) {
 
   if (mode == 0) {
   document.querySelector('#pdf-render').addEventListener('touchstart', function(e){
-    console.log("starting touch")
     touchPressed = true;
     var x =  e.pageX - $(this).offset().left
     var y =  e.pageY - $(this).offset().top
@@ -369,7 +375,6 @@ function initThis(mode, path, slide) {
   });
 
   document.querySelector('#pdf-render').addEventListener('touchmove', function(e){
-    console.log("moving touch here")
     if (touchPressed) {
       var x =  e.pageX - $(this).offset().left
       var y =  e.pageY - $(this).offset().top
@@ -379,16 +384,12 @@ function initThis(mode, path, slide) {
   });
 
   document.querySelector('#pdf-render').addEventListener('touchend', function(e){
-    console.log("ending touch here")
     touchPressed = false;
-   
     shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
   });
 
   document.querySelector('#pdf-render').addEventListener('touchcancel', function(e){
-    console.log("cancelling touch here")
     touchPressed = false;
-  
     shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
   });
 
@@ -434,10 +435,13 @@ function initThis(mode, path, slide) {
 
     document.getElementById("progress-bar").setAttribute("max", pdfDoc.numPages);
     renderPage(slide);
+    /*
     $('#info').click( function()
     {
       document.getElementById('dialog-info').showModal();
+      //$('#dialog-nickname').modal('show')
     });
+    */
   })
   .catch(err => {
     // Display error
@@ -472,7 +476,7 @@ function loadShape(s){
     ctx.stroke();
     lastX = x;
     lastY = y;
-    console.log(nwidth+ " "+nheight+" "+s.width+" "+s.height)
+    //console.log(nwidth+ " "+nheight+" "+s.width+" "+s.height)
   }
 }
 

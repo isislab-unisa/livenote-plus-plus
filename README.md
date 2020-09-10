@@ -12,11 +12,11 @@
 # Introduction
 
 Livenote++ is an Open Source tool that could help people to deliver lessons and webinar in a fast and scalable way.
-The idea was born during the spread of Covid-19. We were looking for a FOSS that could be used by university's teachers to provide regular lessons to the students. Any platform that we've tried had subscrition fees for the Pro functionalities, or have problems about unstable connection, error and bug on high volume of clients and so on. So, like good programmers, we've started to build our own platform.
+The idea was born during the spread of Covid-19. We were looking for a FOSS that could be used by university's teachers to provide regular lessons to the students. Any platform that we've tried had subscrition fees for the Pro functionalities, or had problems about unstable connection, error and bug on high volume of clients and so on. So, like good programmers, we've started to build our own platform.
 
 ## What's Livenote++ for aim?
 
-The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectator, but leaving them the possibility to interact with some tools. The main principle for this project is to have a lightweight platform to present a keynote or some slides. We've achieved this goal mixing some technologies -these are listed below- reducing the impact of communications or streaming between the clients.
+The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectators, but leaving them the possibility to interact with some tools. The main principle for this project is to have a lightweight platform to present a keynote or some slides. We've achieved this goal mixing some technologies -listed below- reducing the impact of communications or streaming between the clients.
 
 ![preview](./public/img/livegif.gif)
 

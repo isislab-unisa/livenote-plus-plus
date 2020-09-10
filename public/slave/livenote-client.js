@@ -11,6 +11,16 @@ function hidecontrol(){
 }
 
 // Render the current page
+module.exports = {
+  loadStatus: function (s) {
+    status = s
+    queueRenderPage(s.nslide);
+    pageNum = s.nslide
+    document.getElementById("progress-bar").setAttribute("value", s.nslide);
+  }
+};
+
+// Render the current page
 function loadStatus(s){
   status = s
   queueRenderPage(s.nslide);
@@ -21,6 +31,7 @@ function loadStatus(s){
 /*
 AUDIO VIDEO
 Manage the connection audio/video for client/master
+Turn Server
 */
 let peerConnection;
 const config = {
@@ -52,7 +63,6 @@ module.exports = {
     socket.emit("connection", true);
   
     socket.on("counter_update", (data) => {
-      console.log('updating counter')
       document.getElementById("counter").innerHTML = data;      
     });
     
@@ -67,8 +77,8 @@ module.exports = {
     //TODO BUG quando un client si collega se il video è in modalità pokemon può vederlo, lo stesso, quando si collega deve chiedere il permesso del video
   
     socket.on("offer", (id, description) => {
-      console.log(id)
-      console.log(description)
+      //console.log(id)
+      //console.log(description)
       
       peerConnection = new RTCPeerConnection(config);
       peerConnection
@@ -110,73 +120,6 @@ module.exports = {
   }
 };
 
-/*
-function initclient(namespace) {
-  socket = io.connect(window.location.origin+namespace, {
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax : 5000,
-    reconnectionAttempts: 99999
-  });
-
-  // counting 
-  socket.emit("connection", true);
-
-  
-  socket.on( "slidechanged", function (msg) {
-    console.log("Presentation Change "+msg); 
-    s = JSON.parse(msg)
-    loadStatus(s);
-  });
-  socket.on( "pokemon-update", function (status, name) {
-    updatepokemon(status,name)
-  });  
-  //TODO BUG quando un client si collega se il video è in modalità pokemon può vederlo, lo stesso, quando si collega deve chiedere il permesso del video
-
-  socket.on("offer", (id, description) => {
-    console.log(id)
-    console.log(description)
-    
-    peerConnection = new RTCPeerConnection(config);
-    peerConnection
-      .setRemoteDescription(description)
-      .then(() => peerConnection.createAnswer())
-      .then(sdp => peerConnection.setLocalDescription(sdp))
-      .then(() => {
-        $('#liveperson').show();
-        socket.emit("answer", id, peerConnection.localDescription);
-      });
-    peerConnection.ontrack = event => {
-      video.srcObject = event.streams[0];
-    };
-    peerConnection.onicecandidate = event => {
-      if (event.candidate) {
-        socket.emit("candidate", id, event.candidate);
-      }
-    };
-  });
-  socket.on("candidate", (id, candidate) => {
-    peerConnection
-      .addIceCandidate(new RTCIceCandidate(candidate))
-      .catch(e => console.error(e));
-  });
-  
-  socket.on("connect", () => {
-    socket.emit("watcher");
-  });
-  
-  socket.on("broadcaster", () => {
-    socket.emit("watcher");
-  });
-  
-  socket.on("disconnectPeer", () => {
-    peerConnection.close();
-  });
-
-  initServices(socket);
-
-}
-*/
 const video = document.querySelector("video");
 
 window.onunload = window.onbeforeunload = () => {
