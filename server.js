@@ -127,7 +127,7 @@ app.post('/', function(req, res) {
 
   fileUploaded.mv(path.join(session_folder + '/' + id+".pdf"), (err) => {
     if (err) throw err;
-    console.log('file uploaded successfull in folder');
+    //console.log('file uploaded successfull in folder');
   })
   sess.save(function(err) {
     if (err) throw err;
@@ -141,7 +141,7 @@ Create livenote for the name specified
 eg: /abc/def
 */
 function createnewlive(name){
-  console.log("New live at "+name)
+  //console.log("New live at "+name)
   const nm = io.of(name);
   nm.on("error", e => console.log(e));
   nm.on("connection", socket => makeitlive(socket));

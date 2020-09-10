@@ -239,29 +239,29 @@ module.exports = {
     }
   
     function startLive(){
-      var dial = document.getElementById('dialog-play')
+      /*var dial = document.getElementById('dialog-play')
       if (typeof dial.showModal === "function") {
         dial.showModal();
       } else {
         alert("The <dialog> API is not supported by this browser");
       }
-      //document.getElementById('dialog-play').showModal();
-          $('#play').click( function()
-            { 
-              getStream()
-              .then(getDevices)
-              .then(gotDevices);
-              function getDevices() {
-                $('#startlive').removeClass("nes-logo");
-                $('#liveperson').show();
-                $('#select-audio').show();
-                $('#select-video').show();
-                
-                // $('#startlive').addClass("nes-mario");
-                return navigator.mediaDevices.enumerateDevices();
-              }
-            }
-          );
+      */
+      $('#play').click( function()
+        { 
+          getStream()
+          .then(getDevices)
+          .then(gotDevices);
+          function getDevices() {
+            $('#startlive').removeClass("nes-logo");
+            $('#liveperson').show();
+            $('#select-audio').show();
+            $('#select-video').show();
+            
+            // $('#startlive').addClass("nes-mario");
+            return navigator.mediaDevices.enumerateDevices();
+          }
+        }
+      );
     }
   
     $('#startlive').click( function() {

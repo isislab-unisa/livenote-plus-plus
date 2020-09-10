@@ -22,7 +22,7 @@ The aim of Livenote++ is to manage lesson/seminars from one person to a large nu
 
 ## Features
 
-For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+)
+For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+, Firefox54+)
 
 * :zap: Stateless -no personal informations are stored-
 * :fire: LoadAndPlay -load your pdf and start your presentation-
@@ -92,9 +92,10 @@ const server = http.createServer({
 },app);
 ```
 
-:beers: Enter in our discord community for suggestions and/or help:
+:beers: Enter in our discord community for suggestions and/or help 
 <a href="https://discord.gg/BTt5fUp">![Discord](https://img.shields.io/discord/693092516286693387?logo=discord)</a>
 
 # License
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
+
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details

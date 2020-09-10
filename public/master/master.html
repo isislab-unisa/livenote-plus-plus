@@ -7,6 +7,11 @@
     <link href="/style/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <!-- bootstrap -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- end boot -->
     <style>
        html, body, pre, code, kbd, samp {
            font-family: 'Press Start 2P';font-size: 1em;
@@ -17,9 +22,9 @@
     <div id="container">
       <canvas class="pdf-canvas " id="pdf-render"></canvas>
       <div id="topButtons">
-        <img id="info"  class="control" style="image-rendering: pixelated;" src="../img/nes.png"/>
+        <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated;" src="../img/nes.png"/>
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
-        <span id="startlive" class="nes-logo control"></span>
+        <span id="startlive" class="nes-logo control" data-toggle="modal" data-target="#dialog-play"></span>
         <div id="select-audio" class="nes-select is-success select control" style="display:none;">
           <select id="audioSource"></select>
         </div>
@@ -38,6 +43,41 @@
       <p>counter: <span id="counter"></span></p>
     </div>
 
+    <!-- Modal info-->
+    <div class="modal fade" id="dialog-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Livenote++</h4>
+          </div>
+          <div class="modal-body">
+            <p>Welcome to our presentation system.</p>
+            <p>This is an experimental version a lot of</p>
+            <p>functionalities will not work correctly.</p>
+            <p>We now support only Desktop browser.</p>
+            <p>Commands:</p>
+            <p>CTRL + ALT + c -> Chat</p>
+            <p>CTRL + ALT + m -> Hide controls</p>
+            <p>Presenter commands:</p>
+            <p>CTRL + ALT + l -> Play video and audio</p>
+            <p>CTRL + ALT + p -> Hide video (Avatar mode, only audio is shared)</p>
+            <p>CTRL + ALT + a -> Change avatar</p>
+            <p>CTRL + ALT + q -> Change color of drawing</p>
+            <p>CTRL + ALT + w -> Change line width of drawing</p>
+
+            <p>Please: consider to refresh your page, if something wrong!</p>
+            <p>Notice: the presentation is totaly stateless,</p>
+            <p>all your changing or messages are not stored.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- baloon -->
     <div id ="liveperson" class="draggable big-video" style="display:none;"> 
       <div id ="video-balloon-container"> 
         <video id = "video-balloon" class = "web-cam" playsinline autoplay muted></video> 
@@ -48,6 +88,7 @@
       </div>
     </div>
 
+    <!-- chat -->
     <div  id="chat" class="nes-table-responsive draggable ">
       <table class=" nes-table  is-bordered is-centered table-chat " style="position: absolute;bottom: 0;  background-color: rgba(255, 255, 255, 0.5);">
         <tbody>
@@ -70,80 +111,81 @@
       </table>
     </div>
 
-  <dialog class="nes-dialog is-rounded center" id="dialog-nickname">
-    <form method="dialog">
-      <p class="title">Enter your nickname:</p>
-      <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
-      <menu class="dialog-menu">
-        <button class="nes-btn is-primary" id="enter" value="default action">Enter</button>
-      </menu>
-    </form>
-  </dialog>
-  <dialog class="nes-dialog is-rounded center is-dark" id="dialog-error-nickname">
-    <form method="dialog">
-      <p class="title">Error you must enter a nickname.</p>
-      <menu class="dialog-menu">
-        <button class="nes-btn is-primary center" id="error-ok" value="default action">ok</button>
-      </menu>
-    </form>
-  </dialog>
+    <!-- Modal chat enter-->
+    <div class="modal fade" id="dialog-nickname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Enter your nickname</h4>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
+          </div>
+          <div class="modal-footer">
+            <button class="nes-btn" data-dismiss="modal">Cancel</button>
+            <button class="nes-btn is-primary" id="enter" value="default action" data-dismiss="modal">Enter</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <dialog class="nes-dialog is-dark is-rounded center"  id="dialog-play">
-    <form method="dialog">
-      <p class="title">Play audio and video</p>
-      <p>Are you sure?</p>
-      <menu class="dialog-menu">
-        <button class="nes-btn">Cancel</button>
-        <button class="nes-btn is-primary" style="margin-left:50%;" id="play">Play Now!</button>
-      </menu>
-    </form>
-  </dialog>
+    <!-- Modal chat error-->
+    <div class="modal fade" id="dialog-error-nickname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error you must enter a nickname.</h4>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
+          </div>
+          <div class="modal-footer">
+            <button class="nes-btn is-primary center" id="error-ok" value="default action" data-dismiss="modal">ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <dialog class="nes-dialog center" id="dialog-info" open="false">
-    <form method="dialog">
-      <p class="title">Livenote++</p>
-      <p>Welcome to our presentation system.</p>
-      <p>This is an experimental version a lot of</p>
-      <p>functionalities will not work correctly.</p>
-      <p>We now support only Desktop browser.</p>
-      <p>Commands:</p>
-      <p>CTRL + ALT + c -> Chat</p>
-      <p>CTRL + ALT + m -> Hide controls</p>
-      <p>Presenter commands:</p>
-      <p>CTRL + ALT + l -> Play video and audio</p>
-      <p>CTRL + ALT + p -> Hide video (Avatar mode, only audio is shared)</p>
-      <p>CTRL + ALT + a -> Change avatar</p>
-      <p>CTRL + ALT + q -> Change color of drawing</p>
-      <p>CTRL + ALT + w -> Change line width of drawing</p>
+    <!-- Modal audiovideo-->
+    <div class="modal fade" id="dialog-play" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Play audio and video</h4>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure?</p>
+          </div>
+          <div class="modal-footer">
+            <button class="nes-btn" data-dismiss="modal">Cancel</button>
+            <button class="nes-btn is-primary" style="margin-left:50%;" id="play" data-dismiss="modal">Play Now!</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <p>Please: consider to refresh your page, if something wrong!</p>
-      <p>Notice: the presentation is totaly stateless,</p>
-      <p>all your changing or messages are not stored.</p>
-      <menu class="dialog-menu">
-        <button class="nes-btn ">Cancel</button>
-      </menu>
-    </form>
-  </dialog>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="module" src="/js/livenote-drag.js"></script>
+    <script src="/js/common.js" ></script>
+    <script type="module" src="/js/dist/m.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
-   
-    
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-  <script type="module" src="/js/livenote-drag.js"></script>
-  <script src="/js/common.js" ></script>
-  <script type="module" src="/js/dist/m.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
-
-  <script>
-    window.onload  = function() {
-      initmaster(window.location.pathname)
-      initThis(0,window.location.origin+"/sessions"+window.location.pathname+".pdf",1)
-    // console.log(window.location.origin+"/sessions"+window.location.pathname+".pdf")
-    }
-    window.onresize = function(){
-        resize()
-    }
-  </script>
+    <script>
+      window.onload  = function() {
+        initmaster(window.location.pathname)
+        initThis(0,window.location.origin+"/sessions"+window.location.pathname+".pdf",1)
+      // console.log(window.location.origin+"/sessions"+window.location.pathname+".pdf")
+      }
+      window.onresize = function(){
+          resize()
+      }
+    </script>
   </body>
 </html>
 
