@@ -267,15 +267,13 @@ body {
 .poll{
   color: black !important;
   position: absolute !important;
-  top: 10%;
   right: 0%;
-  margin: 5px;
+  margin-top:75px !important;
   width: 14em;
 }
 
 #viewPollDynamical{
   display:none;
-  top:25%;
 }
 
 .progress{
@@ -301,8 +299,15 @@ body {
   right: 0.5%;
 }
 
+.delete-option-ranking{
+  position: absolute !important;
+  top: 7%;
+  right: 0.5%;
+}
+
 .div-delete-option{
   position: relative;
+  margin-bottom:10px;
 }
 
 
@@ -315,6 +320,7 @@ body {
   margin:auto;
   margin-top:4px;
   text-align: center;
+  margin-right: 35px;
 }
 
 .percentages{
@@ -355,9 +361,17 @@ body {
   opacity: 0.4;
 }
 
+.container-select.nes-input input:checked ~ img{
+  opacity: 1;
+}
+
+.container-select.nes-input input:hover ~ img{
+  opacity: 1;
+}
+
 .rankIconFinal{
   width: auto;
-  height: 50px;
+  height: 38px;
   margin-right:15px;
   opacity: 1;
 }
@@ -379,12 +393,18 @@ body {
 
 .countVoteRanking{
   position: absolute;
-  left: 580px;
+  left: 90%;
 }
 
 .questionRanking{
   margin-bottom:10px;
   font-size: 18px;
+}
+
+.errorPoll{
+  display: none;
+  color:red;
+  margin-bottom:10px;
 }
 
 

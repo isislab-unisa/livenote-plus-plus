@@ -9,6 +9,7 @@ var cookieSession = require('cookie-session');
 let ejs = require('ejs');
 const { ifError } = require("assert");
 const { json } = require("express");
+const { type } = require("os");
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -276,50 +277,75 @@ function makeitlive(socket){
     socket.broadcast.emit("counter_update", data);
 
   // creazione sondaggio
-  socket.on("pollMultiple",(data)=>{
+  
+
+  socket.on("createPollMultiple",(data)=>{
     countPeopleFixed=countPeopleInLive;
     datePoll=data;
-    socket.broadcast.emit("pollMultiple",data);
-    
+    countPersonAnswer=0;
+
+    socket.broadcast.emit("createPollMultiple",data,countPeopleInLive);
+    socket.emit("createPollMultiple",data,countPeopleInLive);
   });
 
   socket.on("createPollRanking",(data)=>{
     countPeopleFixed=countPeopleInLive;
     datePoll=data;
-    socket.broadcast.emit("createPollRanking",data);
+    countPersonAnswer=0;
+
+    socket.broadcast.emit("createPollRanking",data,countPeopleInLive);
+    socket.emit("createPollRanking",data,countPeopleInLive);
   });
 
   //aggiornamento sondaggio
+  
+
   socket.on("updatingPoll",(optionChecked)=>{
-    
+    countPersonAnswer++;
+    console.log(countPersonAnswer);
     var value=updatingOptionValue(optionChecked);
 
-    socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
-    socket.emit("updatingPoll",{"optionChecked":optionChecked,"value":value});
+    socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value},countPersonAnswer);
+    socket.emit("updatingPoll",{"optionChecked":optionChecked,"value":value},countPersonAnswer);
    
   });
 
   socket.on("updatingPollRanking",(dateSelectRank)=>{
+    countPersonAnswer++;
     jsonVote=updatingRanking(dateSelectRank);
+    
+    console.log("countPerson:"+countPersonAnswer);
 
-    socket.broadcast.emit("updatingPollRanking",jsonVote);
-    socket.emit("updatingPollRanking",jsonVote);
+    socket.broadcast.emit("updatingPollRanking",jsonVote,countPersonAnswer);
+    socket.emit("updatingPollRanking",jsonVote,countPersonAnswer);
   });
 
-  // avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
+  //funzione asincrona
+  // quando riceve il conteggio delle immagini presenti nella directory rankICon,manda tale conteggio al master
+  getCountFilesIMG(function(count){
+    socket.emit("getCountFiles",count);
+  });
+
+
+// avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
   socket.on("closePoll",()=>{
+    var typePoll=(JSON.parse(datePoll).typePoll);
+
     datePoll=0;
-    
-    socket.broadcast.emit("closePoll");
+
+    socket.broadcast.emit("closePoll",typePoll);
   });
 
   
   // un nuovo utente che si connette prende i dati del sondaggio
   if(datePoll){// se il sondaggio è stato creato, l'utente prende altrimenti no
     objectJSON=JSON.parse(datePoll);
-    if(objectJSON.typePoll===0)
-      console.log("mando il socket");
+    if(objectJSON.typePoll===0){
       socket.emit("getPollMultiple",datePoll,countPeopleFixed);
+    }
+    else if(objectJSON.typePoll===1){
+      socket.emit("getPollRanking",datePoll,countPeopleFixed);
+    }
   }
 
   socket.on("disconnect",()=>{
@@ -328,7 +354,7 @@ function makeitlive(socket){
 
 }
 
-
+var countPersonAnswer;
 var countPeopleFixed;
 var countPeopleInLive=-1;
 var chat_users_for_namespaces = {}
@@ -342,19 +368,20 @@ server.listen(port, () => console.log(`Server is running on port ${port}`));
 // partecipando al sondaggio e al conteggio del selezionamento di una determinata opzione
 function updatingOptionValue(optionChecked){
   
-  var value;
+  
+  
   var jsonDati=JSON.parse(datePoll);
 
   var countAnswer=jsonDati.valueOption[optionChecked];
   countAnswer++;
 
-  value=Math.round((countAnswer/countPeopleFixed)*100); // Math.round per fare gli arrotondamenti quando abbiamo i numeri decimali
-
   jsonDati.valueOption[optionChecked]=countAnswer;
 
   datePoll=JSON.stringify(jsonDati);
-  
-  return value;
+
+  console.log("datePoll: "+datePoll);
+
+  return countAnswer;
 }
 
 function updatingRanking(dateSelectRank){
@@ -363,12 +390,9 @@ function updatingRanking(dateSelectRank){
     arrayVote:[]
   };
   
-
-  console.log("dati originali:" + datePoll);
   var jsonDate=JSON.parse(datePoll);
 
   dateSelectRank.map(function(rank){
-    console.log("valore preso: "+rank);
 
     jsonDate.value_question_rank[rank]++;
 
@@ -376,10 +400,25 @@ function updatingRanking(dateSelectRank){
   });
 
   datePoll=JSON.stringify(jsonDate);
-  
-  console.log("JsonVote:"+JSON.stringify(jsonVote));
+
   return JSON.stringify(jsonVote);
 }
+
+function getCountFilesIMG(emitSocket){
+  var countFilesIMG=0;
+
+    fs.readdir(__dirname+"/public/img/rankIcon", function (err, files) {
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      countFilesIMG=files.length;
+      console.log("countFiles:"+countFilesIMG);
+       emitSocket(countFilesIMG);      
+  });
+
+
+}
+
 /*
 // funzione che permette di aggiornare i dati del sondaggio quando un nuovo utente entra nel sito
 function updatingPollEnteringPerson(){
