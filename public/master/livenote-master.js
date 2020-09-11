@@ -108,6 +108,7 @@ document.getElementById("audio").addEventListener('click', function(event){
 });
 
 var socket;
+var countFilesIMGMaster=0;
 
 function initmaster(namespace){
   console.log("Connect to "+window.location.origin+namespace)
@@ -159,18 +160,35 @@ function initmaster(namespace){
     getPollDynamicalMultiple(datePoll,countPeople);
   });
 
+  socket.on("getPollRanking",(datePoll,countPeople)=>{
+    hideBottonCreatePoll();
+    getPollDynamicalRanking(datePoll,countPeople);
+  });
+
   
   
   //aggiornamento sondaggio 
-  socket.on("updatingPoll",(optionPoll)=>{
-  updatePollDynamical(optionPoll.optionChecked,optionPoll.value);
+  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
+  updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
   });
 
-  socket.on("updatingPollRanking",(vote)=>{
-    updatePollRankingDynamical(vote);
+  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+    updatePollRankingDynamical(vote,countPersonAnswered);
   });
 
-    // Get camera and microphone
+  socket.on("createPollRanking",(data,countPeopleInLive)=>{
+    getPollDynamicalRanking(data,countPeopleInLive); 
+  });
+
+  socket.on("createPollMultiple",(data,countPeople)=>{
+    getPollDynamicalMultiple(data,countPeople); 
+  });
+
+  socket.on("getCountFiles",(countFilesIMG)=>{
+    countFilesIMGMaster=countFilesIMG;
+  });
+  
+  // Get camera and microphone
   const videoElement = document.querySelector("video");
   const audioSelect = document.querySelector("select#audioSource");
   const videoSelect = document.querySelector("select#videoSource");
@@ -253,6 +271,7 @@ function initmaster(namespace){
             }
           );
     }
+
     $('#startlive').click( function()
     {
       startLive();
@@ -266,29 +285,75 @@ function initmaster(namespace){
     });
     initServices(socket);
 
-    
-
-    
 
     // manda il sondagggio ai slave quando il master clicca il bottone send poll
     $('#createPoll').click(function(){
-      $("#create-poll").css("display","none");      
+      var selectPoll=$('input[name="choicePoll"]:checked').val();
 
-      if($('input[name="choicePoll"]:checked').val()=="multiple")
-        createJSONPollMultiple();
-      else
-        createJSONRanking();
+      var res;
+      if(selectPoll=="multiple"){
+        // poll ranking
+        res=validatePollMultiple();
+        
+      }
+      else if(selectPoll=="ranking"){
+        //poll multiple
+        res=validatePollRanking();
+      }
+
+      if(res==true){
+        $('#dialog-sondaggio').modal("hide");
+
+        if(selectPoll=="multiple")
+          createJSONPollMultiple();
+        else if(selectPoll=="ranking")
+          createJSONRanking();
+      }
     });
 
     $("#close-poll").click(function(){
       document.getElementById("create-poll").style.display="inline";
       document.getElementById("viewPollDynamical").style.display="none";
+      countPersonAnswer=0;
 
       $("#pollDynamical").empty();
 
       socket.emit("closePoll");
     });
 
+}
+
+function validatePollRanking(){
+  var res=true;
+
+  $("#sondaggio").find("input").each(function(){
+    if($(this).val()==""){
+      $(this).attr("class","nes-input is-error"); 
+      $(this).next().css("display","block");
+      res=false;
+    }
+    else if($(this).hasClass("nes-input is-error")){
+      $(this).attr("class","nes-input").next().hide(); 
+    }
+  });
+
+  return res;
+}
+
+function validatePollMultiple(){
+  var res=true;
+  $("#sondaggio").find("input").each(function(){
+    if($(this).val()==""){
+      $(this).attr("class","nes-input is-error"); 
+      $(this).next().css("display","block");
+      res=false;
+    }
+    else if($(this).hasClass("nes-input is-error")){
+      $(this).attr("class","nes-input").next().hide(); 
+    }
+  });
+
+  return res;
 }
 
 function hideBottonCreatePoll(){
@@ -307,9 +372,9 @@ function deleteOption(element){
 function changeQuestions(element){
   var question=element.value;
 
-  if(question=="raking"){
+  if(question=="ranking"){
     idOption=1;
-    createRaking();
+    createRanking();
   }
   else if(question=="multiple"){
     idOption=1;
@@ -319,15 +384,17 @@ function changeQuestions(element){
 
 //Crea sondaggi a risposte multiple
 function createMultipleQuestions(){
+  
   var divOptionPoll=document.getElementById("sondaggio");
 
   while(divOptionPoll.lastElementChild){
     divOptionPoll.removeChild(divOptionPoll.lastElementChild);
   }
   
+   
+
   var titleQuestion=document.createElement("h5");
   titleQuestion.setAttribute("class","modal-title");
-  titleQuestion.setAttribute("style","style='text-align: center;'");
   var textQuestion=document.createTextNode("Create a question");
   titleQuestion.appendChild(textQuestion);
 
@@ -336,20 +403,26 @@ function createMultipleQuestions(){
   inputQuestion.setAttribute("class","nes-input");
   inputQuestion.setAttribute("name","namePoll");
   inputQuestion.setAttribute("placeholder","Insert a question");
+
+  var spanErrorQuestion=document.createElement("span");
+  spanErrorQuestion.appendChild(document.createTextNode("You haven't inserted a question"));
+  spanErrorQuestion.setAttribute("class","errorPoll");
   
   var hrTag=document.createElement("hr");
 
+  var tableDiv=document.createElement("div");
+  tableDiv.setAttribute("id","tableOption");
+
   var titleOption=document.createElement("h5");
   titleOption.setAttribute("class","modal-title");
-  titleOption.setAttribute("style","style='text-align: center;'");
   var textOption=document.createTextNode("Create some options");
   titleOption.appendChild(textOption);
 
 
 
-  var divDeletePoll=document.createElement("div");
-  divDeletePoll.setAttribute("class","div-delete-option");
-  divDeletePoll.setAttribute("id","option1DIV");
+  var divOtherOption=document.createElement("div");
+  divOtherOption.setAttribute("class","div-delete-option");
+  divOtherOption.setAttribute("id","option1DIV");
 
   var inputOptionPoll=document.createElement("input");
   inputOptionPoll.setAttribute("type","text");
@@ -357,8 +430,12 @@ function createMultipleQuestions(){
   inputOptionPoll.setAttribute("class","nes-input");
   inputOptionPoll.setAttribute("placeholder","Insert an option");
 
+  var spanErrorOption=document.createElement("span");
+  spanErrorOption.appendChild(document.createTextNode("You haven't inserted an option"));
+  spanErrorOption.setAttribute("class","errorPoll");
 
-  var brTag=document.createElement("br");
+
+
 
   var buttonAdd=document.createElement("button");
   buttonAdd.setAttribute("type","button");
@@ -371,20 +448,26 @@ function createMultipleQuestions(){
 
   buttonAdd.appendChild(textNode);
 
-  divDeletePoll.appendChild(inputOptionPoll);
+  divOtherOption.appendChild(inputOptionPoll);
+  divOtherOption.appendChild(spanErrorOption);
+
+  tableDiv.appendChild(divOtherOption);
 
   divOptionPoll.appendChild(titleQuestion);
   divOptionPoll.appendChild(inputQuestion);
+  divOptionPoll.appendChild(spanErrorQuestion);
+
   divOptionPoll.appendChild(hrTag);
+
   divOptionPoll.appendChild(titleOption);
 
-  divOptionPoll.appendChild(divDeletePoll);
-  divOptionPoll.appendChild(brTag);
+  divOptionPoll.appendChild(tableDiv);
   divOptionPoll.appendChild(buttonAdd);
+
 }
 
 // Crea sondaggi a risposte aperte
-function createRaking(){
+function createRanking(){
   var divOptionPoll=document.getElementById("sondaggio");
 
   while(divOptionPoll.lastElementChild){
@@ -407,19 +490,27 @@ function createRaking(){
 
   var brTag=document.createElement("br");
 
+  var spanError=document.createElement("span");  
+  spanError.appendChild(document.createTextNode("You haven't inserted a question"));
+  spanError.setAttribute("class","errorPoll");
+
+
   var titleRank=document.createElement("h5");
   titleRank.appendChild(document.createTextNode("Select a rank"));
 
   var containerSelectRank=document.createElement("div");
   containerSelectRank.setAttribute("class","container-select nes-input");
 
-  for(i=1;i<5;i++){
+  for(i=1;i<countFilesIMGMaster+1;i++){
     var label=document.createElement("label");
     var radioRank=document.createElement("input");
     radioRank.setAttribute("type","radio");
     radioRank.setAttribute("name","rank1");
     radioRank.setAttribute("value","rankIMG"+i)
     radioRank.setAttribute("style","-webkit-appearance: none;")
+
+    if(i==1)
+      radioRank.setAttribute("checked","checked");
 
     var img=document.createElement("img");
     img.setAttribute("src",`../img/rankIcon/rankIMG${i}.png`);
@@ -441,6 +532,7 @@ function createRaking(){
   
   divDeletePoll.appendChild(titleCreateQuestion);
   divDeletePoll.appendChild(inputQuestionPoll);
+  divDeletePoll.appendChild(spanError);
   divDeletePoll.appendChild(brTag);
   divDeletePoll.appendChild(titleRank);
   divDeletePoll.appendChild(containerSelectRank);
@@ -450,18 +542,16 @@ function createRaking(){
   divOptionPoll.appendChild(brTag);
   divOptionPoll.appendChild(buttonAdd);
 
-  $("input[name='rank1']").click(function(){
-    this.nextSibling.style.opacity=1;
-  });
 }
 
 //creazione del sondaggio con risposte multiple
 var idOption=1; // attributo che serve a settare l'id dei div all'interno del Dialog. Cosi sappiamo esattamente quale il master vuole eliminare una opzione
 function addOptionMultiple(){
+  
   //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
-  var listInput=document.getElementById("sondaggio");
-
+  var tableDiv=document.getElementById("tableOption");
   idOption++;
+
 
   var divInput=document.createElement("div");
   divInput.setAttribute("class","div-delete-option");
@@ -477,18 +567,23 @@ function addOptionMultiple(){
   iconX.setAttribute("class","delete-option-multiple nes-icon close is-small");
   iconX.setAttribute("id",`option${idOption}`);
   iconX.setAttribute("onclick","deleteOption(this)");
-  
+
+  var spanError=document.createElement("span");  
+  spanError.appendChild(document.createTextNode("You haven't inserted a option"));
+  spanError.setAttribute("class","errorPoll");
 
   divInput.appendChild(input);
+  divInput.appendChild(spanError);
   divInput.appendChild(iconX);
+  
+  tableDiv.appendChild(divInput);
 
-  listInput.insertBefore(divInput,listInput.childNodes[listInput.childNodes.length-2]);      
 };
 
 //creazione del sondaggio con risposte aperte
 function addQuestionRank(){
   
-  //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
+  
   var listInput=document.getElementById("sondaggio");
 
   idOption++;
@@ -507,23 +602,27 @@ function addQuestionRank(){
   inputQuestion.setAttribute("placeholder","Insert a question");
   inputQuestion.setAttribute("class","nes-input");
 
+  var spanError=document.createElement("span");
+  spanError.appendChild(document.createTextNode("You haven't insert a question"));
+  spanError.setAttribute("class","errorPoll");
+
   var brTag1=document.createElement("br");
 
-  var spanRank=document.createElement("span");
+  var spanRank=document.createElement("h5");
   spanRank.appendChild(document.createTextNode("Select a rank"));
-  
-  var brTag2=document.createElement("br");
 
   var containerSelectRank=document.createElement("div");
   containerSelectRank.setAttribute("class","container-select nes-input");
 
-  for(var i=1;i<5;i++){
+  for(var i=1;i<countFilesIMGMaster+1;i++){
     var label=document.createElement("label");
     var radioRank=document.createElement("input");
     radioRank.setAttribute("type","radio");
     radioRank.setAttribute("name","rank"+idOption);
     radioRank.setAttribute("value","rankIMG"+i)
     radioRank.setAttribute("style","-webkit-appearance: none;")
+    if(i==1)
+      radioRank.setAttribute("checked","checked");
 
     var img=document.createElement("img");
     img.setAttribute("src",`../img/rankIcon/rankIMG${i}.png`);
@@ -537,16 +636,15 @@ function addQuestionRank(){
   }
 
   var iconX=document.createElement("i");
-  iconX.setAttribute("class","delete-option-open nes-icon close is-small");
+  iconX.setAttribute("class","delete-option-ranking nes-icon close is-small");
   iconX.setAttribute("id",`option${idOption}`);
   iconX.setAttribute("onclick","deleteOption(this)");
 
   divInput.appendChild(document.createElement("hr"));
   divInput.appendChild(titleCreateQuestion);
   divInput.appendChild(inputQuestion);
-  divInput.appendChild(brTag1);
+  divInput.appendChild(spanError);
   divInput.appendChild(spanRank);
-  divInput.appendChild(brTag2);
   divInput.appendChild(containerSelectRank);
   divInput.appendChild(iconX);
 
@@ -558,7 +656,7 @@ function createJSONPollMultiple(){
   var jsonValoriOption={}
   
   $('input[name="pollOption"]').map(function(){
-    //dataInput.push(this.value);
+    
     jsonOptionInput.push(this.value);
     jsonValoriOption[this.value]=0;
   });
@@ -573,13 +671,8 @@ function createJSONPollMultiple(){
   var jsonFinalDatiString=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString},"typePoll":0}`;
   
 
-  socket.emit("pollMultiple",jsonFinalDatiString);
-  
-  getPollDynamicalMultiple(jsonFinalDatiString);
+  socket.emit("createPollMultiple",jsonFinalDatiString);
 }
-
-
-
 
 function createJSONRanking(){
   var datePoll={
@@ -608,9 +701,6 @@ function createJSONRanking(){
   });
 
   var jsonStringPollRanking=JSON.stringify(datePoll);
-  console.log(jsonStringPollRanking);
+
   socket.emit("createPollRanking",jsonStringPollRanking);
-
-  getPollDynamicalRanking(jsonStringPollRanking);
 }
-

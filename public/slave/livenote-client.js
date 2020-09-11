@@ -88,33 +88,40 @@ function initclient(namespace) {
 
   
   //Get aggiornamento sondaggio
-  socket.on("pollMultiple",(data)=>{
+  socket.on("createPollMultiple",(data,countPeople)=>{
     createPollMultiple(data);
-    getPollDynamicalMultiple(data); 
+    getPollDynamicalMultiple(data,countPeople); 
   });
 
-  socket.on("createPollRanking",(data)=>{
+  socket.on("createPollRanking",(data,countPeopleInLive)=>{
     createPollRanking(data); 
-    getPollDynamicalRanking(data); 
+    getPollDynamicalRanking(data,countPeopleInLive); 
   });
   
-// Quando un utente partecipa al canale in ritardo, prende i dati del sondaggio
+// Quando un utente partecipa al canale in ritardo o aggiorna la pagina relativa, prende i dati del sondaggio
   socket.on("getPollMultiple",(datePoll,countPeople)=>{
     //getNotice();
     createPollMultiple(datePoll);
     getPollDynamicalMultiple(datePoll,countPeople);
   });
 
-  socket.on("closePoll",()=>{
-    createNotice();
+
+  socket.on("getPollRanking",(data,countPeople)=>{
+    createPollRanking(data); 
+    getPollDynamicalRanking(data,countPeople); 
   });
 
-  socket.on("updatingPoll",(optionPoll)=>{
-    updatePollDynamical(optionPoll.optionChecked,optionPoll.value);
+  socket.on("closePoll",(typePoll)=>{
+    countPersonAnswer=0;
+    createNotice(typePoll);
   });
 
-  socket.on("updatingPollRanking",(vote)=>{
-    updatePollRankingDynamical(vote);
+  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
+    updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+  });
+
+  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+    updatePollRankingDynamical(vote,countPersonAnswered);
   });
 
   initServices(socket);
@@ -126,6 +133,8 @@ function createPollMultiple(data){
   //visualizzo il bottone sondaggio
   
   $("#click-poll").css("display", "inline");
+
+  $("#sendVotePoll").html("Send");
 
   cleanPoll();
 
@@ -257,12 +266,6 @@ function sendVotePollRanking(){
     arrayValueRank.push(valueSelectRank);
   });
 
-  // $('input[name="pollAnswer"]').map(function(){
-  //   var valueAnswer=this.value;
-  //   var rightAnswer=this.nextSibling.value;
-  //   alert(ignoreCase.equals(valueAnswer,rightAnswer));
-  // });
-
   document.getElementById("click-poll").style.display="none";
   socket.emit("updatingPollRanking",arrayValueRank);
 };
@@ -275,11 +278,20 @@ function cleanPoll(){
   $("#pollDynamical").empty();
 }
 
-function createNotice(){
+function createNotice(typePoll){
   document.getElementById("viewPollDynamical").style.display="none";
   document.getElementById("click-poll").style.display="none";
-  document.querySelector("#sendVotePoll").innerHTML="OK";
-  
+  var button=document.querySelector("#sendVotePoll");
+  button.innerHTML="OK";
+
+  console.log("tipo:"+typePoll);
+
+  if(typePoll==1){
+    button.removeEventListener("click",sendVotePollRanking);
+  }
+  else if(typePoll==0){
+    button.removeEventListener("click",sendVotePollMultiple);
+  }
 
   cleanPoll();
 

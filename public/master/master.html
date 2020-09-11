@@ -146,23 +146,28 @@
               <label><input type="radio" class="nes-radio" name="choicePoll" value="multiple" checked onclick="changeQuestions(this)"/>
                 <span>Multiple answers</span>
               </label>
-              <label><input type="radio" class="nes-radio" name="choicePoll" value="raking" onclick="changeQuestions(this)"/>
+              <label><input type="radio" class="nes-radio" name="choicePoll" value="ranking" onclick="changeQuestions(this)"/>
                 <span>Ranking</span>
               </label>
             </div>
           </div>
+
           <div class="modal-body" id="sondaggio">
             <h5 class="modal-title">Create a question</h4>
             <input type="text"  class="nes-input" name="namePoll" placeholder="Insert a question"/> 
+            <span class="errorPoll">You haven't inserted a question</span>
           <hr>
           <h5 class="modal-title">Create some options</h4>
-            <div class="div-delete-option" id="option1DIV">
-              <input type="text" name="pollOption" class="nes-input" placeholder="Insert an option"/> 
-            </div>
+            <div id="tableOption">
+              <div class="div-delete-option" id="option1DIV">
+                <input type="text" name="pollOption" class="nes-input" placeholder="Insert an option"/> 
+                <span class="errorPoll">You haven't inserted an option</span>
+              </div>
+          </div>
             <button type="button" class="nes-btn" id="addOptionMultiple">Add an option</button>          
           </div>
           <div class="modal-footer">
-            <button type="button" class="nes-btn" data-dismiss="modal" id="createPoll">Create</button>
+            <button type="button" class="nes-btn" id="createPoll">Create</button>
           </div>
       </div>
       
@@ -177,7 +182,7 @@
       <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 id="pollTitleDynamical" class="modal-title"></h4>
+            <h4 id="pollTitleDynamical" class="modal-title" style="text-align: center;"></h4>
           </div>
           <div class="modal-body" id="pollDynamical">
           </div>
