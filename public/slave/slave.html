@@ -3,9 +3,6 @@
   <head>
     <title>Livenote++</title>
     <meta charset="UTF-8" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="/style/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
@@ -43,7 +40,7 @@
     <div id ="liveperson" class="draggable big-video" style="display:none;"> 
        <div id ="video-balloon-container"> 
         <video id="video-balloon" class = "web-cam" playsinline></video>
-        <span id="video-avatar"  class="nes-bcrikko"></span> 
+        <span id="video-avatar"  style="" class="nes-bcrikko"></span> 
         <div id = "pokemon" class = "nes-bcrikko" ></div>
         <img id = "play" class="nes-avatar is-large" alt="Gravatar image example" src="../img/play.png" style="image-rendering: pixelated;">
         <img id = "vol"class="nes-avatar is-large" alt="Gravatar image example" src="../img/volume.png" style="image-rendering: pixelated;">
@@ -146,14 +143,41 @@
       </div>
     </div>
  
-      
-        
-        <div class="nes-container is-rounded is-dark is-centered" id="notice">
-          <p>Wait for others to finish the poll</p>
-          <button type="button" class="nes-btn" id="closeNotice">OK</button>
+    <div class="modal fade" id="dialog-sondaggio" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content send Poll-->
+        <div class="modal-content">
+          
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 id="titlePoll" class="modal-title"></h4>
+            </div> 
+
+            <div class="modal-body" id="pollsTable">
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="nes-btn" data-dismiss="modal" id="sendVotePoll">Send</button>
+            </div>
 
         </div>
+      </div>
+    </div>
 
+    <div class="modal fade" id="dialog-pollDynamical" role="dialog">
+      <div class="modal-dialog">
+        
+        <!-- Modal content view Poll-->
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 id="pollTitleDynamical" class="modal-title" style="text-align: center;" ></h4>
+            </div>
+            <div class="modal-body" id="pollDynamical">
+            </div>
+        </div>
+      </div>
+    </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="module" src="/js/livenote-drag.js" ></script>
@@ -162,7 +186,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- boot -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-    <script src="/slave/livenote-client.js" ></script>
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
     <script>

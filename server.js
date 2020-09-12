@@ -7,9 +7,6 @@ var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
 let ejs = require('ejs');
-const { ifError } = require("assert");
-const { json } = require("express");
-const { type } = require("os");
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -61,8 +58,8 @@ app.get('/', function(req, res) {
   }else{
     var session_folder = path.join(__dirname + '/public/sessions/'+ sess.id);
     if (!fs.existsSync(session_folder)) { 
-      sess.links = [];  // un array di sessione dove ogni sessione contiene un tot di file
-      sess.ids = [];    // array di id dei file caricati
+      sess.links = [];  
+      sess.ids = [];    
       sess.save(function(err) {
         if (err) throw err;
       })
@@ -76,9 +73,6 @@ app.get('/', function(req, res) {
 /*
 Dynamic page for presentation - GET
 Check if you are master or slave and render the page
-Prendo la session id e il file id nella richiesta. Faccio il confronto con la session id con l'id memorizzato nella sessione.
-Se sono uguali allora è il master in quanto è colui che ha caricato il file
-Se sono diversi, vuol dire che non si tratta della persona che ha caricato il file quindi un slave. 
 */
 app.get('/:session_id/:file_id', function(req, res) {
   sid = req.params.session_id;
@@ -149,14 +143,13 @@ eg: /abc/def
 function createnewlive(name){
   //console.log("New live at "+name)
   const nm = io.of(name);
-  console.log(nm.name);
+  
   nm.on("error", e => console.log(e));
   nm.on("connection", socket => makeitlive(socket));
 }
 
 /*
 Load a session for each file on the server
-Per il momento non è stato fatto ma lo scopo è quello di caricare un live per ogni sessione che tiene tot file 
 */
 function loadSessions(){
   const directoryPath = path.join(__dirname, 'public/sessions');
@@ -249,10 +242,10 @@ function makeitlive(socket){
     chat_users_for_namespaces[socket.nsp.name] = {}
     }
     chat_users_for_namespaces[socket.nsp.name][socket.id] = nickname;
-    console.log("socket.nsp.name: "+ socket.nsp.name+" e socket id: "+socket.id);
+    
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
-    console.log("chat_users_for_namespaces"+JSON.stringify(chat_users_for_namespaces));
+    
   });
 
   socket.on("pokemon", (status, name) => {
@@ -275,6 +268,7 @@ function makeitlive(socket){
   });
   socket.on("counter", (data) => {
     socket.broadcast.emit("counter_update", data);
+  });
 
   // creazione sondaggio
   

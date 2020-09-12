@@ -116,6 +116,7 @@ document.getElementById("audio").addEventListener('click', function(event){
 
 var socket;
 var counter=0;
+var countFilesIMGMaster=0;
 
 /*
 Function called on load of html page
@@ -180,70 +181,42 @@ module.exports = {
       peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
     });
     
-  socket.on("disconnectPeer", id => {
+    socket.on("disconnectPeer", id => {
     peerConnections[id].close();
     delete peerConnections[id];
   });
 
-  // se il master aggiorna la relativa pagina, controlla se il sondaggio è stato creato. In caso
-  // affermativo il pulsante click poll viene nascosto e messo in vista la view poll
-  socket.on("getPollMultiple",(datePoll,countPeople)=>{
-    hideBottonCreatePoll();
-    getPollDynamicalMultiple(datePoll,countPeople);
-  });
+    //aggiornamento sondaggio 
+    socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
+    updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+    });
 
-  socket.on("getPollRanking",(datePoll,countPeople)=>{
-    hideBottonCreatePoll();
-    getPollDynamicalRanking(datePoll,countPeople);
-  });
+    socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+      updatePollRankingDynamical(vote,countPersonAnswered);
+    });
 
-  
-  
-  //aggiornamento sondaggio 
-  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
-  updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
-  });
+    socket.on("createPollRanking",(data,countPeopleInLive)=>{
+      getPollDynamicalRanking(data,countPeopleInLive); 
+    });
 
-  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
-    updatePollRankingDynamical(vote,countPersonAnswered);
-  });
+    socket.on("createPollMultiple",(data,countPeople)=>{
+      getPollDynamicalMultiple(data,countPeople); 
+    });
 
-  socket.on("createPollRanking",(data,countPeopleInLive)=>{
-    getPollDynamicalRanking(data,countPeopleInLive); 
-  });
+    socket.on("getCountFiles",(countFilesIMG)=>{
+      countFilesIMGMaster=countFilesIMG;
+    });
+    
+    socket.on("getPollRanking",(datePoll,countPeople)=>{
+      hideBottonCreatePoll();
+      getPollDynamicalRanking(datePoll,countPeople);
+    });
 
-  socket.on("createPollMultiple",(data,countPeople)=>{
-    getPollDynamicalMultiple(data,countPeople); 
-  });
-
-  socket.on("getCountFiles",(countFilesIMG)=>{
-    countFilesIMGMaster=countFilesIMG;
-  });
-  
-  // Get camera and microphone
-  const videoElement = document.querySelector("video");
-  const audioSelect = document.querySelector("select#audioSource");
-  const videoSelect = document.querySelector("select#videoSource");
-
-  socket.on("getPollRanking",(datePoll,countPeople)=>{
-    hideBottonCreatePoll();
-    getPollDynamicalRanking(datePoll,countPeople);
-  });
-
-  
-  
-  //aggiornamento sondaggio 
-  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
-  updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
-  });
-
-  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
-    updatePollRankingDynamical(vote,countPersonAnswered);
-  });
-
-  socket.on("createPollRanking",(data,countPeopleInLive)=>{
-    getPollDynamicalRanking(data,countPeopleInLive); 
-  });
+    socket.on("getPollMultiple",(datePoll,countPeople)=>{
+      hideBottonCreatePoll();
+      getPollDynamicalMultiple(datePoll,countPeople);
+    });
+    
 
     // Get camera and microphone
     const videoElement = document.querySelector("video");
@@ -340,9 +313,6 @@ module.exports = {
       }
     });
   
-    initServices(socket);
-
-
     // manda il sondagggio ai slave quando il master clicca il bottone send poll
     $('#createPoll').click(function(){
       var selectPoll=$('input[name="choicePoll"]:checked').val();
@@ -371,21 +341,44 @@ module.exports = {
     $("#close-poll").click(function(){
       document.getElementById("create-poll").style.display="inline";
       document.getElementById("viewPollDynamical").style.display="none";
-      countPersonAnswer=0;
+      // countPersonAnswer=0;
 
       $("#pollDynamical").empty();
 
       socket.emit("closePoll");
     });
 
-}
+    initServices(socket);
+  },
+
+  changeQuestions:function(element){
+    var question=element.value;
+
+    if(question=="ranking"){
+      idOption=1;
+      createRanking();
+    }
+    else if(question=="multiple"){
+      idOption=1;
+      createMultipleQuestions();
+    }
+  },
+
+  deleteOption:function(element){
+    var testo=element.id+"DIV";
+
+  var divOptionRemove=document.getElementById(`${testo}`);
+
+  divOptionRemove.remove();
+  }
+};
 
 function validatePollRanking(){
   var res=true;
 
   $("#sondaggio").find("input").each(function(){
     if($(this).val()==""){
-      $(this).attr("class","nes-input is-error"); 
+      $(this).attr("class","nes-input is-"); 
       $(this).next().css("display","block");
       res=false;
     }
@@ -417,27 +410,6 @@ function hideBottonCreatePoll(){
   document.getElementById("create-poll").style.display="none";
 }
 
-function deleteOption(element){
-  var testo=element.id+"DIV";
-
-  var divOptionRemove=document.getElementById(`${testo}`);
-
-  divOptionRemove.remove();
-}
-
-
-function changeQuestions(element){
-  var question=element.value;
-
-  if(question=="ranking"){
-    idOption=1;
-    createRanking();
-  }
-  else if(question=="multiple"){
-    idOption=1;
-    createMultipleQuestions();
-  }
-}
 
 //Crea sondaggi a risposte multiple
 function createMultipleQuestions(){
@@ -558,7 +530,7 @@ function createRanking(){
   var containerSelectRank=document.createElement("div");
   containerSelectRank.setAttribute("class","container-select nes-input");
 
-  for(i=1;i<countFilesIMGMaster+1;i++){
+  for(var i=1;i<countFilesIMGMaster+1;i++){
     var label=document.createElement("label");
     var radioRank=document.createElement("input");
     radioRank.setAttribute("type","radio");
@@ -719,8 +691,8 @@ function createJSONPollMultiple(){
   });
 
 
-  jsonOptionString=JSON.stringify(jsonOptionInput);
-  jsonValoriOptionString=JSON.stringify(jsonValoriOption);
+  var jsonOptionString=JSON.stringify(jsonOptionInput);
+  var jsonValoriOptionString=JSON.stringify(jsonValoriOption);
   console.log(jsonValoriOptionString);
 
   var namePoll=$('input[name="namePoll"]').val();
@@ -761,3 +733,4 @@ function createJSONRanking(){
 
   socket.emit("createPollRanking",jsonStringPollRanking);
 }
+

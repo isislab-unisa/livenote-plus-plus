@@ -442,16 +442,12 @@ function initThis(mode, path, slide) {
   })
   .catch(err => {
     // Display error
-    alert("errore nel prendere il file");
-    //problema con la riga 449. Da aggiustare
-
-    /*
     const div = document.createElement('div');
     div.className = 'error';
     div.appendChild(document.createTextNode(err.message));
     document.querySelector('body').insertBefore(div, canvas);
     // Remove top bar
-    document.querySelector('.top-bar').style.display = 'none';*/
+    document.querySelector('.top-bar').style.display = 'none';
   });
 
 }

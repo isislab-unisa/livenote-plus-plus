@@ -1,8 +1,4 @@
 # Livenote++
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 ## Table of contents
 * [Introduction](#Introduction)
   * [Features](#Features)
