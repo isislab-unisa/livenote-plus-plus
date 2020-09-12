@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 let broadcaster;
-const port = 8080;
+const port = 443;
 
 /*
 Create https server with certificate
