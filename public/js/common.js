@@ -1,5 +1,4 @@
 /* RENDER PDF*/
-
 let pdfDoc = null,
 pageNum = 1,
 pageIsRendering = false,
@@ -341,7 +340,6 @@ function loadStatus(s){
 }
 
 function initThis(mode, path, slide) {
-
   pmode = mode;
   if (mode == 1) {
     socket.on( "slidechanged", function (msg) {
@@ -432,7 +430,6 @@ function initThis(mode, path, slide) {
   .getDocument(path)
   .promise.then(pdfDoc_ => {
     pdfDoc = pdfDoc_;
-
     document.getElementById("progress-bar").setAttribute("max", pdfDoc.numPages);
     renderPage(slide);
     /*
@@ -501,3 +498,197 @@ function clearArea() {
 }
 
 /* END DRAWING */
+
+var countPeopleTMP;
+
+//creazione della view del sondaggio, sia per il master che client
+//var jsonProgressOption={}; //{b1=0,b2=0..} per ogni opzione del sondaggio
+var jsonDatiPoll;
+function getPollDynamicalMultiple(data,countPeople){
+  countPeopleTMP=countPeople;
+  $("#viewPollDynamical").css("display","inline");
+  console.log("JSON: "+data);
+  jsonDatiPoll=JSON.parse(data);
+
+  $("#pollTitleDynamical").text("Poll multiple");
+
+  var pollTitleDynamical=document.getElementById("pollTitleDynamical");
+
+  var textCountPeople=document.createElement("h4");
+  textCountPeople.setAttribute("style","text-align:center");
+  textCountPeople.setAttribute("id","countPerson");
+
+  
+  
+
+  pollTitleDynamical.appendChild(textCountPeople);
+
+
+  var pollTable=document.getElementById("pollDynamical");
+
+  var titleQuestion=document.createElement("h4");
+  titleQuestion.appendChild(document.createTextNode("Question:"));
+
+  var textQuestion=document.createElement("h4");
+  textQuestion.appendChild(document.createTextNode(jsonDatiPoll.namePoll))
+  textQuestion.setAttribute("style","margin-bottom:20px");
+
+  pollTable.appendChild(titleQuestion);
+  pollTable.appendChild(textQuestion);
+
+  var valueTotal=0;
+
+  for(var i=0;i<jsonDatiPoll.optionPoll.length;i++){
+    var valore=jsonDatiPoll.optionPoll[i];
+
+    var divProgress=document.createElement("div");
+    divProgress.style.position="relative";
+    
+    var spanProgresso=document.createElement("span");
+    spanProgresso.setAttribute("id",`${valore}Span`)
+
+    var stringProgess=`0 persons answered: ${valore}`;
+    
+    
+    var progressBar=document.createElement("progress");
+    progressBar.setAttribute("id",valore);
+    progressBar.setAttribute("class","nes-progress");
+    progressBar.setAttribute("value","0");
+    progressBar.setAttribute("max",countPeople);
+
+
+    console.log(jsonDatiPoll);
+    // nel caso in cui il master fa aggiornamento della pagina
+    if(jsonDatiPoll.valueOption[valore]!=0){
+      var valueOption=jsonDatiPoll.valueOption[valore]
+
+      valueTotal+=valueOption;
+
+      var stringProgess=`${valueOption} persons answered: ${valore}`;
+
+      progressBar.value=valueOption
+
+      
+    }
+
+    spanProgresso.appendChild(document.createTextNode(stringProgess));
+
+    divProgress.appendChild(spanProgresso);
+    divProgress.appendChild(progressBar)
+
+    pollTable.appendChild(divProgress);
+  } 
+  var stringCountPeople=`${valueTotal} in of ${countPeople} persons answered`;
+
+  textCountPeople.appendChild(document.createTextNode(stringCountPeople));
+  
+}
+
+
+var countDivSpecificRank=5; // per costruire 4 righe di immagini
+
+
+
+function getPollDynamicalRanking(data,countPeopleInLive){
+  countPeopleTMP=countPeopleInLive;
+  $("#viewPollDynamical").css("display","inline");
+  
+  jsonDatiPoll=JSON.parse(data);
+  console.log(jsonDatiPoll);
+
+  var tableRanking=document.getElementById("pollDynamical");
+
+  $("#pollTitleDynamical").text("Ranking");
+  $("#pollTitleDynamical").css("text-align","center");
+
+  var pollTitleDynamical=document.getElementById("pollTitleDynamical");
+
+  var textCountPeople=document.createElement("h4");
+  textCountPeople.setAttribute("style","text-align:center");
+  textCountPeople.setAttribute("id","countPerson");
+  
+
+  pollTitleDynamical.appendChild(textCountPeople);
+  
+  countTagHR=0;
+  var valueCountAnswerTotal=0;
+  for(var tmp in jsonDatiPoll.questions_rightanswer){
+
+    var divRanking=document.createElement("div");
+    divRanking.style.position="relative";
+
+    if(countTagHR==1){
+      var hr=document.createElement("hr");
+      divRanking.appendChild(hr);
+    }
+
+    spanQuestion=document.createElement("span");
+    spanQuestion.appendChild(document.createTextNode("Question:"));
+
+
+    spanTextQuestion=document.createElement("span");
+    spanTextQuestion.appendChild(document.createTextNode(jsonDatiPoll.questions_rightanswer[tmp].question));
+
+    divRanking.appendChild(spanQuestion);
+    divRanking.appendChild(document.createElement("br"));
+    divRanking.appendChild(spanTextQuestion);
+    divRanking.appendChild(document.createElement("br"));
+  
+
+    var countRow=1; // per costruire le 4 colonne di immagini
+
+    for(var i=1;i<countDivSpecificRank;i++){
+      var divSpecificRank=document.createElement("div");
+      divSpecificRank.setAttribute("style","margin-top:15px");
+      
+      
+      for(var z=1;z<countRow+1;z++){
+        var img=document.createElement("img");
+        img.setAttribute("src",`../img/rankIcon/${jsonDatiPoll.questions_rightanswer[tmp].select_rankIMG}.png`);
+        img.setAttribute("class","rankIconFinal");
+
+        divSpecificRank.appendChild(img);
+        
+      }
+
+      var stringID=`${jsonDatiPoll.questions_rightanswer[tmp].select_rank}_${i}`;
+      var valueRank=jsonDatiPoll.value_question_rank[stringID];
+      valueCountAnswerTotal+=valueRank;
+
+      var spanCountVote=document.createElement("span");
+      spanCountVote.setAttribute("class","countVoteRanking");
+      spanCountVote.setAttribute("id",`vote_${stringID}`)
+      spanCountVote.appendChild(document.createTextNode(valueRank));
+
+      divSpecificRank.appendChild(spanCountVote);
+
+      if(countRow<countDivSpecificRank)
+        countRow++;
+
+      divRanking.appendChild(divSpecificRank);
+      countTagHR=1; 
+    }
+    tableRanking.appendChild(divRanking);
+  }
+  textCountPeople.appendChild(document.createTextNode(`${valueCountAnswerTotal} in of ${countPeopleTMP} persons answered`));
+}
+
+function updatePollOpenDynamical(progressId,progressValue,countPersonAnswered){
+  document.getElementById("countPerson").innerHTML=`${countPersonAnswered} in of ${countPeopleTMP} persons answered`;
+
+  document.getElementById(`${progressId}`).value=progressValue;
+  // document.getElementById(`${progressId}Span`).textContent=progressValue+"%";
+  document.getElementById(`${progressId}Span`).innerHTML=`${progressValue} persons answered: ${progressId}`;
+
+}
+
+function updatePollRankingDynamical(jsonVote,countPersonAnswered){
+  console.log("setto:"+countPersonAnswered);
+
+  objectVote=JSON.parse(jsonVote);
+  for(tmp in objectVote.arrayVote){
+    $(`#vote_${objectVote.arrayVote[tmp].id}`).text(objectVote.arrayVote[tmp].vote);
+  }
+
+  document.getElementById("countPerson").innerHTML=`${countPersonAnswered} in of ${countPeopleTMP} persons answered`;
+}

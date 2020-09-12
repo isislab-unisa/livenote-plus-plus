@@ -53,15 +53,15 @@ Check if the user is new, otherwise render the page with the right informations
 TODO: manage more then 1 file
 */
 app.get('/', function(req, res) {
+  
   var sess = req.session;
   if (sess.isNew){
     res.render('index.ejs', {element: ""});
   }else{
     var session_folder = path.join(__dirname + '/public/sessions/'+ sess.id);
-    if (!fs.existsSync(session_folder)) {
-      
-      sess.links = [];
-      sess.ids = [];
+    if (!fs.existsSync(session_folder)) { 
+      sess.links = [];  
+      sess.ids = [];    
       sess.save(function(err) {
         if (err) throw err;
       })
@@ -81,6 +81,7 @@ app.get('/:session_id/:file_id', function(req, res) {
   fid = req.params.file_id;
   var sess = req.session;
   if (sess.isNew || sess.id != sid){
+    
     res.sendFile(path.join(__dirname + '/public/slave/slave.html'))
   }else{
     res.sendFile(path.join(__dirname + '/public/master/master.html'))
@@ -140,9 +141,11 @@ app.post('/', function(req, res) {
 Create livenote for the name specified 
 eg: /abc/def
 */
+
 function createnewlive(name){
   //console.log("New live at "+name)
   const nm = io.of(name);
+  
   nm.on("error", e => console.log(e));
   nm.on("connection", socket => makeitlive(socket));
 }
@@ -189,23 +192,36 @@ line: change widht of draw line
 connection: when an user connect to the presentation
 counter: keep track of number of partecipants
 */
+
+
 function makeitlive(socket){
+    // INIZIO 
+    // OPERAZIONI PER LA CONNESSIONE VIDEO
+  countPeopleInLive++;
+  
+  //updatingPollEnteringPerson();
+
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
     socket.broadcast.emit("broadcaster");
   });
+
   socket.on("watcher", () => {
     socket.to(broadcaster).emit("watcher", socket.id);
   });
+
   socket.on("offer", (id, message) => {
     socket.to(id).emit("offer", socket.id, message);
   });
+
   socket.on("answer", (id, message) => {
     socket.to(id).emit("answer", socket.id, message);
   });
+
   socket.on("candidate", (id, message) => {
     socket.to(id).emit("candidate", socket.id, message);
   });
+  // FINE
   socket.on("disconnect", () => {
     if(chat_users_for_namespaces[socket.nsp.name]!= undefined && chat_users_for_namespaces[socket.nsp.name][socket.id] != undefined){
       delete chat_users_for_namespaces[socket.nsp.name][socket.id];
@@ -214,29 +230,38 @@ function makeitlive(socket){
     socket.to(broadcaster).emit("disconnectPeer", socket.id);
     socket.broadcast.emit("client_disconnected", true);
   });
+
   socket.on("master", (data) => {
     socket.broadcast.emit("slidechanged", data);
   });
+
   socket.on("chat-message", (nickname, message) => {
      socket.broadcast.emit("chat-message", nickname, message);
   });
+
   socket.on("chat-enter", (nickname) => {
     if(chat_users_for_namespaces[socket.nsp.name] == undefined){
     chat_users_for_namespaces[socket.nsp.name] = {}
     }
     chat_users_for_namespaces[socket.nsp.name][socket.id] = nickname;
+    
     socket.broadcast.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
     socket.emit("chat-list", chat_users_for_namespaces[socket.nsp.name]);
+    
   });
+
   socket.on("pokemon", (status, name) => {
     socket.broadcast.emit("pokemon-update", status, name);
   });
+
   socket.on("shape", (data) => {
     socket.broadcast.emit("shapechanged", data);
   });
+
   socket.on("color", (data) => {
     socket.broadcast.emit("colorchanged", data);
   });
+  
   socket.on("line", (data) => {
     socket.broadcast.emit("linechanged", data);
   });
@@ -246,9 +271,169 @@ function makeitlive(socket){
   socket.on("counter", (data) => {
     socket.broadcast.emit("counter_update", data);
   });
+
+  // creazione sondaggio
+  
+
+  socket.on("createPollMultiple",(data)=>{
+    countPeopleFixed=countPeopleInLive;
+    datePoll=data;
+    countPersonAnswer=0;
+
+    socket.broadcast.emit("createPollMultiple",data,countPeopleInLive);
+    socket.emit("createPollMultiple",data,countPeopleInLive);
+  });
+
+  socket.on("createPollRanking",(data)=>{
+    countPeopleFixed=countPeopleInLive;
+    datePoll=data;
+    countPersonAnswer=0;
+
+    socket.broadcast.emit("createPollRanking",data,countPeopleInLive);
+    socket.emit("createPollRanking",data,countPeopleInLive);
+  });
+
+  //aggiornamento sondaggio
+  
+
+  socket.on("updatingPoll",(optionChecked)=>{
+    countPersonAnswer++;
+    console.log(countPersonAnswer);
+    var value=updatingOptionValue(optionChecked);
+
+    socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value},countPersonAnswer);
+    socket.emit("updatingPoll",{"optionChecked":optionChecked,"value":value},countPersonAnswer);
+   
+  });
+
+  socket.on("updatingPollRanking",(dateSelectRank)=>{
+    countPersonAnswer++;
+    jsonVote=updatingRanking(dateSelectRank);
+    
+    console.log("countPerson:"+countPersonAnswer);
+
+    socket.broadcast.emit("updatingPollRanking",jsonVote,countPersonAnswer);
+    socket.emit("updatingPollRanking",jsonVote,countPersonAnswer);
+  });
+
+  //funzione asincrona
+  // quando riceve il conteggio delle immagini presenti nella directory rankICon,manda tale conteggio al master
+  getCountFilesIMG(function(count){
+    socket.emit("getCountFiles",count);
+  });
+
+
+// avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
+  socket.on("closePoll",()=>{
+    var typePoll=(JSON.parse(datePoll).typePoll);
+
+    datePoll=0;
+
+    socket.broadcast.emit("closePoll",typePoll);
+  });
+
+  
+  // un nuovo utente che si connette prende i dati del sondaggio
+  if(datePoll){// se il sondaggio è stato creato, l'utente prende altrimenti no
+    objectJSON=JSON.parse(datePoll);
+    if(objectJSON.typePoll===0){
+      socket.emit("getPollMultiple",datePoll,countPeopleFixed);
+    }
+    else if(objectJSON.typePoll===1){
+      socket.emit("getPollRanking",datePoll,countPeopleFixed);
+    }
+  }
+
+  socket.on("disconnect",()=>{
+    countPeopleInLive--;
+  });
+
 }
+
+var countPersonAnswer;
+var countPeopleFixed;
+var countPeopleInLive=-1;
 var chat_users_for_namespaces = {}
+var datePoll=0;
 
 loadSessions()
 server.listen(port, () => console.log(`Server is running on port ${port}`));
 
+
+// calcolo il valore della percentuale di una determinata opzione in base alle persone che stanno 
+// partecipando al sondaggio e al conteggio del selezionamento di una determinata opzione
+function updatingOptionValue(optionChecked){
+  
+  
+  
+  var jsonDati=JSON.parse(datePoll);
+
+  var countAnswer=jsonDati.valueOption[optionChecked];
+  countAnswer++;
+
+  jsonDati.valueOption[optionChecked]=countAnswer;
+
+  datePoll=JSON.stringify(jsonDati);
+
+  console.log("datePoll: "+datePoll);
+
+  return countAnswer;
+}
+
+function updatingRanking(dateSelectRank){
+
+  jsonVote={
+    arrayVote:[]
+  };
+  
+  var jsonDate=JSON.parse(datePoll);
+
+  dateSelectRank.map(function(rank){
+
+    jsonDate.value_question_rank[rank]++;
+
+    jsonVote.arrayVote.push({"id":rank,"vote":jsonDate.value_question_rank[rank]});
+  });
+
+  datePoll=JSON.stringify(jsonDate);
+
+  return JSON.stringify(jsonVote);
+}
+
+function getCountFilesIMG(emitSocket){
+  var countFilesIMG=0;
+
+    fs.readdir(__dirname+"/public/img/rankIcon", function (err, files) {
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      countFilesIMG=files.length;
+      console.log("countFiles:"+countFilesIMG);
+       emitSocket(countFilesIMG);      
+  });
+
+
+}
+
+/*
+// funzione che permette di aggiornare i dati del sondaggio quando un nuovo utente entra nel sito
+function updatingPollEnteringPerson(){
+  if(datePoll){
+    var jsonDati=JSON.parse(datePoll);
+
+    console.log(jsonDati);
+
+    for(var i=0;i<jsonDati.optionPoll.length;i++){
+      var text=jsonDati.optionPoll[i];
+      var value=jsonDati.valueOption[text];
+
+      if(value>0){
+        value-=Math.round((1/countPeopleInLive)*100);
+        jsonDati.valueOption[text]=value;
+      }
+    }
+    console.log(jsonDati);
+    
+    datePoll=JSON.stringify(jsonDati);
+  }
+}*/
