@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-// Hide elements on the view
-=======
 
->>>>>>> Modificato il lato back-end della funzionalità createPollOpen.
 function hidecontrol(){
   $(".control").each(function (index, element) {
     hide = $(element).is(':hidden');
@@ -125,6 +121,44 @@ module.exports = {
 };
   socket.on("disconnectPeer", () => {
     peerConnection.close();
+  });
+
+  
+  //Get aggiornamento sondaggio
+  socket.on("createPollMultiple",(data,countPeople)=>{
+    createPollMultiple(data);
+    getPollDynamicalMultiple(data,countPeople); 
+  });
+
+  socket.on("createPollRanking",(data,countPeopleInLive)=>{
+    createPollRanking(data); 
+    getPollDynamicalRanking(data,countPeopleInLive); 
+  });
+  
+// Quando un utente partecipa al canale in ritardo o aggiorna la pagina relativa, prende i dati del sondaggio
+  socket.on("getPollMultiple",(datePoll,countPeople)=>{
+    //getNotice();
+    createPollMultiple(datePoll);
+    getPollDynamicalMultiple(datePoll,countPeople);
+  });
+
+
+  socket.on("getPollRanking",(data,countPeople)=>{
+    createPollRanking(data); 
+    getPollDynamicalRanking(data,countPeople); 
+  });
+
+  socket.on("closePoll",(typePoll)=>{
+    countPersonAnswer=0;
+    createNotice(typePoll);
+  });
+
+  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
+    updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+  });
+
+  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+    updatePollRankingDynamical(vote,countPersonAnswered);
   });
 
   

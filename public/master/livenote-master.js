@@ -212,6 +212,39 @@ module.exports = {
     getPollDynamicalRanking(data,countPeopleInLive); 
   });
 
+  socket.on("createPollMultiple",(data,countPeople)=>{
+    getPollDynamicalMultiple(data,countPeople); 
+  });
+
+  socket.on("getCountFiles",(countFilesIMG)=>{
+    countFilesIMGMaster=countFilesIMG;
+  });
+  
+  // Get camera and microphone
+  const videoElement = document.querySelector("video");
+  const audioSelect = document.querySelector("select#audioSource");
+  const videoSelect = document.querySelector("select#videoSource");
+
+  socket.on("getPollRanking",(datePoll,countPeople)=>{
+    hideBottonCreatePoll();
+    getPollDynamicalRanking(datePoll,countPeople);
+  });
+
+  
+  
+  //aggiornamento sondaggio 
+  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
+  updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+  });
+
+  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+    updatePollRankingDynamical(vote,countPersonAnswered);
+  });
+
+  socket.on("createPollRanking",(data,countPeopleInLive)=>{
+    getPollDynamicalRanking(data,countPeopleInLive); 
+  });
+
     // Get camera and microphone
     const videoElement = document.querySelector("video");
     const audioSelect = document.querySelector("select#audioSource");
