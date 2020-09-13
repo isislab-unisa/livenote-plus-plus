@@ -38,4 +38,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # pdf uploaded
-sessions/
+public/sessions/
