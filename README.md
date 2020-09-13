@@ -33,6 +33,13 @@ For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
 
+Next steps:
+* [ ] Travis
+* [ ] Code coverage
+* [ ] Full crossplatform 
+* [ ] Upgrade of poll feature
+
+
 ## Technologies
 
 We made Livenote using the following tools:
