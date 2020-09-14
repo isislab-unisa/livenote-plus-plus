@@ -19,7 +19,7 @@ The idea was born during the spread of Covid-19. We were looking for a FOSS that
 
 The aim of Livenote++ is to manage lesson/seminars from one person to a large number of spectators, but leaving them the possibility to interact with some tools. The main principle for this project is to have a lightweight platform to present a keynote or some slides. We've achieved this goal mixing some technologies -listed below- reducing the impact of communications or streaming between the clients.
 
-TRY ME --->
+:fire: [TRY ME](https://isislab-unisa.github.io/livenote-plus-plus/) :fire: 
 
 ![preview](./public/img/livegif.gif)
 
