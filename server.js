@@ -408,8 +408,8 @@ function getCountFilesIMG(emitSocket){
           return console.log('Unable to scan directory: ' + err);
       } 
       countFilesIMG=files.length;
-      console.log("countFiles:"+countFilesIMG);
-       emitSocket(countFilesIMG);      
+      //console.log("countFiles:"+countFilesIMG);
+      emitSocket(countFilesIMG);      
   });
 
 

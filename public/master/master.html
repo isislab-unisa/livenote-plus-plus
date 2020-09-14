@@ -21,9 +21,9 @@
     <div id="container">
       <canvas class="pdf-canvas " id="pdf-render"></canvas>
       <div id="topButtons">
-        <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated;" src="../img/nes.png"/>
+        <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button>
+        <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/>
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
-
         <span id="startlive" class="nes-logo control" data-toggle="modal" data-target="#dialog-play"></span>
 
         <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">Create Poll</button>
@@ -41,10 +41,6 @@
         <button class="nes-btn is-primary control" id="next-page">Next&#8250;</button>    
         <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
       </div>
-    </div>
-
-    <div>
-      <p>counter: <span id="counter"></span></p>
     </div>
 
     <!-- Modal info-->
@@ -251,6 +247,16 @@
       window.onresize = function(){
           resize()
       }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-69374402-3%22%3E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-69374402-3');
+      gtag('send', 'pageview');
+      gtag('set', 'anonymizeIp', true); 
     </script>
   </body>
 </html>

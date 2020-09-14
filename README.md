@@ -27,14 +27,18 @@ The aim of Livenote++ is to manage lesson/seminars from one person to a large nu
 
 For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+, Firefox54+)
 
+Stable:
 * :zap: Stateless -no personal informations are stored-
 * :fire: LoadAndPlay -load your pdf and start your presentation-
 * :rocket: Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
 * :sparkles: Live chat with your spectators
 * :tada: Create Real time poll
+
+Unstable:
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
+  * There are several bugs we are fixing!
 
 Next steps:
 * [ ] Travis
@@ -60,7 +64,8 @@ Frontend:
 * ![](https://img.shields.io/badge/html-1.0-green)
 * ![](https://img.shields.io/badge/css-1.0-green)
 * ![](https://img.shields.io/badge/nes.css-2.3.0-green)
-
+* ![](https://img.shields.io/badge/bootstrap-3.4.1-green)
+* ![](https://img.shields.io/badge/jquery-3.5.1-green)
 # Contributing and Development
 
 ## Installation
