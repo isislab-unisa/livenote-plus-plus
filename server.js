@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const fileUpload = require('express-fileupload');
-const https = require("https");
+const http = require("http");
 var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
@@ -13,15 +13,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 let broadcaster;
-const port = 443;
+const port = 8080;
 
 /*
 Create https server with certificate
 Change with your own if you want https connection
 */
-const server = https.createServer({ 
-  key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/fullchain.pem") 
+const server = http.createServer({ 
 },app);
 
 const io = require("socket.io")(server);
@@ -191,12 +189,17 @@ color: change color of draw line
 line: change widht of draw line
 connection: when an user connect to the presentation
 counter: keep track of number of partecipants
+createPollMultiple: create a poll multiple 
+createPollRanking: create a poll ranking
+updatingPoll: update the value of option selected by student of the open poll
+updatingPollRanking: update the value of emoticons selected by student of the ranking poll
+closePoll: notifers users that the poll is close.
+disconnect: a user was disconnected. So decreases the count of the variable "countPeopleInLive"
 */
 
 
 function makeitlive(socket){
-    // INIZIO 
-    // OPERAZIONI PER LA CONNESSIONE VIDEO
+    
   countPeopleInLive++;
   
   //updatingPollEnteringPerson();
@@ -221,7 +224,7 @@ function makeitlive(socket){
   socket.on("candidate", (id, message) => {
     socket.to(id).emit("candidate", socket.id, message);
   });
-  // FINE
+
   socket.on("disconnect", () => {
     if(chat_users_for_namespaces[socket.nsp.name]!= undefined && chat_users_for_namespaces[socket.nsp.name][socket.id] != undefined){
       delete chat_users_for_namespaces[socket.nsp.name][socket.id];
@@ -272,7 +275,7 @@ function makeitlive(socket){
     socket.broadcast.emit("counter_update", data);
   });
 
-  // creazione sondaggio
+  // creation of the poll
   
 
   socket.on("createPollMultiple",(data)=>{
@@ -293,12 +296,12 @@ function makeitlive(socket){
     socket.emit("createPollRanking",data,countPeopleInLive);
   });
 
-  //aggiornamento sondaggio
+  //increase dynamical of the poll
   
 
   socket.on("updatingPoll",(optionChecked)=>{
     countPersonAnswer++;
-    console.log(countPersonAnswer);
+    
     var value=updatingOptionValue(optionChecked);
 
     socket.broadcast.emit("updatingPoll",{"optionChecked":optionChecked,"value":value},countPersonAnswer);
@@ -309,21 +312,21 @@ function makeitlive(socket){
   socket.on("updatingPollRanking",(dateSelectRank)=>{
     countPersonAnswer++;
     jsonVote=updatingRanking(dateSelectRank);
-    
-    console.log("countPerson:"+countPersonAnswer);
 
     socket.broadcast.emit("updatingPollRanking",jsonVote,countPersonAnswer);
     socket.emit("updatingPollRanking",jsonVote,countPersonAnswer);
   });
 
-  //funzione asincrona
-  // quando riceve il conteggio delle immagini presenti nella directory rankICon,manda tale conteggio al master
+  // asynchron function
+  //The master receve the count of the file present in the directory: rankIcon
+  socket.on("getFileIMG",()=>{
   getCountFilesIMG(function(count){
     socket.emit("getCountFiles",count);
   });
+});
 
 
-// avviso i slave che il sondaggio è chiuso. Setto a 0 datePoll cosicchè un nuovo utente che entra saprà che non ci sarà nessun sondaggio
+
   socket.on("closePoll",()=>{
     var typePoll=(JSON.parse(datePoll).typePoll);
 
@@ -333,8 +336,8 @@ function makeitlive(socket){
   });
 
   
-  // un nuovo utente che si connette prende i dati del sondaggio
-  if(datePoll){// se il sondaggio è stato creato, l'utente prende altrimenti no
+  // if the poll was created, the users will receive date of the poll, otherwise they will receive nothing
+  if(datePoll){
     objectJSON=JSON.parse(datePoll);
     if(objectJSON.typePoll===0){
       socket.emit("getPollMultiple",datePoll,countPeopleFixed);
@@ -360,8 +363,8 @@ loadSessions()
 server.listen(port, () => console.log(`Server is running on port ${port}`));
 
 
-// calcolo il valore della percentuale di una determinata opzione in base alle persone che stanno 
-// partecipando al sondaggio e al conteggio del selezionamento di una determinata opzione
+
+// increases the value of the option selected, present inside of the JSON
 function updatingOptionValue(optionChecked){
   
   
@@ -375,11 +378,12 @@ function updatingOptionValue(optionChecked){
 
   datePoll=JSON.stringify(jsonDati);
 
-  console.log("datePoll: "+datePoll);
+  // console.log("datePoll: "+datePoll);
 
   return countAnswer;
 }
 
+// increase the value of the filled emoticons, present inside of the JSON
 function updatingRanking(dateSelectRank){
 
   jsonVote={
@@ -400,6 +404,7 @@ function updatingRanking(dateSelectRank){
   return JSON.stringify(jsonVote);
 }
 
+// get count of the IMG, present in the directory: /img/rankIcon
 function getCountFilesIMG(emitSocket){
   var countFilesIMG=0;
 
