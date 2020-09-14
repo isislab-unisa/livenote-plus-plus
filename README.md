@@ -1,6 +1,5 @@
 # Livenote++
-
-## A novel simpler, lighter, faster way web-based to share your keynote 🚀 👨‍🏫 👩‍🏫
+_A novel simpler, lighter, faster way web-based to share your keynote 🚀 👨‍🏫 👩‍🏫_
 
 ## Table of contents
 * [Introduction](#Introduction)
