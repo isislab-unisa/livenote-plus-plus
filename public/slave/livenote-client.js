@@ -158,7 +158,7 @@ module.exports = {
   }
 };
 
-// Crea il sondaggio a risposte multiple
+// create a poll multiple
 function createPollMultiple(data){
   //visualizzo il bottone sondaggio
   
@@ -208,7 +208,7 @@ function createPollMultiple(data){
   }
 }
 
-// Crea il sondaggio a tema ranking
+// create a ranking poll
 function createPollRanking(date){
   $("#click-poll").css("display", "inline");
   
@@ -281,6 +281,7 @@ function createPollRanking(date){
   }
 }
 
+// Send the vote of the poll multiple to master
 function sendVotePollMultiple(){
   var optionChecked=$("#pollsTable input[type='radio']:checked").val();
   socket.emit("updatingPoll",optionChecked);
@@ -288,6 +289,7 @@ function sendVotePollMultiple(){
   document.getElementById("click-poll").style.display="none";
 };
 
+// Send the vote of the specific ranking poll to master
 function sendVotePollRanking(){
   var arrayValueRank=[];
 
@@ -303,11 +305,13 @@ function sendVotePollRanking(){
 
 const video = document.querySelector("video");
 
+// clean the tables of poll
 function cleanPoll(){
   $("#pollsTable").empty();
   $("#pollDynamical").empty();
 }
 
+// create a notice when the master close the poll
 function createNotice(typePoll){
   document.getElementById("viewPollDynamical").style.display="none";
   document.getElementById("click-poll").style.display="none";

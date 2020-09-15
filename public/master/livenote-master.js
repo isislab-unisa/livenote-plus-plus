@@ -216,6 +216,8 @@ module.exports = {
       hideBottonCreatePoll();
       getPollDynamicalMultiple(datePoll,countPeople);
     });
+
+    socket.emit("getFileIMG");
     
 
     // Get camera and microphone
@@ -313,19 +315,18 @@ module.exports = {
       }
     });
   
-    // manda il sondagggio ai slave quando il master clicca il bottone send poll
+    // When the master click il botton send, the poll is sent to server. After that, the server will send at the other users
     $('#createPoll').click(function(){
       var selectPoll=$('input[name="choicePoll"]:checked').val();
-
       var res;
       if(selectPoll=="multiple"){
         // poll ranking
-        res=validatePollMultiple();
+        res=validatePoll();
         
       }
       else if(selectPoll=="ranking"){
         //poll multiple
-        res=validatePollRanking();
+        res=validatePoll();
       }
 
       if(res==true){
@@ -338,6 +339,7 @@ module.exports = {
       }
     });
 
+    // When the master click il botton close poll, the server will notifier at the other users that the poll has been closed
     $("#close-poll").click(function(){
       document.getElementById("create-poll").style.display="inline";
       document.getElementById("viewPollDynamical").style.display="none";
@@ -350,7 +352,8 @@ module.exports = {
 
     initServices(socket);
   },
-
+  
+  //Creation dynamical of the poll, based on the poll mode selection
   changeQuestions:function(element){
     var question=element.value;
 
@@ -364,6 +367,7 @@ module.exports = {
     }
   },
 
+  // Delete an option specified
   deleteOption:function(element){
     var testo=element.id+"DIV";
 
@@ -373,24 +377,9 @@ module.exports = {
   }
 };
 
-function validatePollRanking(){
-  var res=true;
-
-  $("#sondaggio").find("input").each(function(){
-    if($(this).val()==""){
-      $(this).attr("class","nes-input is-"); 
-      $(this).next().css("display","block");
-      res=false;
-    }
-    else if($(this).hasClass("nes-input is-error")){
-      $(this).attr("class","nes-input").next().hide(); 
-    }
-  });
-
-  return res;
-}
-
-function validatePollMultiple(){
+// Check if the fields are empty. If so, it will view a messagge of error.
+function validatePoll(){
+  
   var res=true;
   $("#sondaggio").find("input").each(function(){
     if($(this).val()==""){
@@ -406,12 +395,13 @@ function validatePollMultiple(){
   return res;
 }
 
+//Hide the button of createPoll when the master click the button send. 
 function hideBottonCreatePoll(){
   document.getElementById("create-poll").style.display="none";
 }
 
 
-//Crea sondaggi a risposte multiple
+// create a poll multiple
 function createMultipleQuestions(){
   
   var divOptionPoll=document.getElementById("sondaggio");
@@ -495,7 +485,7 @@ function createMultipleQuestions(){
 
 }
 
-// Crea sondaggi a risposte aperte
+// create a ranking poll
 function createRanking(){
   var divOptionPoll=document.getElementById("sondaggio");
 
@@ -573,8 +563,8 @@ function createRanking(){
 
 }
 
-//creazione del sondaggio con risposte multiple
-var idOption=1; // attributo che serve a settare l'id dei div all'interno del Dialog. Cosi sappiamo esattamente quale il master vuole eliminare una opzione
+// insert an option in the multiple poll
+var idOption=1; // variable used to set id of the div. So we know excalty which the master wants to eliminate an option 
 function addOptionMultiple(){
   
   //$('#sondaggio').append('<input type="text" class="nes-input" placeholder="insert an option"/>');
@@ -609,7 +599,7 @@ function addOptionMultiple(){
 
 };
 
-//creazione del sondaggio con risposte aperte
+// create an anther ranking poll
 function addQuestionRank(){
   
   
@@ -680,6 +670,7 @@ function addQuestionRank(){
   listInput.insertBefore(divInput,listInput.childNodes[listInput.childNodes.length-2]);      
 }
 
+// create a JSON that containing date of the multiple poll, as a question , some options.
 function createJSONPollMultiple(){
   var jsonOptionInput=[];
   var jsonValoriOption={}
@@ -693,7 +684,7 @@ function createJSONPollMultiple(){
 
   var jsonOptionString=JSON.stringify(jsonOptionInput);
   var jsonValoriOptionString=JSON.stringify(jsonValoriOption);
-  console.log(jsonValoriOptionString);
+  
 
   var namePoll=$('input[name="namePoll"]').val();
   
@@ -703,6 +694,7 @@ function createJSONPollMultiple(){
   socket.emit("createPollMultiple",jsonFinalDatiString);
 }
 
+// create a JSON that containing date of the ranking poll, as a question , emoticons selected
 function createJSONRanking(){
   var datePoll={
     questions_rightanswer:[],
