@@ -507,7 +507,7 @@ var jsonDatiPoll;
 function getPollDynamicalMultiple(data,countPeople){
   countPeopleTMP=countPeople;
   $("#viewPollDynamical").css("display","inline");
-  console.log("JSON: "+data);
+  //console.log("JSON: "+data);
   jsonDatiPoll=JSON.parse(data);
 
   $("#pollTitleDynamical").text("Poll multiple");
@@ -557,7 +557,7 @@ function getPollDynamicalMultiple(data,countPeople){
     progressBar.setAttribute("max",countPeople);
 
 
-    console.log(jsonDatiPoll);
+    //console.log(jsonDatiPoll);
     // nel caso in cui il master fa aggiornamento della pagina
     if(jsonDatiPoll.valueOption[valore]!=0){
       var valueOption=jsonDatiPoll.valueOption[valore]
