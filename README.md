@@ -33,7 +33,9 @@ Stable:
 * :rocket: Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
 * :sparkles: Live chat with your spectators
-* :tada: Create Real time poll
+* :tada: Create real time poll
+  * Multiple poll: Do you want to know if the students were careful or not? Great! With the open poll, write the question and various options. Students will choose the option they deem right.
+  * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
 
 Unstable:
 * :pencil2: Draw on your slides with your mouse

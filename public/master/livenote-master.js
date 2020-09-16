@@ -260,6 +260,24 @@ module.exports = {
         .then(gotStream)
         .catch(handleError);
     }
+
+    const stopButton = document.getElementById('vol');
+    stopButton.addEventListener('click', function() {
+        navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+          .then(gotStreamNoAudio)
+          .catch(err=>{ 
+            console.log('here' + err) 
+          })
+    });
+
+    function gotStreamNoAudio(stream) {
+      window.stream = stream;
+      videoSelect.selectedIndex = [...videoSelect.options].findIndex(
+        option => option.text === stream.getVideoTracks()[0].label
+      );
+      videoElement.srcObject = stream;
+      socket.emit("broadcaster");
+    }
       
     function gotStream(stream) {
       window.stream = stream;
