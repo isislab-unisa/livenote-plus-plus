@@ -1,3 +1,5 @@
+console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
+
 // hide elements on the view
 function hidecontrol(){
   $(".control").each(function (index, element) {
@@ -272,7 +274,6 @@ module.exports = {
               console.log(err) 
             })
           openaudio = false;
-          console.log('close audio') 
         } else {
           getStream()
           .then(getDevices)
@@ -309,18 +310,15 @@ module.exports = {
             console.log(err) 
           })
         openvideo = false;
-        console.log('close video') 
       } else {
         getStream()
         .then(getDevices)
         openvideo = true;
-        console.log('open video') 
         function getDevices() {
           $('#startlive').removeClass("nes-logo");
           $('#liveperson').show();
           $('#select-audio').show();
           $('#select-video').show();
-          
           // $('#startlive').addClass("nes-mario");
           return navigator.mediaDevices.enumerateDevices();
         }
@@ -348,7 +346,6 @@ module.exports = {
       socket.emit("broadcaster");
     }
   
-    
     function handleError(error) {
       console.error("Error: ", error);
     }

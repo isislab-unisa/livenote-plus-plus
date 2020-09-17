@@ -12,36 +12,44 @@ document.getElementById("vol").addEventListener('click', function(event){
   if (myVideo.muted) {
     myVideo.muted = false;
     $("#vol").attr("src","../img/mute.png");
-    //
   } else{
     myVideo.muted = true;
     $("#vol").attr("src","../img/volume.png");
   }
      
 });
-if (document.getElementById("play") != undefined )
-document.getElementById("play").addEventListener('click', function(event){
-  var myVideo = document.getElementsByTagName('video')[0];
-  if (myVideo.paused){
-      myVideo.play();
-      $("#play").attr("src","../img/circled-pause.png");
-  }else{
-      myVideo.pause();
-      $("#play").attr("src","../img/play.png");
-  }
- });
 
+ var pause = false;
+ if (document.getElementById("play") != undefined )
+  document.getElementById("play").addEventListener('click', function(event){
+    var myVideo = document.getElementsByTagName('video')[0];
+    if (myVideo.paused || pause){
+      pause = false;
+      myVideo.play();
+      $("#play").attr("src","../img/play.png");
+      console.log('here play')
+    }else{
+      pause = true;
+      myVideo.pause();
+      $("#play").attr("src","../img/circled-pause.png");
+      console.log('here pause')
+    }
+  });
+
+ var pauseVideo = false;
  if (document.getElementById("playvideo") != undefined )
   document.getElementById("playvideo").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
-    if (myVideo.paused){
+    if (myVideo.paused || pause){
+      pauseVideo = false;
       myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
-      console.log('here pausing')
+      console.log('here play')
     }else{
+      pauseVideo = true;
       myVideo.pause();
       $("#playvideo").attr("src","../img/circled-pause.png");
-      console.log('here playing')
+      console.log('here pause')
     }
   });
 
