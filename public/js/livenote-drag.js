@@ -1,5 +1,5 @@
 var videoNode = document.getElementById('video-balloon');
-// var videoNode = document.querySelector('.wistia_responsive_padding');
+
 if (videoNode) {
   videoNode.addEventListener('click', function(event){
     event.preventDefault();
@@ -9,16 +9,13 @@ if (videoNode) {
 if (document.getElementById("vol") != undefined )
 document.getElementById("vol").addEventListener('click', function(event){
   var myVideo = document.getElementsByTagName('video')[0];
-  if (myVideo.muted)
-     {
-       myVideo.muted = false;
-       $("#vol").attr("src","../img/volume.png");
-       //
-     } 
-  else{
-    myVideo.muted = true;
+  if (myVideo.muted) {
+    myVideo.muted = false;
     $("#vol").attr("src","../img/mute.png");
-    //<img src=""/>
+    //
+  } else{
+    myVideo.muted = true;
+    $("#vol").attr("src","../img/volume.png");
   }
      
 });
@@ -33,6 +30,20 @@ document.getElementById("play").addEventListener('click', function(event){
       $("#play").attr("src","../img/play.png");
   }
  });
+
+ if (document.getElementById("playvideo") != undefined )
+  document.getElementById("playvideo").addEventListener('click', function(event){
+    var myVideo = document.getElementsByTagName('video')[0];
+    if (myVideo.paused){
+      myVideo.play();
+      $("#playvideo").attr("src","../img/play.png");
+      console.log('here pausing')
+    }else{
+      myVideo.pause();
+      $("#playvideo").attr("src","../img/circled-pause.png");
+      console.log('here playing')
+    }
+  });
 
  if (document.getElementById("size") != undefined )
 document.getElementById("size").addEventListener('click', function(event){

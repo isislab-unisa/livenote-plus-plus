@@ -261,19 +261,76 @@ module.exports = {
         .catch(handleError);
     }
 
-    const stopButton = document.getElementById('vol');
-    stopButton.addEventListener('click', function() {
-        navigator.mediaDevices.getUserMedia({ audio: false, video: true })
-          .then(gotStreamNoAudio)
-          .catch(err=>{ 
-            console.log('here' + err) 
-          })
+    //DETACH AUDIO
+    const stopaudioButton = document.getElementById('vol');
+    var openaudio = true;
+    stopaudioButton.addEventListener('click', function() {
+        if (openaudio) {
+          navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+            .then(gotStreamNoAudio)
+            .catch(err=>{ 
+              console.log(err) 
+            })
+          openaudio = false;
+          console.log('close audio') 
+        } else {
+          getStream()
+          .then(getDevices)
+          openaudio = true;
+          function getDevices() {
+            $('#startlive').removeClass("nes-logo");
+            $('#liveperson').show();
+            $('#select-audio').show();
+            $('#select-video').show();
+            
+            // $('#startlive').addClass("nes-mario");
+            return navigator.mediaDevices.enumerateDevices();
+          }
+        }
     });
 
     function gotStreamNoAudio(stream) {
       window.stream = stream;
       videoSelect.selectedIndex = [...videoSelect.options].findIndex(
         option => option.text === stream.getVideoTracks()[0].label
+      );
+      videoElement.srcObject = stream;
+      socket.emit("broadcaster");
+    }
+
+    //DETACH VIDEO
+    const stopvideoButton = document.getElementById('playvideo');
+    var openvideo = true;
+    stopvideoButton.addEventListener('click', function() {
+      if (openvideo) {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+          .then(gotStreamNoVideo)
+          .catch(err=>{ 
+            console.log(err) 
+          })
+        openvideo = false;
+        console.log('close video') 
+      } else {
+        getStream()
+        .then(getDevices)
+        openvideo = true;
+        console.log('open video') 
+        function getDevices() {
+          $('#startlive').removeClass("nes-logo");
+          $('#liveperson').show();
+          $('#select-audio').show();
+          $('#select-video').show();
+          
+          // $('#startlive').addClass("nes-mario");
+          return navigator.mediaDevices.enumerateDevices();
+        }
+      }
+    });
+
+    function gotStreamNoVideo(stream) {
+      window.stream = stream;
+      audioSelect.selectedIndex = [...audioSelect.options].findIndex(
+        option => option.text === stream.getAudioTracks()[0].label
       );
       videoElement.srcObject = stream;
       socket.emit("broadcaster");
