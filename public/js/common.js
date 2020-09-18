@@ -499,13 +499,12 @@ function clearArea() {
 
 /* END DRAWING */
 
-var countPeopleTMP;
 
 //creazione della view del sondaggio, sia per il master che client
 //var jsonProgressOption={}; //{b1=0,b2=0..} per ogni opzione del sondaggio
 var jsonDatiPoll;
 function getPollDynamicalMultiple(data,countPeople){
-  countPeopleTMP=countPeople;
+  
   $("#viewPollDynamical").css("display","inline");
   //console.log("JSON: "+data);
   jsonDatiPoll=JSON.parse(data);
@@ -514,14 +513,14 @@ function getPollDynamicalMultiple(data,countPeople){
 
   var pollTitleDynamical=document.getElementById("pollTitleDynamical");
 
-  var textCountPeople=document.createElement("h4");
-  textCountPeople.setAttribute("style","text-align:center");
-  textCountPeople.setAttribute("id","countPerson");
+  // var textCountPeople=document.createElement("h4");
+  // textCountPeople.setAttribute("style","text-align:center");
+  // textCountPeople.setAttribute("id","countPerson");
 
   
   
 
-  pollTitleDynamical.appendChild(textCountPeople);
+  // pollTitleDynamical.appendChild(textCountPeople);
 
 
   var pollTable=document.getElementById("pollDynamical");
@@ -578,19 +577,17 @@ function getPollDynamicalMultiple(data,countPeople){
 
     pollTable.appendChild(divProgress);
   } 
-  var stringCountPeople=`${valueTotal} in of ${countPeople} persons answered`;
+  // var stringCountPeople=`${valueTotal} in of ${countPeople} persons answered`;
 
-  textCountPeople.appendChild(document.createTextNode(stringCountPeople));
+  // textCountPeople.appendChild(document.createTextNode(stringCountPeople));
   
 }
 
 
-var countDivSpecificRank=5; // per costruire 4 righe di immagini
 
 
-
-function getPollDynamicalRanking(data,countPeopleInLive){
-  countPeopleTMP=countPeopleInLive;
+function getPollDynamicalRanking(data){
+  var countDivSpecificRank=5; // per costruire 4 righe di immagini
   $("#viewPollDynamical").css("display","inline");
   
   jsonDatiPoll=JSON.parse(data);
@@ -602,13 +599,7 @@ function getPollDynamicalRanking(data,countPeopleInLive){
   $("#pollTitleDynamical").css("text-align","center");
 
   var pollTitleDynamical=document.getElementById("pollTitleDynamical");
-
-  var textCountPeople=document.createElement("h4");
-  textCountPeople.setAttribute("style","text-align:center");
-  textCountPeople.setAttribute("id","countPerson");
   
-
-  pollTitleDynamical.appendChild(textCountPeople);
   
   countTagHR=0;
   var valueCountAnswerTotal=0;
@@ -670,11 +661,10 @@ function getPollDynamicalRanking(data,countPeopleInLive){
     }
     tableRanking.appendChild(divRanking);
   }
-  textCountPeople.appendChild(document.createTextNode(`${valueCountAnswerTotal} in of ${countPeopleTMP} persons answered`));
 }
 
-function updatePollOpenDynamical(progressId,progressValue,countPersonAnswered){
-  document.getElementById("countPerson").innerHTML=`${countPersonAnswered} in of ${countPeopleTMP} persons answered`;
+function updatePollMultipleDynamical(progressId,progressValue){
+  
 
   document.getElementById(`${progressId}`).value=progressValue;
   // document.getElementById(`${progressId}Span`).textContent=progressValue+"%";
@@ -682,13 +672,21 @@ function updatePollOpenDynamical(progressId,progressValue,countPersonAnswered){
 
 }
 
-function updatePollRankingDynamical(jsonVote,countPersonAnswered){
-  console.log("setto:"+countPersonAnswered);
-
-  objectVote=JSON.parse(jsonVote);
+function updatePollRankingDynamical(jsonVote,callLocal){
+  if(callLocal){
+    objectVote=jsonVote
+  }
+  else{
+    objectVote=JSON.parse(jsonVote);
+  }
+  
   for(tmp in objectVote.arrayVote){
     $(`#vote_${objectVote.arrayVote[tmp].id}`).text(objectVote.arrayVote[tmp].vote);
   }
+}
 
-  document.getElementById("countPerson").innerHTML=`${countPersonAnswered} in of ${countPeopleTMP} persons answered`;
+function updateVoteMaxPollMultiple(counter){
+  $("progress").map(function(){
+    $(this).attr("max",counter);
+  });
 }
