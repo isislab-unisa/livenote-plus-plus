@@ -503,7 +503,7 @@ function clearArea() {
 //creazione della view del sondaggio, sia per il master che client
 //var jsonProgressOption={}; //{b1=0,b2=0..} per ogni opzione del sondaggio
 var jsonDatiPoll;
-function getPollDynamicalMultiple(data,countPeople){
+function getPollDynamicalMultiple(data,countPeopleInLive){
   
   $("#viewPollDynamical").css("display","inline");
   //console.log("JSON: "+data);
@@ -513,15 +513,28 @@ function getPollDynamicalMultiple(data,countPeople){
 
   var pollTitleDynamical=document.getElementById("pollTitleDynamical");
 
-  // var textCountPeople=document.createElement("h4");
-  // textCountPeople.setAttribute("style","text-align:center");
-  // textCountPeople.setAttribute("id","countPerson");
-
-  
+  var textCountPeople=document.createElement("h4");
+  textCountPeople.setAttribute("style","text-align:center");
   
 
-  // pollTitleDynamical.appendChild(textCountPeople);
+  var spanCountPersonAnswer=document.createElement("span");
+  spanCountPersonAnswer.setAttribute("id","countPersonAnswered");
 
+  var textSlash=document.createElement("span");
+  textSlash.appendChild(document.createTextNode("\\"));
+
+  var spanCountPersonsTotal=document.createElement("span");
+  spanCountPersonsTotal.setAttribute("id","countPersonTotal");
+
+  var textPersons=document.createElement("span");
+  textPersons.appendChild(document.createTextNode(" persons answered"));
+
+  textCountPeople.appendChild(spanCountPersonAnswer);
+  textCountPeople.appendChild(textSlash);
+  textCountPeople.appendChild(spanCountPersonsTotal);
+  textCountPeople.appendChild(textPersons);
+
+  pollTitleDynamical.appendChild(textCountPeople);
 
   var pollTable=document.getElementById("pollDynamical");
 
@@ -535,7 +548,7 @@ function getPollDynamicalMultiple(data,countPeople){
   pollTable.appendChild(titleQuestion);
   pollTable.appendChild(textQuestion);
 
-  var valueTotal=0;
+  var valuePersonsAnswerTotal=0;
 
   for(var i=0;i<jsonDatiPoll.optionPoll.length;i++){
     var valore=jsonDatiPoll.optionPoll[i];
@@ -553,7 +566,7 @@ function getPollDynamicalMultiple(data,countPeople){
     progressBar.setAttribute("id",valore);
     progressBar.setAttribute("class","nes-progress");
     progressBar.setAttribute("value","0");
-    progressBar.setAttribute("max",countPeople);
+    progressBar.setAttribute("max",countPeopleInLive);
 
 
     //console.log(jsonDatiPoll);
@@ -561,7 +574,7 @@ function getPollDynamicalMultiple(data,countPeople){
     if(jsonDatiPoll.valueOption[valore]!=0){
       var valueOption=jsonDatiPoll.valueOption[valore]
 
-      valueTotal+=valueOption;
+      valuePersonsAnswerTotal+=valueOption;
 
       var stringProgess=`${valueOption} persons answered: ${valore}`;
 
@@ -577,9 +590,9 @@ function getPollDynamicalMultiple(data,countPeople){
 
     pollTable.appendChild(divProgress);
   } 
-  // var stringCountPeople=`${valueTotal} in of ${countPeople} persons answered`;
 
-  // textCountPeople.appendChild(document.createTextNode(stringCountPeople));
+  spanCountPersonAnswer.appendChild(document.createTextNode(valuePersonsAnswerTotal));
+  spanCountPersonsTotal.appendChild(document.createTextNode(countPeopleInLive));
   
 }
 
@@ -663,12 +676,14 @@ function getPollDynamicalRanking(data){
   }
 }
 
-function updatePollMultipleDynamical(progressId,progressValue){
-  
+function updatePollMultipleDynamical(progressId,progressValue,countPersonAnswered){
+  document.getElementById("countPersonAnswered").innerHTML=""+countPersonAnswered;
 
   document.getElementById(`${progressId}`).value=progressValue;
   // document.getElementById(`${progressId}Span`).textContent=progressValue+"%";
   document.getElementById(`${progressId}Span`).innerHTML=`${progressValue} persons answered: ${progressId}`;
+
+
 
 }
 
@@ -686,6 +701,8 @@ function updatePollRankingDynamical(jsonVote,callLocal){
 }
 
 function updateVoteMaxPollMultiple(counter){
+  document.getElementById("countPersonTotal").innerHTML=""+counter;
+
   $("progress").map(function(){
     $(this).attr("max",counter);
   });

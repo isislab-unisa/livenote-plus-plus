@@ -136,16 +136,16 @@ module.exports = {
       reconnectionAttempts: 99999
     });
   
-    socket.on("client_connected", (status) => {
+    socket.on("client_connected", (status,idSocket) => {
       if(status) {
         counter++
         document.getElementById("counter").innerHTML = counter;
         socket.emit("counter", counter);
       }
+
       if(jsonPollObject){
-        console.log("mando l'avviso");
         socket.emit("updateVoteMaxPollMultiple",counter);
-        socket.emit("")
+        socket.emit("waitGetPoll",idSocket);
         updateVoteMaxPollMultiple(counter);
       }
     });
@@ -194,10 +194,12 @@ module.exports = {
     delete peerConnections[id];
   });
 
+    
 
     socket.on("increaseValueOption",(optionChecked)=>{
-      var countOption=updatingOptionValue(optionChecked);
-      socket.emit("updatingPollMultiple",optionChecked,countOption);
+      countPeopleAnswered++;
+      var countOption=updatingOptionValue(optionChecked,countPeopleAnswered);
+      socket.emit("updatingPollMultiple",optionChecked,countOption,countPeopleAnswered);
     })
 
     socket.on("increaseValueRanking",(dateSelectRank)=>{
@@ -206,9 +208,9 @@ module.exports = {
     });
 
 
-    socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
-      updatePollRankingDynamical(vote,countPersonAnswered);
-    });
+    // socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
+    //   updatePollRankingDynamical(vote,countPersonAnswered);
+    // });
 
     socket.on("getCountFiles",(countFilesIMG)=>{
       countFilesIMGMaster=countFilesIMG;
@@ -763,7 +765,7 @@ function addQuestionRank(){
 
 
 var jsonPollObject;
-
+var countPeopleAnswered;
 // create a JSON that containing date of the multiple poll, as a question , some options.
 function createJSONPollMultiple(){
   var jsonOptionInput=[];
@@ -787,6 +789,7 @@ function createJSONPollMultiple(){
   jsonPollObject=JSON.parse(jsonPoll);
 
   socket.emit("createPollMultiple",jsonPoll,counter);
+  countPeopleAnswered=0;
   getPollDynamicalMultiple(jsonPoll,counter);
 }
 
@@ -820,19 +823,20 @@ function createJSONRanking(){
   var jsonStringPollRanking=JSON.stringify(datePoll);
   jsonPollObject=JSON.parse(jsonStringPollRanking);
 
+  countPeopleAnswered=0;
   socket.emit("createPollRanking",jsonStringPollRanking);
   getPollDynamicalRanking(jsonStringPollRanking);
 }
 
 // increases the value of the option selected, present inside of the JSON
-function updatingOptionValue(optionChecked){
+function updatingOptionValue(optionChecked,countPeopleAnswered){
 
   var countOption=jsonPollObject.valueOption[optionChecked];
   countOption++;
 
   jsonPollObject.valueOption[optionChecked]=countOption;
 
-  updatePollMultipleDynamical(optionChecked,countOption);
+  updatePollMultipleDynamical(optionChecked,countOption,countPeopleAnswered);
 
   return countOption;
   

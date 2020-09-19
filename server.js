@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const fileUpload = require('express-fileupload');
-const https = require("https");
+const http = require("http");
 var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
@@ -14,14 +14,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 let broadcaster;
-const port = 443;
+const port = 8080;
 /*
 Create https server with certificate
 Change with your own if you want https connection
 */
-const server = https.createServer({ 
-  key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/fullchain.pem") 
+const server = http.createServer({ 
+  // key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
+  // cert: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/fullchain.pem") 
 },app);
 
 const io = require("socket.io")(server);
@@ -191,12 +191,9 @@ color: change color of draw line
 line: change widht of draw line
 connection: when an user connect to the presentation
 counter: keep track of number of partecipants
-createPollMultiple: create a poll multiple 
-createPollRanking: create a poll ranking
 updatingPollMultiple: update the value of option selected by student of the open poll
 updatingPollRanking: update the value of emoticons selected by student of the ranking poll
 closePoll: notifers users that the poll is close.
-disconnect: a user was disconnected. So decreases the count of the variable "countPeopleInLive"
 */
 
 
@@ -268,7 +265,8 @@ function makeitlive(socket){
     socket.broadcast.emit("linechanged", data);
   });
   socket.on("connection", (status) => {
-    socket.broadcast.emit("client_connected", status);
+    console.log("preso il socket:" + socket.id);
+    socket.broadcast.emit("client_connected", status,socket.id);
   });
   socket.on("counter", (data) => {
     socket.broadcast.emit("counter_update", data);
@@ -277,13 +275,13 @@ function makeitlive(socket){
   // creation of the poll
   socket.on("createPollMultiple",(data,counter)=>{
     socketIdMaster=socket.id;
-
+    
     socket.broadcast.emit("createPollMultiple",data,counter);
   });
 
   socket.on("createPollRanking",(data,counterPeople)=>{
     socketIdMaster=socket.id;
-
+    
     socket.broadcast.emit("createPollRanking",data,counterPeople);
     socket.emit("createPollRanking",data,counterPeople);
   });
@@ -293,8 +291,9 @@ function makeitlive(socket){
    
   });
   
-  socket.on("updatingPollMultiple",(progessID,progessValue,countPerson)=>{
-    socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPerson);
+  socket.on("updatingPollMultiple",(progessID,progessValue,countPersonsAnswered)=>{
+    console.log("countPersonAnswered:" +countPersonsAnswered);
+    socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPersonsAnswered);
   });
 
   
@@ -313,6 +312,7 @@ function makeitlive(socket){
   
 
   socket.on("getPollMultiple",(idSocket,jsonPollMultipleObject,counterPeople)=>{
+    console.log("mando al socket: "+idSocket);
     socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople);
   });
 
@@ -332,8 +332,11 @@ function makeitlive(socket){
     socket.broadcast.emit("closePoll",typePoll);
   });
 
-  if(socketIdMaster)
-    socket.broadcast.to(socketIdMaster).emit("getPoll",socket.id);
+  // when the users reload the page, check if the master has created the poll. If so, get date of the poll. Otherwise, nothing
+  socket.on("waitGetPoll",(idSocket)=>{
+    socket.emit("getPoll",idSocket);
+  });
+  
 }
 
 var chat_users_for_namespaces = {}
