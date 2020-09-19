@@ -1,3 +1,4 @@
+const { type } = require("os");
 console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
 
 function hidecontrol(){
@@ -136,23 +137,26 @@ module.exports = {
   });
 
 
-  socket.on("getPollRanking",(data,countPeople)=>{
+  socket.on("getPollRanking",(data)=>{
     createPollRanking(data); 
-    getPollDynamicalRanking(data,countPeople); 
+    getPollDynamicalRanking(data); 
   });
 
   socket.on("closePoll",(typePoll)=>{
     createNotice(typePoll);
   });
 
-  socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
-    updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+  socket.on("updatingPollMultiple",(id,value,countPersonAnswered)=>{
+    updatePollMultipleDynamical(id,value,countPersonAnswered);
   });
 
   socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
     updatePollRankingDynamical(vote,countPersonAnswered);
   });
 
+  socket.on("updateVoteMaxPollMultiple",(counter)=>{
+    updateVoteMaxPollMultiple(counter);
+  });
   
 
   initServices(socket);
@@ -285,7 +289,7 @@ function createPollRanking(date){
 // Send the vote of the poll multiple to master
 function sendVotePollMultiple(){
   var optionChecked=$("#pollsTable input[type='radio']:checked").val();
-  socket.emit("updatingPoll",optionChecked);
+  socket.emit("increaseValueOption",optionChecked);
 
   document.getElementById("click-poll").style.display="none";
 };
@@ -300,11 +304,8 @@ function sendVotePollRanking(){
   });
 
   document.getElementById("click-poll").style.display="none";
-  socket.emit("updatingPollRanking",arrayValueRank);
+  socket.emit("increaseValueRanking",arrayValueRank);
 };
-
-
-const video = document.querySelector("video");
 
 // clean the tables of poll
 function cleanPoll(){
@@ -319,7 +320,6 @@ function createNotice(typePoll){
   var button=document.querySelector("#sendVotePoll");
   button.innerHTML="OK";
 
-  console.log("tipo:"+typePoll);
 
   if(typePoll==1){
     button.removeEventListener("click",sendVotePollRanking);
@@ -344,6 +344,10 @@ function createNotice(typePoll){
   pollsTable.appendChild(notice);
   pollDynamical.appendChild(noticeAnother);
 }
+
+
+const video = document.querySelector("video");
+
 
 
 window.onunload = window.onbeforeunload = () => {

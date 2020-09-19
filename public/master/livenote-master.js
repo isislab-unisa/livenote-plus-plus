@@ -142,6 +142,12 @@ module.exports = {
         document.getElementById("counter").innerHTML = counter;
         socket.emit("counter", counter);
       }
+      if(jsonPollObject){
+        console.log("mando l'avviso");
+        socket.emit("updateVoteMaxPollMultiple",counter);
+        socket.emit("")
+        updateVoteMaxPollMultiple(counter);
+      }
     });
   
     socket.on("client_disconnected", (status) => {
@@ -188,21 +194,20 @@ module.exports = {
     delete peerConnections[id];
   });
 
-    //aggiornamento sondaggio 
-    socket.on("updatingPoll",(optionPoll,countPersonAnswered)=>{
-    updatePollOpenDynamical(optionPoll.optionChecked,optionPoll.value,countPersonAnswered);
+
+    socket.on("increaseValueOption",(optionChecked)=>{
+      var countOption=updatingOptionValue(optionChecked);
+      socket.emit("updatingPollMultiple",optionChecked,countOption);
+    })
+
+    socket.on("increaseValueRanking",(dateSelectRank)=>{
+    var jsonVote=updatingValueRanking(dateSelectRank);
+    socket.emit("updatingPollRanking",jsonVote);
     });
+
 
     socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
       updatePollRankingDynamical(vote,countPersonAnswered);
-    });
-
-    socket.on("createPollRanking",(data,countPeopleInLive)=>{
-      getPollDynamicalRanking(data,countPeopleInLive); 
-    });
-
-    socket.on("createPollMultiple",(data,countPeople)=>{
-      getPollDynamicalMultiple(data,countPeople); 
     });
 
     socket.on("getCountFiles",(countFilesIMG)=>{
@@ -219,7 +224,20 @@ module.exports = {
       getPollDynamicalMultiple(datePoll,countPeople);
     });
 
+    socket.on("getPoll",(idSocket)=>{
+      if(jsonPollObject){
+        var jsonString=JSON.stringify(jsonPollObject);
+        if(jsonPollObject.typePoll==0){
+          socket.emit("getPollMultiple",idSocket,jsonString,counter);
+        } 
+        else if(jsonPollObject.typePoll==1){
+          socket.emit("getPollRanking",idSocket,jsonString);
+        }
+      }
+    });
+
     socket.emit("getFileIMG");
+    
     
 
     // Get camera and microphone
@@ -418,8 +436,9 @@ module.exports = {
       // countPersonAnswer=0;
 
       $("#pollDynamical").empty();
+      jsonPollObject=0;
 
-      socket.emit("closePoll");
+      socket.emit("closePoll",jsonPollObject.typePoll);
     });
 
     initServices(socket);
@@ -742,6 +761,9 @@ function addQuestionRank(){
   listInput.insertBefore(divInput,listInput.childNodes[listInput.childNodes.length-2]);      
 }
 
+
+var jsonPollObject;
+
 // create a JSON that containing date of the multiple poll, as a question , some options.
 function createJSONPollMultiple(){
   var jsonOptionInput=[];
@@ -760,10 +782,12 @@ function createJSONPollMultiple(){
 
   var namePoll=$('input[name="namePoll"]').val();
   
-  var jsonFinalDatiString=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString},"typePoll":0}`;
-  
+  var jsonPoll=`{"namePoll":"${namePoll}","optionPoll":${jsonOptionString},"valueOption":${jsonValoriOptionString},"typePoll":0}`;
 
-  socket.emit("createPollMultiple",jsonFinalDatiString);
+  jsonPollObject=JSON.parse(jsonPoll);
+
+  socket.emit("createPollMultiple",jsonPoll,counter);
+  getPollDynamicalMultiple(jsonPoll,counter);
 }
 
 // create a JSON that containing date of the ranking poll, as a question , emoticons selected
@@ -794,7 +818,43 @@ function createJSONRanking(){
   });
 
   var jsonStringPollRanking=JSON.stringify(datePoll);
+  jsonPollObject=JSON.parse(jsonStringPollRanking);
 
   socket.emit("createPollRanking",jsonStringPollRanking);
+  getPollDynamicalRanking(jsonStringPollRanking);
+}
+
+// increases the value of the option selected, present inside of the JSON
+function updatingOptionValue(optionChecked){
+
+  var countOption=jsonPollObject.valueOption[optionChecked];
+  countOption++;
+
+  jsonPollObject.valueOption[optionChecked]=countOption;
+
+  updatePollMultipleDynamical(optionChecked,countOption);
+
+  return countOption;
+  
+}
+
+//increase the value of the filled emoticons, present inside of the JSON
+function updatingValueRanking(dateSelectRank){
+  var jsonVote={
+    arrayVote:[]
+  }
+
+  dateSelectRank.map(function(rank){
+
+    jsonPollObject.value_question_rank[rank]++;
+
+    jsonVote.arrayVote.push({"id":rank,"vote":jsonPollObject.value_question_rank[rank]});
+
+  });
+
+  updatePollRankingDynamical(jsonVote,true);
+  console.log("jsonMaster:"+jsonVote);
+
+  return JSON.stringify(jsonVote);
 }
 
