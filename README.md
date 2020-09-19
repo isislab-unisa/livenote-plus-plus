@@ -26,19 +26,24 @@ The aim of Livenote++ is to manage lesson/seminars from one person to a large nu
 ## Features
 
 For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+, Firefox54+)
+All the features are available with a key combo, click on the nes console on the window to see them!
 
 Stable:
 * :zap: Stateless -no personal informations are stored-
 * :fire: LoadAndPlay -load your pdf and start your presentation-
 * :rocket: Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
+  * You can temporarily mute you if you need privacy!
 * :sparkles: Live chat with your spectators
-* :tada: Create Real time poll
+  * Insert your name and have real time feedback!
+* :tada: Create real time poll
+  * Multiple poll: With the open poll, write the question and various options. Students will choose the option they deem right.
+  * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons :star: :heart:. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
 
-Unstable:
+Unstable ():
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
-  * There are several bugs we are fixing!
+  * There are minor bugs we are fixing, depending on the browser you are using!
 
 Next steps:
 * [ ] Travis
@@ -76,6 +81,7 @@ Start using Node
 
 ```bash
 # Install dependencies for server
+
 npm install
 
 # Start turn on the machine where should run
