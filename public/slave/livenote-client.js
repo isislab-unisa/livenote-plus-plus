@@ -63,6 +63,7 @@ module.exports = {
   
     // counting 
     socket.emit("connection", true);
+
   
     socket.on("counter_update", (data) => {
       document.getElementById("counter").innerHTML = data;      
