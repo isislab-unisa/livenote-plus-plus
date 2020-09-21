@@ -25,12 +25,14 @@ document.getElementById("vol").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
     if (myVideo.paused || pause){
       pause = false;
+      myVideo.paused = false;
       myVideo.play();
       $("#play").attr("src","../img/play.png");
       console.log('here play')
     }else{
       pause = true;
       myVideo.pause();
+      myVideo.paused = true;
       $("#play").attr("src","../img/circled-pause.png");
       console.log('here pause')
     }
@@ -42,12 +44,14 @@ document.getElementById("vol").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
     if (myVideo.paused || pause){
       pauseVideo = false;
+      myVideo.paused = false;
       myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
       console.log('here play')
     }else{
       pauseVideo = true;
       myVideo.pause();
+      myVideo.paused = true;
       $("#playvideo").attr("src","../img/circled-pause.png");
       console.log('here pause')
     }
