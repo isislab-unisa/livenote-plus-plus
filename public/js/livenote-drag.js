@@ -6,71 +6,63 @@ if (videoNode) {
   });
 }
 
+// Mute/Unmute button
 if (document.getElementById("vol") != undefined )
-document.getElementById("vol").addEventListener('click', function(event){
-  var myVideo = document.getElementsByTagName('video')[0];
-  if (myVideo.muted) {
-    myVideo.muted = false;
-    $("#vol").attr("src","../img/mute.png");
-  } else{
-    myVideo.muted = true;
-    $("#vol").attr("src","../img/volume.png");
-  }
-     
-});
+  document.getElementById("vol").addEventListener('click', function(event){
+    var myVideo = document.getElementsByTagName('video')[0];
+    if (myVideo.muted) {
+      myVideo.muted = false;
+      $("#vol").attr("src","../img/mute.png");
+    } else{
+      myVideo.muted = true;
+      $("#vol").attr("src","../img/volume.png");
+    }    
+  });
 
- var pause = false;
- if (document.getElementById("play") != undefined )
+var pause = false;
+if (document.getElementById("play") != undefined )
   document.getElementById("play").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
     if (myVideo.paused || pause){
       pause = false;
-      myVideo.paused = false;
       myVideo.play();
       $("#play").attr("src","../img/play.png");
-      console.log('here play')
     }else{
       pause = true;
       myVideo.pause();
-      myVideo.paused = true;
       $("#play").attr("src","../img/circled-pause.png");
-      console.log('here pause')
     }
   });
 
- var pauseVideo = false;
- if (document.getElementById("playvideo") != undefined )
+//TODO: camera seem to remain open after closing  
+var pauseVideo = false;
+if (document.getElementById("playvideo") != undefined )
   document.getElementById("playvideo").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
-    if (myVideo.paused || pause){
+    
+    if (pauseVideo){
       pauseVideo = false;
-      myVideo.paused = false;
       myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
-      console.log('here play')
     }else{
       pauseVideo = true;
       myVideo.pause();
-      myVideo.paused = true;
       $("#playvideo").attr("src","../img/circled-pause.png");
-      console.log('here pause')
     }
   });
 
- if (document.getElementById("size") != undefined )
-document.getElementById("size").addEventListener('click', function(event){
-  if( $("#liveperson").hasClass("big-video")){
-    $("#liveperson").removeClass("big-video");
-    $("#liveperson").addClass("small-video");
-  
-    $("#size").addClass("is-half");
-  }else{
-    $("#liveperson").removeClass("small-video");
-    $("#liveperson").addClass("big-video");
-    $("#size").removeClass("is-half");
-  }
-
- });
+if (document.getElementById("size") != undefined )
+  document.getElementById("size").addEventListener('click', function(event){
+    if( $("#liveperson").hasClass("big-video")){
+      $("#liveperson").removeClass("big-video");
+      $("#liveperson").addClass("small-video");
+      $("#size").addClass("is-half");
+    }else{
+      $("#liveperson").removeClass("small-video");
+      $("#liveperson").addClass("big-video");
+      $("#size").removeClass("is-half");
+    }
+  });
 
 import interact from 
 'https://cdn.interactjs.io/v1.9.20/interactjs/index.js'

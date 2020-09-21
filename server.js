@@ -265,7 +265,7 @@ function makeitlive(socket){
     socket.broadcast.emit("linechanged", data);
   });
   socket.on("connection", (status) => {
-    console.log("preso il socket:" + socket.id);
+    //console.log("preso il socket:" + socket.id);
     socket.broadcast.emit("client_connected", status,socket.id);
   });
   socket.on("counter", (data) => {
