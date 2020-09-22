@@ -198,7 +198,7 @@ closePoll: notifers users that the poll is close.
 
 
 function makeitlive(socket){
-  
+  socket.vote=false;
 
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
@@ -287,11 +287,13 @@ function makeitlive(socket){
   });
 
   socket.on("increaseValueOption",(optionChecked)=>{    
+    socket.vote=true;
     socket.broadcast.to(socketIdMaster).emit("increaseValueOption",optionChecked);
    
   });
   
   socket.on("updatingPollMultiple",(progessID,progessValue,countPersonsAnswered)=>{
+    socket.vote=true;
     console.log("countPersonAnswered:" +countPersonsAnswered);
     socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPersonsAnswered);
   });
@@ -312,12 +314,12 @@ function makeitlive(socket){
   
 
   socket.on("getPollMultiple",(idSocket,jsonPollMultipleObject,counterPeople)=>{
-    console.log("mando al socket: "+idSocket);
-    socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople);
+    
+    socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople,socket.vote);
   });
 
   socket.on("getPollRanking",(idSocket,jsonPollRankingObject)=>{
-    socket.broadcast.to(idSocket).emit("getPollRanking",jsonPollRankingObject);
+    socket.broadcast.to(idSocket).emit("getPollRanking",jsonPollRankingObject,socket.vote);
   });
 
   // asynchron function

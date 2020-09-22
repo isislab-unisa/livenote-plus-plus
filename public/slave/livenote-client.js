@@ -131,15 +131,18 @@ module.exports = {
   });
   
 // Quando un utente partecipa al canale in ritardo o aggiorna la pagina relativa, prende i dati del sondaggio
-  socket.on("getPollMultiple",(datePoll,countPeople)=>{
+  socket.on("getPollMultiple",(datePoll,countPeople,vote)=>{
+    console.log("il voto è:"+ vote);
     //getNotice();
-    createPollMultiple(datePoll);
+    if(!vote)
+      createPollMultiple(datePoll);
     getPollDynamicalMultiple(datePoll,countPeople);
   });
 
 
-  socket.on("getPollRanking",(data)=>{
-    createPollRanking(data); 
+  socket.on("getPollRanking",(data,vote)=>{
+    if(!vote)
+      createPollRanking(data); 
     getPollDynamicalRanking(data); 
   });
 
