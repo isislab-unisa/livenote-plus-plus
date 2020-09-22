@@ -6,8 +6,7 @@ var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
-let ejs = require('ejs');
-const { count } = require("console");
+
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -198,7 +197,6 @@ closePoll: notifers users that the poll is close.
 
 
 function makeitlive(socket){
-  socket.vote=false;
 
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
@@ -287,13 +285,13 @@ function makeitlive(socket){
   });
 
   socket.on("increaseValueOption",(optionChecked)=>{    
-    socket.vote=true;
+
     socket.broadcast.to(socketIdMaster).emit("increaseValueOption",optionChecked);
    
   });
   
   socket.on("updatingPollMultiple",(progessID,progessValue,countPersonsAnswered)=>{
-    socket.vote=true;
+    
     console.log("countPersonAnswered:" +countPersonsAnswered);
     socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPersonsAnswered);
   });
@@ -315,11 +313,11 @@ function makeitlive(socket){
 
   socket.on("getPollMultiple",(idSocket,jsonPollMultipleObject,counterPeople)=>{
     
-    socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople,socket.vote);
+    socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople);
   });
 
   socket.on("getPollRanking",(idSocket,jsonPollRankingObject)=>{
-    socket.broadcast.to(idSocket).emit("getPollRanking",jsonPollRankingObject,socket.vote);
+    socket.broadcast.to(idSocket).emit("getPollRanking",jsonPollRankingObject);
   });
 
   // asynchron function
