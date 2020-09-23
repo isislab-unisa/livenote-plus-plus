@@ -411,4 +411,9 @@ body {
   margin-bottom:10px;
 }
 
+.message_p{
+  word-break: break-word;
+  font-size: 12px;
+}
+
 

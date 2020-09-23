@@ -225,7 +225,8 @@ function addNewMessage(name, message){
       side = sside == '-left'? 'from-left toleft':'from-right toright';
    }
    ptext = $('<p>', {
-    text: name + ": "+ message
+    text: name + ": "+ message,
+    class: 'message_p'
    });
    div = $('<div>', {
     class: 'nes-balloon '

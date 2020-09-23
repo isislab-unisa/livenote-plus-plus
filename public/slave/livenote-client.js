@@ -151,8 +151,8 @@ module.exports = {
     updatePollMultipleDynamical(id,value,countPersonAnswered);
   });
 
-  socket.on("updatingPollRanking",(vote,countPersonAnswered)=>{
-    updatePollRankingDynamical(vote,countPersonAnswered);
+  socket.on("updatingPollRanking",(countPersonAnswered)=>{
+    updatePollRankingDynamical(countPersonAnswered);
   });
 
   socket.on("updateVoteMaxPollMultiple",(counter)=>{

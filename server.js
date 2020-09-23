@@ -6,8 +6,7 @@ var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
-let ejs = require('ejs');
-const { count } = require("console");
+
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -198,7 +197,6 @@ closePoll: notifers users that the poll is close.
 
 
 function makeitlive(socket){
-  
 
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
@@ -287,11 +285,13 @@ function makeitlive(socket){
   });
 
   socket.on("increaseValueOption",(optionChecked)=>{    
+
     socket.broadcast.to(socketIdMaster).emit("increaseValueOption",optionChecked);
    
   });
   
   socket.on("updatingPollMultiple",(progessID,progessValue,countPersonsAnswered)=>{
+    
     console.log("countPersonAnswered:" +countPersonsAnswered);
     socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPersonsAnswered);
   });
@@ -312,7 +312,7 @@ function makeitlive(socket){
   
 
   socket.on("getPollMultiple",(idSocket,jsonPollMultipleObject,counterPeople)=>{
-    console.log("mando al socket: "+idSocket);
+    
     socket.broadcast.to(idSocket).emit("getPollMultiple",jsonPollMultipleObject,counterPeople);
   });
 
