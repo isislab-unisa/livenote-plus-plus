@@ -101,9 +101,16 @@ body {
   display: inline-block;
   position: absolute;
   top: 0%;
-  right: 0%;
+  right: 6%;
   margin: 5px;
   width: 14em;
+}
+
+#chatLogo{
+  display: inline-block;
+  position: absolute;
+  top: 0%;
+  right: 1%;
 }
 
 
@@ -414,6 +421,117 @@ body {
 .message_p{
   word-break: break-word;
   font-size: 12px;
+}
+
+#chatLogo{
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+}
+
+
+/* Sliding navbar*/
+.sidenav {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: -26%;
+  background-color: silver;
+  overflow-x: hidden;
+  transition: left 0.3s linear;
+  padding-top: 10px;
+  border: 5px black solid;  
+}
+
+.sidenav.animation {
+  left:-0%;
+}
+
+
+.sidenav div:hover span{
+  color: black;
+}
+.sidenav a:hover {
+  color:black;
+}
+
+
+
+.sidenav .closebtn {
+  position: absolute;
+  top:-2px;
+  right: 1px;
+  font-size: 36px;
+  margin-left: 50px;
+  color: white;
+}
+
+
+.textNavbar{
+  color: white;
+  position: relative;
+  left:15px;
+}
+
+.divNavbar{
+  margin-bottom:15px;
+  margin-left: 10px;
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+}
+
+#nesMenu{
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+  height: 50px;
+  width: 50px;
+  position: relative;
+  left: 11px;
+}
+
+#titleNavbar{
+  color: black;
+  position: relative; 
+  right: 12px; 
+  text-align: center;
+  margin-bottom:20px;
+}
+
+
+
+
+
+.sidenavBlack {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: -26%;
+  background-color:#202020;
+  overflow-x: hidden;
+  transition: left 0.3s linear;
+  padding-top: 10px;
+  border: 5px white solid;  
+}
+
+.sidenavBlack.animation {
+  left:-0%;
+}
+
+
+.sidenavBlack div:hover span{
+  color: grey;
+}
+.sidenavBlack a:hover {
+  color:grey;
+}
+
+.sidenavBlack .closebtn {
+  position: absolute;
+  top:-2px;
+  right: 1px;
+  font-size: 36px;
+  margin-left: 50px;
+  color: white;
 }
 
 

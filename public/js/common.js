@@ -90,6 +90,7 @@ const goFullScreen = () => {
       } else if (document.msExitFullscreen) { /* IE/Edge */
         document.msExitFullscreen();
       }
+      changeNavbarInWhite();
       return;
     }
   
@@ -102,6 +103,8 @@ const goFullScreen = () => {
     } else if (elem.msRequestFullscreen) { /* IE/Edge */
       elem.msRequestFullscreen();
     }
+    changeNavbarInBlack();
+
     $('#full-screen').text("Close")
   };
 
@@ -242,7 +245,7 @@ function addNewMessage(name, message){
 var colors =  [
   "#000000", //black
   "#FF0000", //red
-  "#008000" //verde
+  "#008000" //green
 ]
 var mycolor = 0;
 
@@ -251,6 +254,7 @@ function changeColor(){
     mycolor = (mycolor + 1) % colors.length;
     ctx.strokeStyle = colors[mycolor];
     socket.emit("color", colors[mycolor]);
+    return colors[mycolor];
   }
 }
 
@@ -267,6 +271,7 @@ function changeLineWidth(){
     myLineWidth = (myLineWidth + 1) % 5;
     ctx.lineWidth = myLineWidth;
     socket.emit("line", myLineWidth);
+    return myLineWidth;
   }
 }
 
@@ -707,4 +712,14 @@ function updateVoteMaxPollMultiple(counter){
   $("progress").map(function(){
     $(this).attr("max",counter);
   });
+}
+
+function changeNavbarInBlack(){
+  $(".sidenav").attr("class","sidenavBlack");
+  $("#titleNavbar").css("color","white");
+}
+
+function changeNavbarInWhite(){
+  $(".sidenavBlack").attr("class","sidenav");
+  $("#titleNavbar").css("color","black");
 }
