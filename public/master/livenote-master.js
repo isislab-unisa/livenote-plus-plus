@@ -351,6 +351,11 @@ module.exports = {
         option => option.text === stream.getAudioTracks()[0].label
       );
       videoElement.srcObject = stream;
+      /*const tracks = stream.getTracks();
+      tracks.forEach(function(track) {
+        track.stop();
+        console.log('stopping')
+      })*/
       socket.emit("broadcaster");
     }
       

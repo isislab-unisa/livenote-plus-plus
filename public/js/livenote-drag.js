@@ -42,11 +42,11 @@ if (document.getElementById("playvideo") != undefined )
     
     if (pauseVideo){
       pauseVideo = false;
-      myVideo.play();
+      //myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
     }else{
       pauseVideo = true;
-      myVideo.pause();
+      //myVideo.pause();
       $("#playvideo").attr("src","../img/circled-pause.png");
     }
   });
