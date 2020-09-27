@@ -1,3 +1,5 @@
+const { functionsIn } = require("lodash");
+
 console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
 
 // hide elements on the view
@@ -425,6 +427,7 @@ module.exports = {
         //poll multiple
         res=validatePoll();
       }
+      $("#create-poll").css("display","none");
 
       if(res==true){
         $('#dialog-sondaggio').modal("hide");
@@ -434,6 +437,8 @@ module.exports = {
         else if(selectPoll=="ranking")
           createJSONRanking();
       }
+
+      
     });
 
     // When the master click il botton close poll, the server will notifier at the other users that the poll has been closed
@@ -446,6 +451,7 @@ module.exports = {
       jsonPollObject=0;
 
       socket.emit("closePoll",jsonPollObject.typePoll);
+      $("#create-poll").css("display","block");
     });
 
     initServices(socket);
@@ -472,6 +478,35 @@ module.exports = {
   var divOptionRemove=document.getElementById(`${testo}`);
 
   divOptionRemove.remove();
+  },
+
+  toggleHamburger:function(){
+    $("#mySidenav").toggleClass("animation");
+  },
+  
+  changeDrawingColor:function(){
+    var color=changeColor();
+    if(color==="#000000"){
+      $("#colorDraw").text(" black");
+      $("#colorDraw").css("color","black");
+    }
+    else if(color==="#FF0000"){
+      $("#colorDraw").text(" red");
+      $("#colorDraw").css("color","red");
+    }
+    else if(color==="#008000"){
+      $("#colorDraw").text(" green"); 
+      $("#colorDraw").css("color","green");
+    }
+  },
+
+  changeWidthDrawing:function(){
+    var size=changeLineWidth();
+    $("#widthDraw").text(size);
+  },
+
+  showChatLogo:function(){
+    showChat();
   }
 };
 

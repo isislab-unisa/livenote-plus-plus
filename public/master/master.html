@@ -11,6 +11,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    
+
     <!-- end boot -->
     <style>
        html, body, pre, code, kbd, samp {
@@ -20,19 +22,60 @@
   </head>
   <body onload="">
     <div id="container">
+
+      <!-- <div id="mySidenav" class="sidenav">
+        <h2 style="position: relative; bottom: 50px;">Livenote</h1>
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleHamburger()">&times;</a>
+        <div class="divNavbar" data-toggle="modal" data-target="#dialog-info">
+          <img id="info" class="control "  style="image-rendering: pixelated; position: relative" src="../img/nes.png"/> 
+          <span class="textNavbar">Commands</span>
+        </div>
+        <div class="divNavbar" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">
+          <img style="image-rendering: pixelated; position: relative; left:10px;" src="../img/create_poll.png">
+          <span class="textNavbar" >Create poll</span>
+        </div>
+        <div class="divNavbar" data-toggle="modal" data-target="#dialog-play">
+          <span  class="nes-logo" ></span>
+          <span class="textNavbar">Play video and audio</span>
+        </div> -->
+
+        <div id="mySidenav" class="sidenav">
+          <h2 id="titleNavbar">Livenote</h1>
+          <a href="javascript:void(0)" class="closebtn" onclick="toggleHamburger()">&times;</a>
+          <div class="divNavbar" data-toggle="modal" data-target="#dialog-info">
+            <span class="textNavbar">Commands</span>
+          </div>
+          <div class="divNavbar" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">
+            <span class="textNavbar" >Create poll</span>
+          </div>
+          <div class="divNavbar" data-toggle="modal" data-target="#dialog-play">
+            <span class="textNavbar">Play video and audio</span>
+          </div>
+          <div class="divNavbar" onclick="changeDrawingColor()">
+            <span class="textNavbar">Change color of drawing:<span style="color: black" id="colorDraw"> black</span> </span>
+          </div>
+          <div class="divNavbar" onclick="changeWidthDrawing()">
+            <span class="textNavbar">Change line widht of drawing: <span style="color: #F5D12D;" id="widthDraw">1</span></span>
+          </div>
+        
+      </div>
+
       <canvas class="pdf-canvas " id="pdf-render"></canvas>
       <div id="topButtons">
-        <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button>
-        <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/>
+        <!-- <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button> -->
+
+        <!-- <button class="w3-button" onclick="openHamburger()">&#9776 Menu</button> -->
+        <img onclick="toggleHamburger()" id="nesMenu" src="../img/nes.png"/>
+        <!-- <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/> -->
+
+        <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
         <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
         <span id="startlive" class="nes-logo control" data-toggle="modal" data-target="#dialog-play"></span>
-
-        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">Create Poll</button>
         <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
 
         <div id="select-audio" class="nes-select is-success select control" style="display:none;">
           <select id="audioSource"></select> 
-        </div>
+        </div >
         <div id="select-video" class="nes-select is-warning select control" style="display:none;">
           <select id="videoSource"></select>
         </div>
@@ -46,7 +89,7 @@
 
     <!-- Modal info-->
     <div class="modal fade" id="dialog-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog" role="document" style="width: 40% !important;">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -72,7 +115,7 @@
             <p>all your changing or messages are not stored.</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="nes-btn" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -164,7 +207,7 @@
           </div>
           <div class="modal-footer">
             <button class="nes-btn" data-dismiss="modal">Cancel</button>
-            <button class="nes-btn is-primary" style="margin-left:50%;" id="play" data-dismiss="modal">Play Now!</button>
+            <button class="nes-btn is-primary" style="margin-left:49%;" id="play" data-dismiss="modal">Play Now!</button>
           </div>
         </div>
       </div>
