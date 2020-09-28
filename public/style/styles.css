@@ -77,35 +77,45 @@ body {
 }
 #container #select-audio{
   width: 8em;
-  position: absolute;
-  top:0%;
   opacity: 0.5;
-  right:25em;
+  display: inline-block;
 }
 #container  #select-video {
   width: 8em;
-  position: absolute;
   opacity: 0.5;
-  right:15em;
-  top:0%
+  display: inline-block;
 }
 
-#container #full-screen {
-  color: black;
-  display: inline-block;
-  position: absolute;
-  top: 0%;
-  right: 6%;
-  margin: 5px;
-  width: 14em;
+#full-chat{
+  float: right;
+  height: 110px;
+}
+
+#full-chat-slave{
+  float: right;
+  height: 110px;
+  margin-right: 20px;
+}
+
+.poll-master{
+  color: black !important;
+  position: absolute !important;
+  right: 4.8%;
+  top:80px;
+  width: 12.6em;
+}
+
+.poll-slave{
+  margin-bottom:10px !important;
+  margin-top:10px !important;
+  width: 100%;
 }
 
 #chatLogo{
-  display: inline-block;
-  position: absolute;
-  top: 0%;
-  right: 1%;
-}
+  position: relative;
+  top: 8%;
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
+} 
 
 
 #container #text-canvas {
@@ -269,18 +279,26 @@ body {
   padding: 1rem;
 }
 
-.poll{
-  color: black !important;
-  position: absolute !important;
-  right: 0%;
-  margin-top:75px !important;
-  width: 14em;
+
+
+#counter{
+  position: absolute;
+    top: 38px;
+    left: 27px;
+    color: black;
+    
+    
+    text-align: center;
+    height: 27px;
+    line-height: 10px;
+    text-indent: -3px;
 }
 
-#viewPollDynamical{
-  display:none;
+#counterDiv{
+    position: absolute;
+    left: 70px;
+    top: 10px;
 }
-
 .progress{
     height:10px;
     width:0%;
@@ -417,9 +435,6 @@ body {
   font-size: 12px;
 }
 
-#chatLogo{
-  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
-}
 
 
 /* Sliding navbar*/
@@ -458,13 +473,14 @@ body {
   font-size: 36px;
   margin-left: 50px;
   color: white;
+  text-decoration: none !important;
 }
 
 
 .textNavbar{
   color: white;
   position: relative;
-  left:15px;
+  left:8px;
 }
 
 .divNavbar{
@@ -479,6 +495,7 @@ body {
   width: 50px;
   position: relative;
   left: 11px;
+  top:10px;
 }
 
 #titleNavbar{
@@ -487,6 +504,7 @@ body {
   right: 12px; 
   text-align: center;
   margin-bottom:20px;
+  margin-top:40px;
 }
 
 
@@ -526,6 +544,7 @@ body {
   font-size: 36px;
   margin-left: 50px;
   color: white;
+  text-decoration: none !important;
 }
 
 
