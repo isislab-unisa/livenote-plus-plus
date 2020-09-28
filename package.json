@@ -13,10 +13,6 @@
   "author": "Carmine Spagnuolo and Daniele De Vinco",
   "license": "MIT",
   "dependencies": {
-    "@types/cookie-session": "^2.0.41",
-    "@types/ejs": "^3.0.4",
-    "@types/express-fileupload": "^1.1.5",
-    "@types/shortid": "0.0.29",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "ejs": "^3.1.5",
