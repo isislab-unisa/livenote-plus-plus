@@ -22,11 +22,22 @@
     <div id="container">
       <canvas class="pdf-canvas" id="pdf-render"></canvas>
       <div id="topButtons">
-        <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button>
-        <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/>
-        <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
-        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="click-poll" style="display:none !important; top:10%" >Vote poll</button>
-        <button type="button" class="poll nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
+
+        <div id="counterDiv">
+          <img id="counterPeople" src="../img/people.png" style="height: 50px";/>
+          <br>
+            <div class="nes-btn is-warning" id="counter">0</div>          
+        </div>
+
+        <!-- <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/> -->
+
+        <div id="full-chat-slave">
+          <button class="poll-slave nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+          <br>
+          <button type="button" class="poll-slave nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="click-poll" style="display: none;"  >Vote poll</button>
+          <br>
+          <button type="button" class="poll-slave nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;">View Poll</button>
+        </div>
       </div>
       <div id="bottomButtons">
         <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
