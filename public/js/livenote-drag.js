@@ -7,15 +7,20 @@ if (videoNode) {
 }
 
 // Mute/Unmute button
+var volum = false;
 if (document.getElementById("vol") != undefined )
   document.getElementById("vol").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
-    if (myVideo.muted) {
+    if (volum) {
       myVideo.muted = false;
-      $("#vol").attr("src","../img/mute.png");
-    } else{
-      myVideo.muted = true;
+      volum = false;
       $("#vol").attr("src","../img/volume.png");
+      console.log('not mute')
+    } else{
+      volum = true;
+      myVideo.muted = true;
+      $("#vol").attr("src","../img/mute.png");
+      console.log('mute')
     }    
   });
 
@@ -34,7 +39,6 @@ if (document.getElementById("play") != undefined )
     }
   });
 
-//TODO: camera seem to remain open after closing  
 var pauseVideo = false;
 if (document.getElementById("playvideo") != undefined )
   document.getElementById("playvideo").addEventListener('click', function(event){
@@ -42,11 +46,11 @@ if (document.getElementById("playvideo") != undefined )
     
     if (pauseVideo){
       pauseVideo = false;
-      //myVideo.play();
+      myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
     }else{
       pauseVideo = true;
-      //myVideo.pause();
+      myVideo.srcObject.getTracks()[1].stop();
       $("#playvideo").attr("src","../img/circled-pause.png");
     }
   });
