@@ -142,10 +142,26 @@ function makepokemon(){
     if(!hide){
       updatepokemon(true, pokemons[mypokemon]);
       socket.emit("pokemon",true, pokemons[mypokemon]);
+
+
+    var divNavbar=document.createElement("div");
+    divNavbar.setAttribute("class","divNavbar");
+    divNavbar.setAttribute("onclick","changeAvatarNavbar()");
+    divNavbar.setAttribute("id","changeAvatar");
+
+    var text=document.createElement("span");
+    text.setAttribute("class","textNavbar");
+    text.appendChild(document.createTextNode("Change avatar"));
+
+    divNavbar.appendChild(text);
+
+    $(divNavbar).insertAfter('#startlive');
     
     }else {
       updatepokemon(false, pokemons[mypokemon]);
       socket.emit("pokemon",false, pokemons[mypokemon]);
+
+      $('#changeAvatar').remove();
     }
   }
 }

@@ -146,6 +146,7 @@ module.exports = {
       }
 
       if(jsonPollObject){
+        console.log("jsonPollObject: "+jsonPollObject);
         socket.emit("updateVoteMaxPollMultiple",counter);
         socket.emit("waitGetPoll",idSocket);
         updateVoteMaxPollMultiple(counter);
@@ -396,6 +397,10 @@ module.exports = {
             $('#select-audio').show();
             $('#select-video').show();
             
+            $('#video-audio').text("Hide video");
+            $('#startlive').attr("onclick","hideVideoNavbar()").removeAttr("data-toggle").removeAttr("data-target");
+            
+           
             // $('#startlive').addClass("nes-mario");
             return navigator.mediaDevices.enumerateDevices();
           }
@@ -507,6 +512,14 @@ module.exports = {
 
   showChatLogo:function(){
     showChat();
+  },
+
+  hideVideoNavbar:function(){
+    makepokemon();
+  },
+
+  changeAvatarNavbar:function(){
+    changepokemon();
   }
 };
 
