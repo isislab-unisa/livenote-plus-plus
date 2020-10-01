@@ -32,7 +32,8 @@
         <!-- <img id="info" class="control" data-toggle="modal" data-target="#dialog-info" style="image-rendering: pixelated; position: relative" src="../img/nes.png"/> -->
 
         <div id="full-chat-slave">
-          <button class="poll-slave nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+          <button class="poll-slave nes-btn is-warning control" id="full-screen" style="width: auto;"> Full-Screen <i class="fas fa-compress"></i></button>
+          <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
           <br>
           <button type="button" class="poll-slave nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="click-poll" style="display: none;"  >Vote poll</button>
           <br>
@@ -58,7 +59,7 @@
     </div>
 
     <!-- chat -->
-    <div  id="chat" class="nes-table-responsive draggable ">
+    <!-- <div  id="chat" class="nes-table-responsive draggable ">
       <table class=" nes-table  is-bordered is-centered table-chat " style="position: absolute;bottom: 0;  background-color: rgba(255, 255, 255, 0.5);">
         <tbody>
           <tr>
@@ -78,6 +79,18 @@
           </tr>
         </tbody>
       </table>
+    </div> -->
+
+    <div id="mysidenavChat" class="sidenavChat">
+      <section id="buttonChat">
+
+      </section>
+      <section id="chat-list" class="message-list chat-list">
+
+      </section>
+      <div class="nes-field is-inline" id="messageChat">
+        <textarea id="chat-input" class="nes-textarea" placeholder="Write a message"></textarea>
+      </div>
     </div>
 
     <!-- Modal chat enter-->

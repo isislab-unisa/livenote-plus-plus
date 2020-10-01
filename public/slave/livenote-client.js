@@ -161,6 +161,10 @@ module.exports = {
   
 
   initServices(socket);
+  },
+
+  showChatLogo:function(){
+    showChat();
   }
 };
 

@@ -96,7 +96,6 @@ body {
 #full-chat-slave{
   float: right;
   height: 110px;
-  margin-right: 20px;
 }
 
 .poll-master{
@@ -137,20 +136,16 @@ body {
   width: 15em;
   height: 15em;
 }
-.toleft{
+/* .toleft{
   left:0%;
 
 }
 .toright{
   right:0%;
 
-}
-.chat-list {
-    width: 100%;
-    height:92%;
-    overflow-y: scroll;
-    font-size: 0.5em; 
-}
+} */
+
+
 
 ::-webkit-scrollbar {
   width: 0px;  /* Remove scrollbar space */
@@ -552,18 +547,18 @@ body {
 /* Chat */
 
 .sidenavChat {
-  height: 100%;
+  height: 100vh;
   width: 0;
   position: fixed;
   z-index: 1;
   top: 0;
-  right: -1%;
+  right: -0%;
   background-color: white;
-  border: 5px black solid;
+  border: 0px black solid;
   overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
+  transition: width 0.5s;
 }
+
 
 .sidenav .closebtn {
   position: absolute;
@@ -573,5 +568,37 @@ body {
   margin-left: 50px;
 }
 
+#buttonChat{
+  width: 100%;
+  height: 5vh;
+  border-bottom: 5px black solid;
+}
 
 
+.message-list{
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height:87vh;
+  overflow-y: scroll;
+  font-size: 0.5em; 
+}
+
+.-right{
+  align-self: flex-end;
+}
+
+.-left{
+  align-self: flex-start;
+}
+
+.nes-balloon{
+  border-image-repeat: initial !important;
+}
+
+#messageChat{
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    height: 7vh;
+}
