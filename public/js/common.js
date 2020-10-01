@@ -202,14 +202,21 @@ function showChat(){
           if(nickname.length != 0){
             socket.emit("chat-enter", nickname);
            // socket.emit("chat-ask-list");
-            hide =$('#chat').is(':hidden')
-            if(!hide){
-              $("#chat_input").val('');
-              $('#chat').hide();
+            // hide =$('#chat').is(':hidden')
+            if(!$("#mysidenavChat").width()==0){
+              $("#chatLogo").attr("src","../img/chat.png");
+              $("#mysidenavChat").css("width","0px");
+              $("#container").css("margin-right","0px");
+              $("#chat-input").val('');
+              // $('#chat').hide();
             }else {
-              $('#chat').show();
-              $("#chat_input").focus();
-              $("#chat_input").val('');
+              $("#chatLogo").attr("src","../img/close.png");
+              $("#mysidenavChat").css("width","450px");
+              $("#container").css("margin-right","450px");         
+              $("#chat-input").focus();
+              $("#chat-input").val('');
+
+              // $('#chat').show();
               scrollChatList();
             }
           }else {
@@ -218,24 +225,35 @@ function showChat(){
         }
       );
   }else{
-    hide =$('#chat').is(':hidden')
-    if(!hide){
-      $("#chat_input").val('');
-      $('#chat').hide();
+    // hide =$('#chat').is(':hidden')
+    if(!$("#mysidenavChat").width()==0){
+      $("#chatLogo").attr("src","../img/chat.png");
+      $("#mysidenavChat").css("width","0px");
+      $("#container").css("margin-right","0px");
+      $("#chat-input").val('');
+      // $('#chat').hide();
     }else {
-      $('#chat').show();
-      $("#chat_input").focus();
-      $("#chat_input").val('');
-      scrollChatList();
+      
+      $("#chatLogo").attr("src","../img/close.png");
+      $("#mysidenavChat").css("width","450px");
+      $("#container").css("margin-right","450px");      
+      // $('#chat').show();
+      $("#chat-input").focus();
+      $("#chat-input").val('');
+      // scrollChatList();
     }
   }
 }
+
 function scrollChatList(){
   var wtf    = $('#chat-list');
     var height = wtf[0].scrollHeight;
     wtf.scrollTop(height);
 }
+
 function addNewMessage(name, message){
+  console.log("inserisco un messaggio");
+
    if($('#chat-list').children().length == 0){
       sside = '-right'
       side = 'from-right toright'
@@ -332,14 +350,16 @@ function initServices(mysocket){
     }
     $("#nusers").text(Object.keys(list).length)
   });
+
   socket.on("chat-message", (name, message) => {
     addNewMessage(name, message);
   });
-  $(document).keyup(function(event) {
-    if ($("#chat_input").is(":focus") && event.key == "Enter") {
+
+  $("#chat-input").keyup(function(event) {
+    if ($("#chat-input").is(":focus") && event.key == "Enter") {
       message = $("#chat_input").val()
+      $("#chat-input").val('');
       socket.emit("chat-message", nickname, message);
-      $("#chat_input").val('');
       addNewMessage(nickname, message);
     }
   });

@@ -71,7 +71,7 @@
           <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
         </div>
         
-        <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" >View Poll</button>
+        <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;" >View Poll</button>
 
         
       </div>
@@ -130,7 +130,7 @@
     </div>
 
     <!-- chat -->
-    <div  id="chat" class="nes-table-responsive draggable ">
+    <!-- <div  id="chat" class="nes-table-responsive draggable ">
       <table class=" nes-table  is-bordered is-centered table-chat " style="position: absolute;bottom: 0;  background-color: rgba(255, 255, 255, 0.5);">
         <tbody>
           <tr>
@@ -150,6 +150,14 @@
           </tr>
         </tbody>
       </table>
+    </div> -->
+
+    <div id="mysidenavChat" class="sidenavChat">
+      <section id="chat-list" class="message-list chat-list"></section>
+      <div class="nes-field is-inline" style="width: 428px;">
+        
+        <textarea id="chat-input" class="nes-textarea" placeholder="Write a message"></textarea>
+      </div>
     </div>
 
     <!-- Modal chat enter-->
