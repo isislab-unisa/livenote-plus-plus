@@ -74,7 +74,7 @@ const queueRenderPage = num => {
 
 /*END RENDER PDF*/
 
-
+var booleanBlack=false;
 // Go FullScreen when clicked on the button
 const goFullScreen = () => {
     //document.getElementsByTagName("body")[0].requestFullscreen();
@@ -90,7 +90,10 @@ const goFullScreen = () => {
       } else if (document.msExitFullscreen) { /* IE/Edge */
         document.msExitFullscreen();
       }
+
+      booleanBlack=false;
       changeNavbarInWhite();
+      changeSidebarChatInWhite();
       return;
     }
   
@@ -103,7 +106,9 @@ const goFullScreen = () => {
     } else if (elem.msRequestFullscreen) { /* IE/Edge */
       elem.msRequestFullscreen();
     }
+    booleanBlack=true;
     changeNavbarInBlack();
+    changeSidebarChatInBlack();
 
     $('#full-screen').text("Close")
   };
@@ -336,27 +341,37 @@ function scrollChatList(){
     wtf.scrollTop(height);
 }
 
-function addNewMessage(name, message,mode){
-
+var colorTMP=getRandomColor();
+var color;
+function addNewMessage(name, message,mode,colorFrom){
+  var colorBalloon="";
+    if(booleanBlack)
+      colorBalloon="is-dark";
+  
    if(mode==1){ // When the attribute mode is equal one, it means that the box balloon will position at the right of chat list. Otherwise, at the left of chat list
     sectionPosition = '-right';
     divPosition = 'from-right';
+    color=colorTMP;
+    console.log("il master ha il colore: "+ color);
    }else if(mode==0){
       sectionPosition='-left';
       divPosition='from-left';
+      color=colorFrom;
+      console.log("il slave ha il colore: "+ color);
       // sside = $('#chat-list').children('.message').last().hasClass("-right")? '-left':'-right';
       // side = sside == '-left'? 'from-left':'from-right';
    }
    pNametext = $('<p>', {
     text: name,
-    class: 'message_p'
+    class: 'message_p',
+    style: "color:"+color
    });
    pText=$('<p>', {
     text: message,
-    class: 'message_p'
+    class: 'message_p',
    });
    div = $('<div>', {
-    class: 'nes-balloon '+ divPosition
+    class: 'nes-balloon '+ divPosition +" " + colorBalloon
    });
    pNametext.appendTo(div);
    pText.appendTo(div);
@@ -442,16 +457,21 @@ function initServices(mysocket){
     $("#nusers").text(Object.keys(list).length)
   });
 
-  socket.on("chat-message", (name, message,mode) => {
-    addNewMessage(name, message,mode);
+  socket.on("chat-message", (name, message,mode,color) => {
+    addNewMessage(name, message,mode,color);
   });
 
   $("#chat-input").keyup(function(event) {
     if ($("#chat-input").is(":focus") && event.key == "Enter") {
-      message = $("#chat-input").val()
+      console.log($("#chat-input").val());
+      if(!($("#chat-input").val()==="\n")){
+        message = $("#chat-input").val()
+        $("#chat-input").val('');
+        socket.emit("chat-message", nickname, message,0,colorTMP);
+        console.log("mando il colore: " + colorTMP);
+        addNewMessage(nickname, message,1,colorTMP);
+      }
       $("#chat-input").val('');
-      socket.emit("chat-message", nickname, message,0);
-      addNewMessage(nickname, message,1);
     }
   });
 }
@@ -849,4 +869,39 @@ function changeNavbarInBlack(){
 function changeNavbarInWhite(){
   $(".sidenavBlack").attr("class","sidenav");
   $("#titleNavbar").css("color","black");
+}
+
+function changeSidebarChatInWhite(){
+  $("#mysidenavChat").css({
+    "background-color":"white",
+    "border-color" : "black"
+  });
+
+  $(".nes-balloon").each(function(){
+    $(this).attr("class","nes-balloon from-right");
+  });
+
+  $("#chat-input").attr("class","nes-textarea");
+}
+
+function changeSidebarChatInBlack(){
+  $("#mysidenavChat").css({
+    "background-color":"#212529",
+    "border-color" : "#636363"
+  });
+
+  $(".nes-balloon").each(function(){
+    $(this).attr("class","nes-balloon from-right is-dark");
+  });
+
+  $("#chat-input").attr("class","nes-textarea is-dark");
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
