@@ -202,14 +202,40 @@ function showChat(){
           if(nickname.length != 0){
             socket.emit("chat-enter", nickname);
            // socket.emit("chat-ask-list");
-            hide =$('#chat').is(':hidden')
-            if(!hide){
-              $("#chat_input").val('');
-              $('#chat').hide();
+            // hide =$('#chat').is(':hidden')
+            if(!$("#mysidenavChat").width()==0){
+              $("#chatLogo").attr("src","../img/chat.png");
+              
+              $("#mysidenavChat").css({
+                width            : "0%",
+                border           :  "1px solid black",
+                WebkitTransition : 'border 0 0.4s, width 0.5s 0',
+                MozTransition    : 'border 0 0.4s, width 0.5s 0',
+                MsTransition     : 'border 0 0.4s, width 0.5s 0 ',
+                OTransition      : 'border 0 0.4s, width 0.5s 0 ',
+                transition       : 'border 0 0.4s, width 0.5s 0 '
+            });
+
+              $("#container").css("margin-right","0px");
+              $("#chat-input").val('');
+              // $('#chat').hide();
             }else {
-              $('#chat').show();
-              $("#chat_input").focus();
-              $("#chat_input").val('');
+              $("#chatLogo").attr("src","../img/close.png");
+              
+              $("#mysidenavChat").css({
+                width            : "23%",
+                border           :  "5px solid black",
+                WebkitTransition : 'border 0s 0s, width 0.5s 0s',
+                MozTransition    : 'border 0s 0s, width 0.5s 0s',
+                MsTransition     : 'border 0s 0s, width 0.5s 0s ',
+                OTransition      : 'border 0s 0s, width 0.5s 0s ',
+                transition       : 'border 0s 0s, width 0.5s 0s '
+            });
+              $("#container").css("margin-right","23%");         
+              $("#chat-input").focus();
+              $("#chat-input").val('');
+
+              // $('#chat').show();
               scrollChatList();
             }
           }else {
@@ -218,41 +244,76 @@ function showChat(){
         }
       );
   }else{
-    hide =$('#chat').is(':hidden')
-    if(!hide){
-      $("#chat_input").val('');
-      $('#chat').hide();
+    // hide =$('#chat').is(':hidden')
+    if(!$("#mysidenavChat").width()==0){
+      $("#chatLogo").attr("src","../img/chat.png");
+      
+      $("#mysidenavChat").css({
+        width            : "0%",
+        border           :  "1px solid black",
+        WebkitTransition : 'border 0s 0.4s, width 0.5s 0s',
+        MozTransition    : 'border 0s 0.4s, width 0.5s 0s',
+        MsTransition     : 'border 0s 0.4s, width 0.5s 0s ',
+        OTransition      : 'border 0s 0.4s, width 0.5s 0s ',
+        transition       : 'border 0s 0.4s, width 0.5s 0s '
+    });
+
+      $("#container").css("margin-right","0px");
+      $("#chat-input").val('');
+      // $('#chat').hide();
     }else {
-      $('#chat').show();
-      $("#chat_input").focus();
-      $("#chat_input").val('');
-      scrollChatList();
+      
+      $("#chatLogo").attr("src","../img/close.png");
+      $("#mysidenavChat").css({
+        width            : "23%",
+        border           :  "5px solid black",
+        WebkitTransition : 'border 0s 0s, width 0.5s 0s',
+        MozTransition    : 'border 0s 0s, width 0.5s 0s',
+        MsTransition     : 'border 0s 0s, width 0.5s 0s ',
+        OTransition      : 'border 0s 0s, width 0.5s 0s ',
+        transition       : 'border 0s 0s, width 0.5s 0s '
+    });
+      $("#container").css("margin-right","23%");      
+      // $('#chat').show();
+      $("#chat-input").focus();
+      $("#chat-input").val('');
+      // scrollChatList();
     }
   }
 }
+
 function scrollChatList(){
   var wtf    = $('#chat-list');
     var height = wtf[0].scrollHeight;
     wtf.scrollTop(height);
 }
-function addNewMessage(name, message){
-   if($('#chat-list').children().length == 0){
-      sside = '-right'
-      side = 'from-right toright'
-   }else{
-      sside = $('#chat-list').children('.message').last().hasClass("-right")? '-left':'-right';
-      side = sside == '-left'? 'from-left toleft':'from-right toright';
+
+function addNewMessage(name, message,mode){
+
+   if(mode==1){ // When the attribute mode is equal one, it means that the box balloon will position at the right of chat list. Otherwise, at the left of chat list
+    sectionPosition = '-right';
+    divPosition = 'from-right';
+   }else if(mode==0){
+      sectionPosition='-left';
+      divPosition='from-left';
+      // sside = $('#chat-list').children('.message').last().hasClass("-right")? '-left':'-right';
+      // side = sside == '-left'? 'from-left':'from-right';
    }
-   ptext = $('<p>', {
-    text: name + ": "+ message,
+   pNametext = $('<p>', {
+    text: name,
+    class: 'message_p'
+   });
+   pText=$('<p>', {
+    text: message,
     class: 'message_p'
    });
    div = $('<div>', {
-    class: 'nes-balloon '
+    class: 'nes-balloon '+ divPosition
    });
-   ptext.appendTo(div);
+   pNametext.appendTo(div);
+   pText.appendTo(div);
    section = $('<section>', {
-    class: 'message '
+    class: 'message '+ sectionPosition 
    }).appendTo('#chat-list');
    div.appendTo(section);
    scrollChatList();
@@ -332,15 +393,17 @@ function initServices(mysocket){
     }
     $("#nusers").text(Object.keys(list).length)
   });
-  socket.on("chat-message", (name, message) => {
-    addNewMessage(name, message);
+
+  socket.on("chat-message", (name, message,mode) => {
+    addNewMessage(name, message,mode);
   });
-  $(document).keyup(function(event) {
-    if ($("#chat_input").is(":focus") && event.key == "Enter") {
-      message = $("#chat_input").val()
-      socket.emit("chat-message", nickname, message);
-      $("#chat_input").val('');
-      addNewMessage(nickname, message);
+
+  $("#chat-input").keyup(function(event) {
+    if ($("#chat-input").is(":focus") && event.key == "Enter") {
+      message = $("#chat-input").val()
+      $("#chat-input").val('');
+      socket.emit("chat-message", nickname, message,0);
+      addNewMessage(nickname, message,1);
     }
   });
 }

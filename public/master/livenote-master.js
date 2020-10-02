@@ -515,7 +515,9 @@ module.exports = {
 
   changeAvatarNavbar:function(){
     changepokemon();
-  }
+  },
+
+  
 };
 
 // Check if the fields are empty. If so, it will view a messagge of error.
