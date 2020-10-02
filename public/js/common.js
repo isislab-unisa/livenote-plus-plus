@@ -158,11 +158,14 @@ function loadVideoYt(){
     }
 
     /* work in progress */
-    var done = false;
     function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING && !done) {
-        player.stopVideo(); //player.playVideo()
-      } 
+      if (event.data == YT.PlayerState.PLAYING) {
+        console.log('playing yt video')
+        //player.stopVideo();
+      } else if (event.data == YT.PlayerState.PAUSED){
+        console.log('pausing yt video')
+        //player.playVideo();
+      }
     }
   }
 }
