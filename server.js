@@ -232,8 +232,8 @@ function makeitlive(socket){
     socket.broadcast.emit("slidechanged", data);
   });
 
-  socket.on("chat-message", (nickname, message) => {
-     socket.broadcast.emit("chat-message", nickname, message);
+  socket.on("chat-message", (nickname, message, mode) => {
+     socket.broadcast.emit("chat-message", nickname, message, mode);
   });
 
   socket.on("chat-enter", (nickname) => {
