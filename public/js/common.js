@@ -124,6 +124,51 @@ document.addEventListener('MSFullscreenChange', closeFullScreen, false);
 document.addEventListener('webkitfullscreenchange', closeFullScreen, false);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
+function loadVideoYt(){
+  ytid = $('#input-ytvideo').val();
+  if(ytid.length != 0){
+    //TODO difference master/slave
+    // Load the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Replace the 'ytplayer' element with an <iframe> and
+    // YouTube player after the API code downloads.
+    var player;
+    onYouTubePlayerAPIReady();
+
+    // controls: 0 -> slave no possibility to control
+    function onYouTubePlayerAPIReady() {
+      player = new window.YT.Player('ytplayer', {
+        height: '360',
+        width: '640',
+        videoId: ytid,
+        playerVars: {
+          enablejsapi: 1,
+          rel: 0,
+          modestbranding: 1,
+          origin: 'https://isiswork00.di.unisa.it/',
+        },
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    /* work in progress */
+    var done = false;
+    function onPlayerStateChange(event) {
+      if (event.data == YT.PlayerState.PLAYING && !done) {
+        player.stopVideo(); //player.playVideo()
+      } 
+    }
+  }
+}
+
+
+
 var pokemons =  [
   "nes-mario",
   "nes-ash",

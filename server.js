@@ -7,7 +7,6 @@ var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
 
-
 //Template engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

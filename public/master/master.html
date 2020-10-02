@@ -44,7 +44,28 @@
           <div class="divNavbar" onclick="changeWidthDrawing()">
             <span class="textNavbar">Change line widht of drawing: <span style="color: #F5D12D;" id="widthDraw">1</span></span>
           </div>
-        
+          <div class="divNavbar" data-toggle="modal" data-target="#dialog-ytvideo" id="modal-ytvideo">
+            <span class="textNavbar">Load video</span>
+          </div>
+      </div>
+
+      <!-- Modal chat enter-->
+      <div class="modal fade" id="dialog-ytvideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Enter your YouTube link ID</h4>
+            </div>
+            <div class="modal-body">
+              <input type="text" id="input-ytvideo" class="nes-input" placeholder="YhxjNYvJbgM">
+            </div>
+            <div class="modal-footer">
+              <button class="nes-btn" data-dismiss="modal">Cancel</button>
+              <button class="nes-btn is-primary" id="enter-ytvideo" value="default action" data-dismiss="modal" onclick="loadVideo()">Enter</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <canvas class="pdf-canvas " id="pdf-render"></canvas>
@@ -281,6 +302,8 @@
     </div>
   </div>
 
+  <div id="ytplayer"></div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="module" src="/js/livenote-drag.js"></script>
@@ -291,8 +314,12 @@
     <!-- bootstrap -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <!-- plyr -->
+    <script src="https://www.youtube.com/player_api"></script>
+
 
     <script>
+
       window.onload  = function() {
         initmaster(window.location.pathname)
         initThis(0,window.location.origin+"/sessions"+window.location.pathname+".pdf",1)

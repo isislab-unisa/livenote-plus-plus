@@ -517,6 +517,10 @@ module.exports = {
     changepokemon();
   },
 
+  loadVideo:function(){
+    loadVideoYt();
+  },
+
   
 };
 
