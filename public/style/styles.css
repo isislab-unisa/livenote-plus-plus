@@ -276,19 +276,20 @@ body {
   padding: 1rem;
 }
 
+#counter{  
+  position: relative;
+  left: 5px;
+}
 
 
-#counter{
+#counterButton{
   position: absolute;
-    top: 38px;
-    left: 27px;
-    color: black;
-    
-    
-    text-align: center;
-    height: 27px;
-    line-height: 10px;
-    text-indent: -3px;
+  top: 35px;
+  left: 23px;
+  color: black;
+  height: 27px;
+  line-height: 10px;
+  text-indent: -12px;
 }
 
 #counterDiv{
@@ -514,7 +515,7 @@ body {
   z-index: 1;
   top: 0;
   left: -26%;
-  background-color:#202020;
+  background-color:#212529;
   overflow-x: hidden;
   transition: left 0.3s linear;
   padding-top: 10px;
