@@ -409,6 +409,8 @@ var myLineWidth = 1;
 function changeLineWidth(){
   if(pmode == 0) {
     myLineWidth = (myLineWidth + 1) % 5;
+    if(myLineWidth==0)
+      myLineWidth=5;
     ctx.lineWidth = myLineWidth;
     socket.emit("line", myLineWidth);
     return myLineWidth;
