@@ -129,6 +129,8 @@ document.addEventListener('MSFullscreenChange', closeFullScreen, false);
 document.addEventListener('webkitfullscreenchange', closeFullScreen, false);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
+var player;
+
 function loadVideoYt(){
     // Load the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
@@ -142,7 +144,6 @@ function loadVideoYt(){
         // Replace the 'ytplayer' element with an <iframe> and
         // YouTube player after the API code downloads.
         socket.emit("ytvid", ytid);
-        var player;
         onYouTubePlayerAPIReady();
     
         function onYouTubePlayerAPIReady() {
@@ -161,10 +162,10 @@ function loadVideoYt(){
             }
           });
         }
+        $('#deleteYT').show()
       }
     } else {
       if (ytiden.length != 0) {
-        var player;
         onYouTubePlayerAPIReady();
     
         function onYouTubePlayerAPIReady() {
@@ -173,6 +174,7 @@ function loadVideoYt(){
             width: '640',
             videoId: ytiden,
             playerVars: {
+              disablekb: 1,
               controls: 0,
               enablejsapi: 1,
               rel: 0,
@@ -189,15 +191,27 @@ function loadVideoYt(){
 
     /* work in progress */
     function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING) {
-        console.log('playing yt video')
-        //player.stopVideo();
-      } else if (event.data == YT.PlayerState.PAUSED){
-        console.log('pausing yt video')
-        //player.playVideo();
+      if (pmode==0) {
+        var second;
+        if (event.data == YT.PlayerState.PLAYING) {
+          second = event.target.getCurrentTime();
+          socket.emit("yt_start", second);
+          //player.stopVideo();
+        } else if (event.data == YT.PlayerState.PAUSED){
+          second = event.target.getCurrentTime();
+          socket.emit("yt_stop", second);
+          //player.playVideo();
+        }
       }
     }
 }
+
+if (document.getElementById("deleteYT") != undefined )
+  document.getElementById("deleteYT").addEventListener('click', function(event){
+    player.destroy();
+    socket.emit("yt_destroy", true);
+    $('#deleteYT').hide()
+  });
 
 var pokemons =  [
   "nes-mario",
@@ -544,6 +558,18 @@ function initThis(mode, path, slide) {
       console.log(id)
       ytiden = id;
       loadVideoYt();
+    });
+    socket.on("ytstarting", function (data) {
+      player.seekTo(data, true);
+      player.playVideo();
+    });
+    socket.on("ytstopping", function (data) {
+      player.seekTo(data, true);
+      player.pauseVideo();
+    });
+    socket.on("ytdestroying", function (data) {
+      console.log("DISTRUGGERE")
+      player.destroy();
     });
   }
 
