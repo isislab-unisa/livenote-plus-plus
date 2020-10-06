@@ -268,6 +268,10 @@ function makeitlive(socket){
   socket.on("counter", (data) => {
     socket.broadcast.emit("counter_update", data);
   });
+  //broadcast id youtube video
+  socket.on("ytvid", (data) => {
+    socket.broadcast.emit("ytvideoid", data);
+  });
 
   // creation of the poll
   socket.on("createPollMultiple",(data,counter)=>{
