@@ -481,6 +481,17 @@ module.exports = {
   },
 
   toggleHamburger:function(){
+    if(window.innerHeight>window.innerWidth)
+      if($("#mysidenavChat").width()!=0){
+
+        $("#mysidenavChat").css({
+          width            : "0%",
+          right            : "-1%"
+        });
+        $("#container").css("margin-right","0px");
+        $("#chat-input").val('');
+      }
+
     $("#mySidenav").toggleClass("animation");
   },
   

@@ -25,7 +25,7 @@
 
         <div id="mySidenav" class="sidenav">
           <h2 id="titleNavbar">Livenote</h1>
-          <a href="javascript:void(0)" class="closebtn" onclick="toggleHamburger()">&times;</a>
+          <a href="javascript:void(0)" id="closeBtnFromLeft" class="closebtn glyphicon glyphicon-chevron-left" onclick="toggleHamburger()"></a>
           <div class="divNavbar" data-toggle="modal" data-target="#dialog-info">
             <span class="textNavbar">Shorcut commands</span>
           </div>
@@ -47,6 +47,7 @@
           <div class="divNavbar" data-toggle="modal" data-target="#dialog-ytvideo" id="modal-ytvideo">
             <span class="textNavbar">Load video</span>
           </div>
+          <a href="javascript:void(0)" id="closebtnFromBottom" class="glyphicon glyphicon-chevron-up" sytle="display:none" onclick="toggleHamburger()"></a>
       </div>
 
       <!-- Modal chat enter-->
@@ -307,6 +308,7 @@
   </div>
 
   <div id="ytframe" class="draggable">
+    <div id="handle" class="handle"></div>
     <div id="ytplayer"></div>
   </div>
 

@@ -465,19 +465,25 @@ body {
 
 .sidenav .closebtn {
   position: absolute;
-  top:-2px;
-  right: 1px;
-  font-size: 36px;
+  top:9px;
+  right: 5px;
+  font-size: 26px;
   margin-left: 50px;
   color: white;
   text-decoration: none !important;
 }
 
+#closebtnFromBottom{
+  position: relative;
+  right: 50%;
+  font-size: 26px;
+  color: white;
+}
 
 .textNavbar{
   color: white;
   position: relative;
-  left:8px;
+  left:1%;
 }
 
 .divNavbar{
@@ -502,6 +508,7 @@ body {
   text-align: center;
   margin-bottom:20px;
   margin-top:40px;
+  font-size:2vw;
 }
 
 
@@ -536,9 +543,9 @@ body {
 
 .sidenavBlack .closebtn {
   position: absolute;
-  top:-2px;
-  right: 1px;
-  font-size: 36px;
+  top:9px;
+  right: 5px;
+  font-size: 26px;
   margin-left: 50px;
   color: white;
   text-decoration: none !important;
@@ -552,20 +559,12 @@ body {
   position: fixed;
   z-index: 1;
   top: 0;
-  right: -0%;
-  background-color: white;
-  border: 0px black solid;
+  right: -1%;
+  background-color: silver;
+  border: 5px black solid;
   transition: width 0.5s;
 }
 
-
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
 
 #buttonChat{
   width: 100%;
@@ -597,8 +596,86 @@ body {
 }
 
 #messageChat{
-    width: 22.5%;
+    width: 22.5vw;
     position: fixed;
     bottom: 5px;
     height: auto;
 }
+
+.handle{
+  display: none;
+  width: 640px;
+  background: #ccc;
+  border: 1px solid #000;
+  border-radius: 4px;
+  height: 23px;
+  margin-bottom: -3px;
+}
+
+@media only screen and (orientation:portrait){
+  .sidenav{
+    height: auto;
+    width: 100%;
+    top: -370px;
+    left:0;
+    position: fixed;
+    z-index: 1;
+    background-color: silver;
+    overflow-x: hidden;
+    border: 5px black solid;  
+  }
+
+  .sidenav.animation {
+    top:0px;
+  }
+
+  .sidenavBlack {
+    height: auto;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: -370px;
+    left: 0;
+    background-color:#212529;
+    overflow-x: hidden;
+    border: 5px white solid;  
+  }
+
+  .sidenavBlack.animation {
+    top:0px;
+  }
+  
+
+  #titleNavbar{
+    right: -2%;
+    margin-top:0px;
+    font-size: 4vw;
+  }
+  
+  .divNavbar{
+    text-align: center;
+  }
+
+  .sidenav .closebtn{
+    right:0px;
+    left: -2%;
+  }
+
+  .sidenavBlack .closebtn{
+    right:0px;
+    left: -2%;
+  }
+
+
+  #closebtnFromBottom{
+    display: inline;
+    left: 50%;
+    top: -5px;
+  }
+  
+  #closeBtnFromLeft{
+    display: none;
+  }
+}
+
+ 
