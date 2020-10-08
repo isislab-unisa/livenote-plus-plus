@@ -71,7 +71,7 @@ if (document.getElementById("size") != undefined )
 import interact from 
 'https://cdn.interactjs.io/v1.9.20/interactjs/index.js'
 
-interact('.draggable')
+/* interact('.draggable')
   .draggable({
     // enable inertial throwing
     inertia: true,
@@ -93,12 +93,21 @@ interact('.draggable')
       end (event) {
        
       }
-    }
-  })
 
-function dragMoveListener (event) {
+    },
+  }) */
+
+  $(".draggable").draggable({
+    handle:".handle",
+    iframeFix:true,
+    scroll:true,
+    containment:"window"
+  });
+  
+
+/* function dragMoveListener (event) {
   var target = event.target
-  // keep the dragged position in the data-x/data-y attributes
+  // keep the dragged position in the data-x/data-y attributes 
   var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
   var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
 
@@ -110,7 +119,7 @@ function dragMoveListener (event) {
   // update the posiion attributes
   target.setAttribute('data-x', x)
   target.setAttribute('data-y', y)
-}
+} */
 
 // this function is used later in the resizing and gesture demos
 window.dragMoveListener = dragMoveListener

@@ -171,8 +171,8 @@ function loadVideoYt(){
     
         function onYouTubePlayerAPIReady() {
           player = new window.YT.Player('ytplayer', {
-            height: '360',
-            width: '640',
+            height: '20%',
+            width: '40%',
             videoId: ytiden,
             playerVars: {
               disablekb: 1,
