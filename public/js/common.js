@@ -162,6 +162,7 @@ function loadVideoYt(){
             }
           });
         }
+        $("#handle").show();
         $('#deleteYT').show()
       }
     } else {
@@ -293,33 +294,50 @@ function showChat(){
            // socket.emit("chat-ask-list");
             // hide =$('#chat').is(':hidden')
             if(!$("#mysidenavChat").width()==0){
-              $("#chatLogo").attr("src","../img/chat.png");
               
-              $("#mysidenavChat").css({
-                width            : "0%",
-                border           :  "1px solid black",
-                WebkitTransition : 'border 0 0.4s, width 0.5s 0',
-                MozTransition    : 'border 0 0.4s, width 0.5s 0',
-                MsTransition     : 'border 0 0.4s, width 0.5s 0 ',
-                OTransition      : 'border 0 0.4s, width 0.5s 0 ',
-                transition       : 'border 0 0.4s, width 0.5s 0 '
-            });
+              $("#chatLogo").attr("src","../img/chat.png");
+
+              
+                $("#mysidenavChat").css({
+                  width            : "0%",
+                  right            : "-1%"
+                });
+              
+              
+              //   $("#mysidenavChat").css({
+              //     width            : "0%",
+              //     border           :  "1px solid black",
+              //     WebkitTransition : 'border 0 0.4s, width 0.5s 0',
+              //     MozTransition    : 'border 0 0.4s, width 0.5s 0',
+              //     MsTransition     : 'border 0 0.4s, width 0.5s 0 ',
+              //     OTransition      : 'border 0 0.4s, width 0.5s 0 ',
+              //     transition       : 'border 0 0.4s, width 0.5s 0 '
+              // });
+
 
               $("#container").css("margin-right","0px");
               $("#chat-input").val('');
               // $('#chat').hide();
             }else {
               $("#chatLogo").attr("src","../img/close.png");
+
+                $("#mysidenavChat").css({
+                  width            : "23%",
+                  right            : "0%"
+              });
+            
               
-              $("#mysidenavChat").css({
-                width            : "23%",
-                border           :  "5px solid black",
-                WebkitTransition : 'border 0s 0s, width 0.5s 0s',
-                MozTransition    : 'border 0s 0s, width 0.5s 0s',
-                MsTransition     : 'border 0s 0s, width 0.5s 0s ',
-                OTransition      : 'border 0s 0s, width 0.5s 0s ',
-                transition       : 'border 0s 0s, width 0.5s 0s '
-            });
+
+            //   $("#mysidenavChat").css({
+            //     width            : "23%",
+            //     border           :  "5px solid black",
+            //     WebkitTransition : 'border 0s 0s, width 0.5s 0s',
+            //     MozTransition    : 'border 0s 0s, width 0.5s 0s',
+            //     MsTransition     : 'border 0s 0s, width 0.5s 0s ',
+            //     OTransition      : 'border 0s 0s, width 0.5s 0s ',
+            //     transition       : 'border 0s 0s, width 0.5s 0s '
+            // });
+          
               $("#container").css("margin-right","23%");         
               $("#chat-input").focus();
               $("#chat-input").val('');
@@ -334,34 +352,51 @@ function showChat(){
       );
   }else{
     // hide =$('#chat').is(':hidden')
-    if(!$("#mysidenavChat").width()==0){
+
+    if(!($("#mysidenavChat").width()==0)){
       $("#chatLogo").attr("src","../img/chat.png");
       
-      $("#mysidenavChat").css({
-        width            : "0%",
-        border           :  "1px solid black",
-        WebkitTransition : 'border 0s 0.4s, width 0.5s 0s',
-        MozTransition    : 'border 0s 0.4s, width 0.5s 0s',
-        MsTransition     : 'border 0s 0.4s, width 0.5s 0s ',
-        OTransition      : 'border 0s 0.4s, width 0.5s 0s ',
-        transition       : 'border 0s 0.4s, width 0.5s 0s '
-    });
+      
+        $("#mysidenavChat").css({
+          width            : "0%",
+          right            : "-1%"
+        });
+      
+      
+        // $("#mysidenavChat").css({
+        //   width            : "0%",
+        //   border           :  "1px solid black",
+        //   WebkitTransition : 'border 0s 0.4s, width 0.5s 0s',
+        //   MozTransition    : 'border 0s 0.4s, width 0.5s 0s',
+        //   MsTransition     : 'border 0s 0.4s, width 0.5s 0s ',
+        //   OTransition      : 'border 0s 0.4s, width 0.5s 0s ',
+        //   transition       : 'border 0s 0.4s, width 0.5s 0s '
+        // });
+    
 
       $("#container").css("margin-right","0px");
       $("#chat-input").val('');
       // $('#chat').hide();
     }else {
-      
       $("#chatLogo").attr("src","../img/close.png");
-      $("#mysidenavChat").css({
-        width            : "23%",
-        border           :  "5px solid black",
-        WebkitTransition : 'border 0s 0s, width 0.5s 0s',
-        MozTransition    : 'border 0s 0s, width 0.5s 0s',
-        MsTransition     : 'border 0s 0s, width 0.5s 0s ',
-        OTransition      : 'border 0s 0s, width 0.5s 0s ',
-        transition       : 'border 0s 0s, width 0.5s 0s '
-    });
+
+      
+        $("#mysidenavChat").css({
+          width            : "23%",
+          right            : "0%"
+      });
+      
+      
+      //   $("#mysidenavChat").css({
+      //     width            : "23%",
+      //     border           :  "5px solid black",
+      //     WebkitTransition : 'border 0s 0s, width 0.5s 0s',
+      //     MozTransition    : 'border 0s 0s, width 0.5s 0s',
+      //     MsTransition     : 'border 0s 0s, width 0.5s 0s ',
+      //     OTransition      : 'border 0s 0s, width 0.5s 0s ',
+      //     transition       : 'border 0s 0s, width 0.5s 0s '
+      // });
+    
       $("#container").css("margin-right","23%");      
       // $('#chat').show();
       $("#chat-input").focus();
@@ -929,12 +964,12 @@ function changeNavbarInWhite(){
 
 function changeSidebarChatInWhite(){
   $("#mysidenavChat").css({
-    "background-color":"white",
+    "background-color":"silver",
     "border-color" : "black"
   });
 
   $(".nes-balloon").each(function(){
-    $(this).attr("class","nes-balloon from-right");
+    $(this).removeClass("is-dark");
   });
 
   $("#chat-input").attr("class","nes-textarea");
@@ -947,7 +982,7 @@ function changeSidebarChatInBlack(){
   });
 
   $(".nes-balloon").each(function(){
-    $(this).attr("class","nes-balloon from-right is-dark");
+    $(this).addClass("is-dark");
   });
 
   $("#chat-input").attr("class","nes-textarea is-dark");
