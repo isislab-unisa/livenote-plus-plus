@@ -212,6 +212,7 @@ if (document.getElementById("deleteYT") != undefined )
     player.destroy();
     socket.emit("yt_destroy", true);
     $('#deleteYT').hide()
+    $("#handle").hide();
   });
 
 var pokemons =  [
