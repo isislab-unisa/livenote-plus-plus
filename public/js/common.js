@@ -132,6 +132,7 @@ document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 var player;
 
 function loadVideoYt(){
+  console.log("carico il video");
     // Load the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/player_api";
@@ -162,8 +163,9 @@ function loadVideoYt(){
             }
           });
         }
+        $("#ytframe").css("display","inline-block");
         $("#handle").show();
-        $('#deleteYT').show()
+        // $('#deleteYT').show()
       }
     } else {
       if (ytiden.length != 0) {
@@ -187,6 +189,8 @@ function loadVideoYt(){
             }
           });
         }
+        $("#ytframe").css("display","inline-block");
+        $("#handle").show();
       }
     }
 
@@ -207,11 +211,12 @@ function loadVideoYt(){
     }
 }
 
-if (document.getElementById("deleteYT") != undefined )
-  document.getElementById("deleteYT").addEventListener('click', function(event){
+if (document.getElementById("trashYT") != undefined )
+  document.getElementById("trashYT").addEventListener('click', function(event){
     player.destroy();
     socket.emit("yt_destroy", true);
-    $('#deleteYT').hide()
+    $('#ytframe').hide()
+    // $('#deleteYT').hide()
     $("#handle").hide();
   });
 
@@ -606,6 +611,7 @@ function initThis(mode, path, slide) {
     socket.on("ytdestroying", function (data) {
       console.log("DISTRUGGERE")
       player.destroy();
+      $("#ytframe").hide();
     });
   }
 

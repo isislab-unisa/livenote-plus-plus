@@ -73,7 +73,6 @@
       <div id="topButtons">
         <!-- <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button> -->
 
-        <!-- <button class="w3-button" onclick="openHamburger()">&#9776 Menu</button> -->
         <img onclick="toggleHamburger()" id="nesMenu" src="../img/nes.png"/>
         <div id="counterDiv">
           <img id="counterPeople" src="../img/people.png" style="height: 50px";/>
@@ -91,7 +90,7 @@
           <div id="select-video" class="nes-select is-warning select control" style="display:none;">
             <select id="videoSource"></select>
           </div>
-          <button class="nes-btn is-warning control" id="deleteYT" style="display:none"> Delete YT Video <i class="fas fa-compress"></i></button>
+          <!-- <button class="nes-btn is-warning control" id="deleteYT" style="display:none"> Delete YT Video <i class="fas fa-compress"></i></button> -->
           <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
           <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
         </div>
@@ -103,8 +102,8 @@
       <div id="bottomButtons">
         <button class="nes-btn is-primary control" id="prev-page">&#8249;Prev</button>
         <button class="nes-btn is-primary control" id="next-page">Next&#8250;</button>    
-        <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
       </div>
+      <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
     </div>
 
     <!-- Modal info-->
@@ -154,35 +153,9 @@
       </div>
     </div>
 
-    <!-- chat -->
-    <!-- <div  id="chat" class="nes-table-responsive draggable ">
-      <table class=" nes-table  is-bordered is-centered table-chat " style="position: absolute;bottom: 0;  background-color: rgba(255, 255, 255, 0.5);">
-        <tbody>
-          <tr>
-            <td style="width:25%;">
-              <div class="lists users">
-                  <ul id="ul-users" class="nes-list is-disc ">
-                  </ul>
-              </div>
-              <div class="nusers"> Online: <span id="nusers">0</span> </div>
-            </td>
-            <td style="width:75%">
-              <section id="chat-list" class="message-list chat-list"></section>
-              <div class="nes-field is-inline">
-                <input type="text" id="chat_input" class="nes-input is-dark" placeholder="write a message">
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
-
     
 
     <div id="mysidenavChat" class="sidenavChat">
-      <!-- <section id="buttonChat">
-        <img src="../img/group.png"/>
-      </section> -->
       <section id="chat-list" class="message-list chat-list">
         
       </section>
@@ -308,7 +281,10 @@
   </div>
 
   <div id="ytframe" class="draggable">
-    <div id="handle" class="handle"></div>
+    <div id="handle" class="handle">
+      <span style="position: relative; top: 7px;">Drag me</span>
+      <img id="trashYT" src="../img/cestino.png"/>
+    </div>
     <div id="ytplayer"></div>
   </div>
 
