@@ -597,9 +597,9 @@ body {
 
 #messageChat{
     width: 22.5vw;
-    position: absolute;
+    position: fixed;
+    bottom: 5px;
     height: auto;
-    bottom: 0px;
 }
 
 .handle{
