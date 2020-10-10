@@ -23,6 +23,7 @@
   <body onload="">
     <div id="container">
 
+      <!--Sidenav comands-->
         <div id="mySidenav" class="sidenav">
           <h2 id="titleNavbar">Livenote</h1>
           <a href="javascript:void(0)" id="closeBtnFromLeft" class="closebtn glyphicon glyphicon-chevron-left" onclick="toggleHamburger()"></a>
@@ -50,16 +51,21 @@
           <a href="javascript:void(0)" id="closebtnFromBottom" class="glyphicon glyphicon-chevron-up" sytle="display:none" onclick="toggleHamburger()"></a>
       </div>
 
-      <!-- Modal chat enter-->
+      <!-- Modal Youtube enter-->
       <div class="modal fade" id="dialog-ytvideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" sytle="width:38% !important">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Enter your YouTube link ID</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  
+              <h4 class="modal-title is-primary" id="myModalLabel" style="text-align: center;">Enter your YouTube link ID</h4>
             </div>
             <div class="modal-body">
-              <input type="text" id="input-ytvideo" class="nes-input" placeholder="YhxjNYvJbgM">
+              <span class="nes-text is-warning" style="display:block; margin-bottom: 7px;" >Warning: consider only the green one</span>
+              <span>https://www.youtube.com/watch?v=<span style="color: green; font-size: 15px;">v2AC41dglnM</span>
+              </span>
+          </div>
+            <div class="modal-body">
+              <input type="text" id="input-ytvideo" class="nes-input" placeholder="insert link ID">
             </div>
             <div class="modal-footer">
               <button class="nes-btn" data-dismiss="modal">Cancel</button>
@@ -91,18 +97,23 @@
             <select id="videoSource"></select>
           </div>
           <!-- <button class="nes-btn is-warning control" id="deleteYT" style="display:none"> Delete YT Video <i class="fas fa-compress"></i></button> -->
-          <button class="nes-btn is-warning control" id="full-screen"> Full-Screen <i class="fas fa-compress"></i></button>
+          <div style="display: inline-grid";>
+            <button class="nes-btn is-warning control" id="full-screen" style="display: block;"> Full-Screen <i class="fas fa-compress"></i></button>
+            <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;" >View Poll</button>
+          </div>
           <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
+          
+          
         </div>
         
-        <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;" >View Poll</button>
+        
 
         
       </div>
-      <div id="bottomButtons">
+
         <button class="nes-btn is-primary control" id="prev-page">&#8249;Prev</button>
         <button class="nes-btn is-primary control" id="next-page">Next&#8250;</button>    
-      </div>
+
       <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
     </div>
 
@@ -174,17 +185,18 @@
           </div>
           <div class="modal-body">
             <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
+            <span class="errorPoll">You must insert a nickname</span>
           </div>
           <div class="modal-footer">
             <button class="nes-btn" data-dismiss="modal">Cancel</button>
-            <button class="nes-btn is-primary" id="enter" value="default action" data-dismiss="modal">Enter</button>
+            <button class="nes-btn is-primary" id="enter">Enter</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modal chat error-->
-    <div class="modal fade" id="dialog-error-nickname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- div class="modal fade" id="dialog-error-nickname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -199,7 +211,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Modal audiovideo-->
     <div class="modal fade" id="dialog-play" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

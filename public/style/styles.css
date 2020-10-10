@@ -46,6 +46,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: -1;
+  transition: margin-left 0.5s;
 }
 
 #container #next-page {
@@ -54,6 +55,11 @@ body {
   font-size: 1em;
   line-height: 0px;
   width: 6em;
+  margin-right: 0.5%;
+  transition: margin-right 0.5s;
+  position: absolute;
+  top: 50%;
+  right: 0%;
 }
 
 #container #prev-page {
@@ -62,15 +68,12 @@ body {
   font-size: 1em;
   line-height: 0px;
   width: 6em;
-}
-
-#bottomButtons{
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  margin-left: 0.5%;
   position: absolute;
   top: 50%;
 }
+
+
 
 
 #container #progress-bar {
@@ -79,7 +82,8 @@ body {
   position: absolute;
   left: calc(50% - 100px);
   opacity: 0.5;
-  top:85%
+  top:85%;
+  transition: margin-left 0.5s;
 }
 #container #select-audio{
   width: 8em;
@@ -104,16 +108,14 @@ body {
 
 .poll-master{
   color: black !important;
-  position: absolute !important;
-  right: 4.8%;
-  top:80px;
+  top:20px;
   width: 12.6em;
 }
 
 .poll-slave{
   margin-bottom:10px !important;
   margin-top:10px !important;
-  width: 100%;
+  width: 61%;
 }
 
 #chatLogo{
@@ -602,7 +604,7 @@ body {
 #messageChat{
     width: 22.5vw;
     position: absolute;
-    bottom: 5px;
+    bottom: 0px;
     height: auto;
 }
 
