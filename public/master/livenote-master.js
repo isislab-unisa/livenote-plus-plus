@@ -392,13 +392,14 @@ module.exports = {
             $('#select-audio').show();
             $('#select-video').show();
             
+            $("#mySidenav").removeClass("animation");
             $('#video-audio').text("Hide video");
             $('#startlive').attr("onclick","hideVideoNavbar()").removeAttr("data-toggle").removeAttr("data-target");
             
            
             // $('#startlive').addClass("nes-mario");
             return navigator.mediaDevices.enumerateDevices();
-          }
+          }          
         }
       );
     }
@@ -552,6 +553,8 @@ function validatePoll(){
 
   return res;
 }
+
+
 
 //Hide the button of createPoll when the master click the button send. 
 function hideBottonCreatePoll(){

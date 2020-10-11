@@ -46,36 +46,44 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: -1;
+  transition: margin-left 0.5s;
 }
 
 #container #next-page {
   display: inline-block;
-  position: absolute;
-  top: 80%;
-  right: 0%;
   opacity: 0.5;
   font-size: 1em;
   line-height: 0px;
   width: 6em;
+  margin-right: 0.5%;
+  transition: margin-right 0.5s;
+  position: absolute;
+  top: 50%;
+  right: 0%;
 }
 
 #container #prev-page {
   display: inline-block;
-  position: absolute;
-  top: 80%;
-  left: 0%;
   opacity: 0.5;
   font-size: 1em;
   line-height: 0px;
   width: 6em;
+  margin-left: 0.5%;
+  position: absolute;
+  top: 50%;
 }
+
+
+
+
 #container #progress-bar {
   width: 8em;
   height: 3em;
   position: absolute;
   left: calc(50% - 100px);
   opacity: 0.5;
-  top:85%
+  top:85%;
+  transition: margin-left 0.5s;
 }
 #container #select-audio{
   width: 8em;
@@ -100,16 +108,14 @@ body {
 
 .poll-master{
   color: black !important;
-  position: absolute !important;
-  right: 4.8%;
-  top:80px;
+  top:20px;
   width: 12.6em;
 }
 
 .poll-slave{
   margin-bottom:10px !important;
   margin-top:10px !important;
-  width: 100%;
+  width: 61%;
 }
 
 #chatLogo{
@@ -526,7 +532,7 @@ body {
   overflow-x: hidden;
   transition: left 0.3s linear;
   padding-top: 10px;
-  border: 5px white solid;  
+  border: 5px #636363 solid;  
 }
 
 .sidenavBlack.animation {
@@ -597,19 +603,35 @@ body {
 
 #messageChat{
     width: 22.5vw;
-    position: fixed;
-    bottom: 5px;
+    position: absolute;
+    bottom: 0px;
     height: auto;
 }
 
 .handle{
   display: none;
   width: 640px;
-  background: #ccc;
-  border: 1px solid #000;
-  border-radius: 4px;
-  height: 23px;
+  background:white;
+  height: 37px;
   margin-bottom: -3px;
+  text-align: center;
+  border-bottom: 9px solid black;
+}
+
+#ytframe{
+  display: none;
+  border:5px solid black;
+  border-radius: 4px;
+  z-index: 1;
+  position: relative;
+}
+
+#trashYT{
+  height: 38px;
+  position: absolute;
+  right: -3px;
+  top: -4px;
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
 }
 
 @media only screen and (orientation:portrait){
@@ -638,7 +660,7 @@ body {
     left: 0;
     background-color:#212529;
     overflow-x: hidden;
-    border: 5px white solid;  
+    border: 5px #636363 solid;  
   }
 
   .sidenavBlack.animation {
@@ -677,5 +699,7 @@ body {
     display: none;
   }
 }
+
+
 
  

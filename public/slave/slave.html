@@ -105,10 +105,11 @@
           </div>
           <div class="modal-body">
             <input type="text" id="input-nickname" class="nes-input" placeholder="nickname">
+            <span class="errorPoll">You must insert a nickname</span>
           </div>
           <div class="modal-footer">
             <button class="nes-btn" data-dismiss="modal">Cancel</button>
-            <button class="nes-btn is-primary" id="enter" value="default action" data-dismiss="modal">Enter</button>
+            <button class="nes-btn is-primary" id="enter">Enter</button>
           </div>
         </div>
       </div>
@@ -203,6 +204,9 @@
     </div>
 
     <div id="ytframe" class="draggable" style="pointer-events: none;">
+      <div id="handle" class="handle">
+        <span>Drag me</span>
+      </div>
       <div id="ytplayer"></div>
     </div>
     
