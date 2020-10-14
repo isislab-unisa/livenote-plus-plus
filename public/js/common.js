@@ -190,7 +190,7 @@ function loadVideoYt(){
             }
           });
         }
-        $("#ytframe").css("display","inline-block");
+        $("#ytframe").css("display","inline-grid");
         $("#handle").show();
       }
     }
@@ -317,11 +317,13 @@ function showChat(){
               $("#chat-input").val('');
             }else {
               $("#chatLogo").attr("src","../img/close.png");
-
+              
                 $("#mysidenavChat").css({
-                  width            : "23%",
-                  right            : "0%"
-              });
+                width            : "23%",
+                right            : "0%"
+                });
+               
+              
             
               $("#progress-bar").css("margin-left","-11%");
               $("#next-page").css("margin-right","23.5%");
@@ -356,11 +358,10 @@ function showChat(){
     }else {
       $("#chatLogo").attr("src","../img/close.png");
 
-      
         $("#mysidenavChat").css({
-          width            : "23%",
-          right            : "0%"
-      });
+        width            : "23%",
+        right            : "0%"
+        });
 
       $("#progress-bar").css("margin-left","-11%");
       $("#next-page").css("margin-right","23.5%");
