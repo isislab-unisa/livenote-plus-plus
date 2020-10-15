@@ -561,7 +561,7 @@ body {
 
 .sidenavChat {
   height: 100vh;
-  width: 0;
+  width: 0%;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -634,7 +634,9 @@ body {
   cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
 }
 
-@media only screen and (orientation:portrait){
+
+/* Risoluzione fissata per tablet */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
   .sidenav{
     height: auto;
     width: 100%;
@@ -699,6 +701,32 @@ body {
     display: none;
   }
 }
+
+/* Risoluzione fissata per smartphone */
+@media screen and (min-width: 320px) and (max-width: 479px){
+  #full-screen{
+    display: none !important;
+  }
+
+  #counterDiv{
+    display: none;
+  }
+
+  #chatLogo{
+    width: 64%;
+    z-index: 2;
+  }
+
+  #sidenavChat{
+    width: 100%;
+  }
+
+  #messageChat{
+    width: 100%;
+  }
+}
+
+
 
 
 
