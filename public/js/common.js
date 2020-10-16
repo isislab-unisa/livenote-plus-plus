@@ -316,15 +316,24 @@ function showChat(){
               $("#container").css("margin-right","0px");
               $("#chat-input").val('');
             }else {
+
               $("#chatLogo").attr("src","../img/close.png");
-              
+
+              if(window.innerWidth<479 && window.innerHeight>320){
+                $("#mysidenavChat").css({
+                  width            : "100%",
+                  right            : "0%"
+                  });
+
+                  $("#container").css("margin-right","-6%");
+              }
+              else{
                 $("#mysidenavChat").css({
                 width            : "23%",
                 right            : "0%"
                 });
                
-              
-            
+
               $("#progress-bar").css("margin-left","-11%");
               $("#next-page").css("margin-right","23.5%");
               $("#pdf-render").css("margin-left","-12%");
@@ -333,6 +342,7 @@ function showChat(){
               $("#chat-input").val('');
 
               scrollChatList();
+              }
             }
           }
         }
@@ -347,9 +357,7 @@ function showChat(){
           width            : "0%",
           right            : "-1%"
         });
-      
 
-        
       $("#progress-bar").css("margin-left","0%");  
       $("#next-page").css("margin-right","0.5%");
       $("#pdf-render").css("margin-left","0%");
@@ -357,7 +365,13 @@ function showChat(){
       $("#chat-input").val('');
     }else {
       $("#chatLogo").attr("src","../img/close.png");
-
+      if(window.innerWidth<479 && window.innerHeight>320){
+        $("#mysidenavChat").css({
+          width            : "100%",
+          right            : "0%"
+          });
+          $("#container").css("margin-right","-6%");
+      }else{
         $("#mysidenavChat").css({
         width            : "23%",
         right            : "0%"
@@ -371,6 +385,7 @@ function showChat(){
       $("#chat-input").focus();
       $("#chat-input").val('');
       // scrollChatList();
+      }
     }
   }
 }
