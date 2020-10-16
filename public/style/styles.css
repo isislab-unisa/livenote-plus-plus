@@ -634,6 +634,10 @@ body {
   cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
 }
 
+#counterPeople{
+  height: 50px;
+}
+
 
 /* Risoluzione fissata per tablet */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
@@ -709,7 +713,13 @@ body {
   }
 
   #counterDiv{
-    display: none;
+    z-index: 2;
+    top:11px;
+    left: 20px;
+  }
+
+  #counterPeople{
+    height: 34px;
   }
 
   #chatLogo{
@@ -723,6 +733,27 @@ body {
 
   #messageChat{
     width: 100%;
+  }
+
+  .message-list{
+    position: relative;
+    top:7%;
+    height: 82vh;
+  }
+
+  #counterButton{
+    top: 21px;
+    left: 12px;
+    height: 15px;
+  }
+  #counter{
+    font-size: 12px;
+    top:-6px;
+    z-index:1;
+  }
+
+  .sidenavChat{
+    right: -2%;
   }
 }
 
