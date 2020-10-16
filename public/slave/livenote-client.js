@@ -70,7 +70,7 @@ module.exports = {
     });
     
     socket.on( "slidechanged", function (msg) {
-      console.log("Presentation Change "+msg); 
+      //console.log("Presentation Change "+msg); 
       s = JSON.parse(msg)
       loadStatus(s);
     });

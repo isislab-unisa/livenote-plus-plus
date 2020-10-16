@@ -20,29 +20,29 @@ const renderPage = num => {
 
     var viewport = page.getViewport({ scale: 1, });
     var scale = Math.min((window.innerHeight / viewport.height), (window.innerWidth / viewport.width));
-    //console.log(viewport.width +" "+viewport.height+" "+scale)    
     var viewport = page.getViewport({scale: scale,});
    
-    canvas.height = window.innerHeight;
-    canvas.width = viewport.width; 
-    // canvas.height =  page.getViewport({ scale: 1, }).height;
-    // canvas.width = page.getViewport({ scale: 1, }).width;
-    
- 
-    var viewport = page.getViewport({ scale: 1, });
-    if(viewport.width > viewport.height){
-      var d =  window.innerWidth;
-      var scale = d / viewport.width;
-      var viewport = page.getViewport({ scale: scale, });
-      canvas.height = viewport.height;
-      canvas.width = window.innerWidth; 
-    }else{
-        var d =  window.innerHeight;
-        var scale = d / viewport.height;
-        var viewport = page.getViewport({ scale: scale, });
-        canvas.height = window.innerHeight;
-        canvas.width = viewport.width; 
-    }
+    canvas.height = canvas.clientHeight;
+    canvas.width = canvas.clientWidth;
+
+    // var viewport = page.getViewport({ scale: 1, });
+    // if(window.innerWidth > window.innerHeight){
+    //   console.log('case1')
+    //   var d =  window.innerWidth;
+    //   var scale = d / viewport.width;
+    //   var viewport = page.getViewport({ scale: scale, });
+    //   // canvas.height = viewport.height;
+    //   // canvas.width = window.innerWidth;
+    //   canvas.height = canvas.clientHeight;
+    //   canvas.width = window.innerWidth;
+    // }else{
+    //   console.log('case2')
+    //     var d =  window.innerHeight;
+    //     var scale = d / viewport.height;
+    //     var viewport = page.getViewport({ scale: scale, });
+    //     canvas.height = window.innerHeight;
+    //     canvas.width = viewport.width; 
+    // }
 
     const renderCtx = {
       canvasContext: ctx,
@@ -132,7 +132,7 @@ document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 var player;
 
 function loadVideoYt(){
-  console.log("carico il video");
+  //console.log("carico il video");
     // Load the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/player_api";
@@ -392,12 +392,12 @@ function addNewMessage(name, message,mode,colorFrom){
     sectionPosition = '-right';
     divPosition = 'from-right';
     color=colorTMP;
-    console.log("il master ha il colore: "+ color);
+    //console.log("il master ha il colore: "+ color);
    }else if(mode==0){
       sectionPosition='-left';
       divPosition='from-left';
       color=colorFrom;
-      console.log("il slave ha il colore: "+ color);
+      //console.log("il slave ha il colore: "+ color);
       // sside = $('#chat-list').children('.message').last().hasClass("-right")? '-left':'-right';
       // side = sside == '-left'? 'from-left':'from-right';
    }
@@ -505,12 +505,12 @@ function initServices(mysocket){
 
   $("#chat-input").keyup(function(event) {
     if ($("#chat-input").is(":focus") && event.key == "Enter") {
-      console.log($("#chat-input").val());
+      //console.log($("#chat-input").val());
       if(!($("#chat-input").val()==="\n")){
         message = $("#chat-input").val()
         $("#chat-input").val('');
         socket.emit("chat-message", nickname, message,0,colorTMP);
-        console.log("mando il colore: " + colorTMP);
+        //console.log("mando il colore: " + colorTMP);
         addNewMessage(nickname, message,1,colorTMP);
       }
       $("#chat-input").val('');
@@ -559,7 +559,7 @@ function initThis(mode, path, slide) {
       updateLine(data)
     });
     socket.on( "ytvideoid", function (id) {
-      console.log(id)
+      //console.log(id)
       ytiden = id;
       loadVideoYt();
     });
@@ -572,7 +572,7 @@ function initThis(mode, path, slide) {
       player.pauseVideo();
     });
     socket.on("ytdestroying", function (data) {
-      console.log("DISTRUGGERE")
+      //console.log("DISTRUGGERE")
       player.destroy();
       $("#ytframe").hide();
     });
@@ -624,14 +624,14 @@ function initThis(mode, path, slide) {
   $('#pdf-render').mouseup(function (e) {
       mousePressed = false;
       socket.emit("shape", JSON.stringify(shape), function (data) {      
-        console.log('Message shape sent! ');
+        //console.log('Message shape sent! ');
       });
       shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
   });
   $('#pdf-render').mouseleave(function (e) {
       mousePressed = false;
       socket.emit("shape", JSON.stringify(shape), function (data) {      
-        console.log('Message shape sent! ');
+        //console.log('Message shape sent! ');
       });
       shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
   });
@@ -818,7 +818,7 @@ function getPollDynamicalRanking(data){
   $("#viewPollDynamical").css("display","inline");
   
   jsonDatiPoll=JSON.parse(data);
-  console.log(jsonDatiPoll);
+  //console.log(jsonDatiPoll);
 
   var tableRanking=document.getElementById("pollDynamical");
 
