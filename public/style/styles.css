@@ -610,7 +610,7 @@ body {
 
 .handle{
   display: none;
-  width: 640px;
+  width: 100%;
   background:white;
   height: 37px;
   margin-bottom: -3px;
@@ -634,8 +634,12 @@ body {
   cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0, pointer;
 }
 
+#counterPeople{
+  height: 50px;
+}
 
-/* Risoluzione fissata per tablet */
+
+/* Risoluzione fissata per tablet in potrait */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
   .sidenav{
     height: auto;
@@ -703,18 +707,26 @@ body {
 }
 
 /* Risoluzione fissata per smartphone */
-@media screen and (min-width: 320px) and (max-width: 479px){
+@media screen and (min-width: 320px) and (max-width: 479px),
+only screen and (min-device-width : 375px) and (max-device-width : 812px) and (orientation : landscape) {
   #full-screen{
     display: none !important;
   }
 
   #counterDiv{
-    display: none;
+    z-index: 2;
+    top:11px;
+    left: 20px;
+  }
+
+  #counterPeople{
+    height: 34px;
   }
 
   #chatLogo{
     width: 64%;
     z-index: 2;
+    left:32%;
   }
 
   #sidenavChat{
@@ -723,6 +735,27 @@ body {
 
   #messageChat{
     width: 100%;
+  }
+
+  .message-list{
+    position: relative;
+    top:7%;
+    height: 82vh;
+  }
+
+  #counterButton{
+    top: 21px;
+    left: 12px;
+    height: 15px;
+  }
+  #counter{
+    font-size: 12px;
+    top:-6px;
+    z-index:1;
+  }
+
+  .sidenavChat{
+    right: -3%;
   }
 }
 
