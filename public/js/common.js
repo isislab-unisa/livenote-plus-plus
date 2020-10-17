@@ -24,6 +24,12 @@ const renderPage = num => {
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
+    // risoluzione del tablet in modalità landscape
+    if(window.innerWidth>=768 && window.innerWidth<=1366 && window.matchMedia("(orientation: landscape)").matches) {  
+      var viewport = page.getViewport({scale: scale/1.23,});
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+    }
     /* OLD math calculation
 
     canvas.height = window.innerHeight;
