@@ -21,28 +21,28 @@ const renderPage = num => {
     var viewport = page.getViewport({ scale: 1, });
     var scale = Math.min((window.innerHeight / viewport.height), (window.innerWidth / viewport.width));
     var viewport = page.getViewport({scale: scale,});
-   
-    canvas.height = canvas.clientHeight;
-    canvas.width = canvas.clientWidth;
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
 
-    // var viewport = page.getViewport({ scale: 1, });
-    // if(window.innerWidth > window.innerHeight){
-    //   console.log('case1')
-    //   var d =  window.innerWidth;
-    //   var scale = d / viewport.width;
-    //   var viewport = page.getViewport({ scale: scale, });
-    //   // canvas.height = viewport.height;
-    //   // canvas.width = window.innerWidth;
-    //   canvas.height = canvas.clientHeight;
-    //   canvas.width = window.innerWidth;
-    // }else{
-    //   console.log('case2')
-    //     var d =  window.innerHeight;
-    //     var scale = d / viewport.height;
-    //     var viewport = page.getViewport({ scale: scale, });
-    //     canvas.height = window.innerHeight;
-    //     canvas.width = viewport.width; 
-    // }
+    /* OLD math calculation
+
+    canvas.height = window.innerHeight;
+    canvas.width = viewport.width;
+    var viewport = page.getViewport({ scale: 1, });
+    if(viewport.width > viewport.height){
+      var d =  window.innerWidth;
+      var scale = d/viewport.width;
+      var viewport = page.getViewport({ scale: scale, });
+      canvas.height = viewport.height;
+      canvas.width = window.innerWidth;
+    }else{
+        var d =  window.innerHeight;
+        var scale = d / viewport.height;
+        var viewport = page.getViewport({ scale: scale, });
+        canvas.height =window.innerHeight;
+        canvas.width = viewport.width;
+    }
+    */
 
     const renderCtx = {
       canvasContext: ctx,
