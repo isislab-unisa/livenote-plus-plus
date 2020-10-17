@@ -610,7 +610,7 @@ body {
 
 .handle{
   display: none;
-  width: 640px;
+  width: 100%;
   background:white;
   height: 37px;
   margin-bottom: -3px;
@@ -707,7 +707,8 @@ body {
 }
 
 /* Risoluzione fissata per smartphone */
-@media screen and (min-width: 320px) and (max-width: 479px){
+@media screen and (min-width: 320px) and (max-width: 479px),
+only screen and (min-device-width : 375px) and (max-device-width : 812px) and (orientation : landscape) {
   #full-screen{
     display: none !important;
   }
@@ -725,6 +726,7 @@ body {
   #chatLogo{
     width: 64%;
     z-index: 2;
+    left:32%;
   }
 
   #sidenavChat{
@@ -753,7 +755,7 @@ body {
   }
 
   .sidenavChat{
-    right: -2%;
+    right: -3%;
   }
 }
 
