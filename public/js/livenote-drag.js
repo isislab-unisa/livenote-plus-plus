@@ -24,6 +24,7 @@ if (document.getElementById("vol") != undefined )
     }    
   });
 
+/*client video
 var pause = false;
 if (document.getElementById("play") != undefined )
   document.getElementById("play").addEventListener('click', function(event){
@@ -32,13 +33,16 @@ if (document.getElementById("play") != undefined )
       pause = false;
       myVideo.play();
       $("#play").attr("src","../img/play.png");
+      console.log('pause')
     }else{
       pause = true;
       myVideo.pause();
       $("#play").attr("src","../img/circled-pause.png");
     }
   });
+*/
 
+// master
 var pauseVideo = false;
 if (document.getElementById("playvideo") != undefined )
   document.getElementById("playvideo").addEventListener('click', function(event){
