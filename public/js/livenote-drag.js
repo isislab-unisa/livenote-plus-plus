@@ -43,7 +43,6 @@ if (document.getElementById("play") != undefined )
 */
 
 /* master control of balloon
-test
 */
 var pauseVideo = false;
 if (document.getElementById("playvideo") != undefined )
