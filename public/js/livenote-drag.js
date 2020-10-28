@@ -42,7 +42,8 @@ if (document.getElementById("play") != undefined )
   });
 */
 
-// master
+/* master control of balloon
+*/
 var pauseVideo = false;
 if (document.getElementById("playvideo") != undefined )
   document.getElementById("playvideo").addEventListener('click', function(event){
