@@ -149,7 +149,8 @@ function loadVideoYt(){
     var hei = window.innerHeight/2;
 
     if(pmode==0){
-      ytid = $('#input-ytvideo').val();
+      ytid = getLinkYoutube();
+      //$('#input-ytvideo').val();
       if (ytid.length != 0) {
         // Replace the 'ytplayer' element with an <iframe> and
         // YouTube player after the API code downloads.
@@ -1022,4 +1023,18 @@ function validateNickname(){
     $("#input-nickname").removeClass("is-error").next().hide();
   }
   return res;
+}
+
+function getLinkYoutube(){
+  var linkYoutube=$('#input-ytvideo').val();
+
+  var countStart=linkYoutube.indexOf("=")+1;
+  var countEnd=linkYoutube.indexOf("&");
+  
+  if(countEnd!=-1){
+    return linkYoutube.substring(countStart,countEnd);
+  }
+  else{
+    return linkYoutube.substr(countStart);
+  }
 }
