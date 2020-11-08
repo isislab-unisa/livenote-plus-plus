@@ -12,6 +12,16 @@ function hidecontrol(){
 });
 }
 
+var ua = navigator.userAgent.toLowerCase(); 
+if (ua.indexOf('safari') != -1) { 
+  if (ua.indexOf('chrome') > -1) {
+    
+  } else {
+    document.getElementById("video-balloon").controls = "true";
+  }
+}
+
+
 // Render the current page
 module.exports = {
   loadStatus: function (s) {
