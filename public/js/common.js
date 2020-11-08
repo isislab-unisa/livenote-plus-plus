@@ -149,7 +149,6 @@ function loadVideoYt(){
     var hei = window.innerHeight/2;
 
     if(pmode==0){
-      console.log("prendo il video");
       ytid = getLinkYoutube();
       //$('#input-ytvideo').val();
       if (ytid.length != 0) {
