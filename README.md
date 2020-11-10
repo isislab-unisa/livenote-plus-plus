@@ -21,12 +21,13 @@ The aim of Livenote++ is to manage lesson/seminars from one person to a large nu
 
 :fire: [TRY ME](https://isislab-unisa.github.io/livenote-plus-plus/) :fire: 
 
-![preview](./public/img/livegif.gif)
+![preview](./public/img/livegif2.gif)
 
 ## Features
 
 For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+, Firefox54+)
 All the features are available with a key combo, click on the nes console on the window to see them!
+If you have problem with rendering the graphic, try to disable AdBlocker and retry!
 
 Stable:
 * :zap: Stateless -no personal informations are stored-
@@ -40,9 +41,9 @@ Stable:
   * Multiple poll: With the open poll, write the question and various options. Students will choose the option they deem right.
   * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons :star: :heart:. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
 * :youtube: Embed your favourite youtube video!
-  * You can insert the id of the youtube video you want to show during your presentation and have plenty control on it, synchronously with your watchers!
+  * You can insert the link of the youtube video you want to show during your presentation and have plenty control on it, synchronously with your watchers!
 
-Unstable ():
+Unstable:
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
   * There are minor bugs we are fixing, depending on the browser you are using!
