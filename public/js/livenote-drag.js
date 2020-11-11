@@ -59,6 +59,29 @@ if (document.getElementById("playvideo") != undefined )
       $("#playvideo").attr("src","../img/circled-pause.png");
     }
   });
+/*
+FROM MENU
+*/
+var firstClick = true;
+if (document.getElementById("video-audio") != undefined )
+  document.getElementById("video-audio").addEventListener('click', function(event){
+    var myVideo = document.getElementsByTagName('video')[0];
+    if (firstClick) {
+      //$('#video-audio').text("Hide video balloon");
+      firstClick = false;
+    } else if (!pauseVideo){
+      myVideo.srcObject.getTracks()[1].stop();
+      $("#playvideo").attr("src","../img/circled-pause.png");
+      pauseVideo = true;
+      $("#liveperson").hide();
+      $('#video-audio').text("Show Video (click on play to start)");
+    } else {     
+      pauseVideo = false;
+      myVideo.play();
+      $("#liveperson").show();
+      $('#video-audio').text("Stop Video");
+    }
+  });
 
 if (document.getElementById("size") != undefined )
   document.getElementById("size").addEventListener('click', function(event){

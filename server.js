@@ -281,6 +281,12 @@ function makeitlive(socket){
   socket.on("yt_destroy", (data) => {
     socket.broadcast.emit("ytdestroying", data);
   });
+  socket.on("client_count", (data) => {
+    socket.broadcast.emit("client_counting", data);
+  });
+  socket.on("ack_counting", (data) => {
+    socket.broadcast.emit("ack", data);
+  });
 
   // creation of the poll
   socket.on("createPollMultiple",(data,counter)=>{

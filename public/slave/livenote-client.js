@@ -89,6 +89,10 @@ module.exports = {
     });  
     //TODO BUG quando un client si collega se il video è in modalità pokemon può vederlo, lo stesso, quando si collega deve chiedere il permesso del video
   
+    socket.on("client_counting", (data) => {
+      socket.emit("ack_counting", true);      
+    });
+
     socket.on("offer", (id, description) => {
       //console.log(id)
       //console.log(description)

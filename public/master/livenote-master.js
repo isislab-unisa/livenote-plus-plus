@@ -142,6 +142,14 @@ module.exports = {
       reconnectionDelayMax : 5000,
       reconnectionAttempts: 99999
     });
+
+    socket.emit("client_count", true);
+
+    socket.on("ack", (data) => {
+      console.log("counting ack");
+      counter++;
+      document.getElementById("counter").innerHTML = counter;      
+    });
   
     socket.on("client_connected", (status,idSocket) => {
       if(status) {
@@ -527,7 +535,7 @@ module.exports = {
   },
 
   hideVideoNavbar:function(){
-    makepokemon();
+    //makepokemon();
   },
 
   changeAvatarNavbar:function(){
