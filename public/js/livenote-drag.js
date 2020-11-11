@@ -75,11 +75,13 @@ if (document.getElementById("video-audio") != undefined )
       pauseVideo = true;
       $("#liveperson").hide();
       $('#video-audio').text("Show Video (click on play to start)");
+      socket.emit("stop_balloon", true);
     } else {     
       pauseVideo = false;
       myVideo.play();
       $("#liveperson").show();
       $('#video-audio').text("Stop Video");
+      socket.emit("play_balloon", true);
     }
   });
 

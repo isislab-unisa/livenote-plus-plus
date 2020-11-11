@@ -195,6 +195,8 @@ yt_stop: send command to stop the ytvideo
 yt_destroy: send command to destroy ytvideo
 client_count: master ask client to send ack for counting
 ack_counting: client send ack back
+stop_balloon: stopping audio on client
+play_balloon: playing audio on client
 updatingPollMultiple: update the value of option selected by student of the open poll
 updatingPollRanking: update the value of emoticons selected by student of the ranking poll
 closePoll: notifers users that the poll is close.
@@ -293,6 +295,12 @@ function makeitlive(socket){
   socket.on("ack_counting", (data) => {
     socket.broadcast.emit("ack", data);
   });
+  socket.on("stop_balloon", (data) => {
+    socket.broadcast.emit("balloonstopping", data);
+  });
+  socket.on("play_balloon", (data) => {
+    socket.broadcast.emit("balloonplaying", data);
+  });
 
   // creation of the poll
   socket.on("createPollMultiple",(data,counter)=>{
@@ -316,7 +324,7 @@ function makeitlive(socket){
   
   socket.on("updatingPollMultiple",(progessID,progessValue,countPersonsAnswered)=>{
     
-    console.log("countPersonAnswered:" +countPersonsAnswered);
+    //console.log("countPersonAnswered:" +countPersonsAnswered);
     socket.broadcast.emit("updatingPollMultiple",progessID,progessValue,countPersonsAnswered);
   });
 

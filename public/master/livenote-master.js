@@ -34,7 +34,7 @@ const showPrevPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
-  updateMasterStatus();
+  //updateMasterStatus();
 };
 
 // Move to next page of presentation
@@ -50,7 +50,7 @@ const showNextPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
-  updateMasterStatus();
+  //updateMasterStatus();
 };
 
 // Notify all client that page of presentation has changed
@@ -182,7 +182,7 @@ module.exports = {
     });
 
     //updateMasterStatus()
-    loadStoredStatus();
+    //loadStoredStatus();
 
     socket.emit("client_count", true);
 
@@ -564,13 +564,13 @@ module.exports = {
       $("#colorDraw").text(" green"); 
       $("#colorDraw").css("color","green");
     }
-    updateMasterStatus();
+    //updateMasterStatus();
   },
 
   changeWidthDrawing:function(){
     var size=changeLineWidth();
     $("#widthDraw").text(size);
-    updateMasterStatus();
+    //updateMasterStatus();
   },
 
   showChatLogo:function(){

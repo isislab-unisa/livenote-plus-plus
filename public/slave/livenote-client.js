@@ -93,6 +93,20 @@ module.exports = {
       socket.emit("ack_counting", true);      
     });
 
+    socket.on("balloonstopping", (data) => {
+      console.log("balloonstopping")
+      $("#liveperson").hide();
+      var clientVideo = document.getElementsByTagName('video')[0];
+      clientVideo.muted = true;
+    });
+    
+    socket.on("balloonplaying", (data) => {
+      console.log("balloonplaying")
+      $("#liveperson").show();
+      var clientVideo = document.getElementsByTagName('video')[0];
+      clientVideo.muted = false;
+    });
+
     socket.on("offer", (id, description) => {
       //console.log(id)
       //console.log(description)
