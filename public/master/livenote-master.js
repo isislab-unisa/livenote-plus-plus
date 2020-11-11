@@ -2,26 +2,24 @@ const { functionsIn } = require("lodash");
 
 console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
 
-// hide elements on the view
-function hidecontrol(){
-  $(".control").each(function (index, element) {
-    hide = $(element).is(':hidden');
+function hidecontrol() {
 
-    if($(element).attr('id') =="select-audio" || $(element).attr('id') =="select-video")
-    {
-      if($("#startlive").hasClass('nes-logo')){
-        $(element).hide()     
-      }
-    } else{
+  var txt = $("#hidetext").text();
+  if (txt === "Hide controls")
+    $("#hidetext").text("Show controls");
+  else
+    $("#hidetext").text("Hide controls");
+
+  $(".hideable").each(function (index, element) {
+    var hide = $(element).is(':hidden');
+
       if(!hide){
         $(element).hide()     
       }else {
         $(element).show()
       }
-    }
   });
 }
-
 // Move to prev page of presentation
 const showPrevPage = () => {
   if (pageNum <= 1) {
@@ -31,6 +29,10 @@ const showPrevPage = () => {
   (pmode == 0) && sendMasterStatus(pageNum);
   queueRenderPage(pageNum);
   document.getElementById("progress-bar").setAttribute("value", pageNum);
+  $("#colorDraw").text(" black");
+  $("#colorDraw").css("color","black");
+  $("#widthDraw").text(1);
+  myLineWidth = 1;
 };
 
 // Move to next page of presentation
@@ -42,7 +44,10 @@ const showNextPage = () => {
   (pmode == 0) && sendMasterStatus(pageNum);
   queueRenderPage(pageNum);
   document.getElementById("progress-bar").setAttribute("value", pageNum);
-
+  $("#colorDraw").text(" black");
+  $("#colorDraw").css("color","black");
+  $("#widthDraw").text(1);
+  myLineWidth = 1;
 };
 
 // Notify all client that page of presentation has changed
@@ -531,6 +536,10 @@ module.exports = {
 
   loadVideo:function(){
     loadVideoYt();
+  },
+
+  hideControl:function(){
+    hidecontrol();
   },
 
   

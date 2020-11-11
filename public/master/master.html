@@ -30,8 +30,8 @@
           <div class="divNavbar" data-toggle="modal" data-target="#dialog-info">
             <span class="textNavbar">Shorcut commands</span>
           </div>
-          <div class="divNavbar">
-            <span class="textNavbar">Hide controls</span>
+          <div class="divNavbar" onclick="hideControl()">
+            <span class="textNavbar" id="hidetext">Hide controls</span>
           </div>
           <div class="divNavbar" data-toggle="modal" data-target="#dialog-sondaggio" id="create-poll">
             <span class="textNavbar" >Create poll</span>
@@ -75,7 +75,7 @@
         <!-- <button class="nes-btn is-warning control" disabled>Counter: <span id="counter"></span><i class="fas fa-compress"></i></button> -->
 
         <img onclick="toggleHamburger()" id="nesMenu" src="../img/nes.png"/>
-        <div id="counterDiv">
+        <div id="counterDiv" class="hideable">
           <img id="counterPeople" src="../img/people.png"/>
           <br>
           <div class="nes-btn is-warning" id="counterButton">
@@ -93,10 +93,10 @@
           </div>
           <!-- <button class="nes-btn is-warning control" id="deleteYT" style="display:none"> Delete YT Video <i class="fas fa-compress"></i></button> -->
           <div style="display: inline-grid";>
-            <button class="nes-btn is-warning control" id="full-screen" style="display: block;"> Full-Screen <i class="fas fa-compress"></i></button>
+            <button class="nes-btn is-warning control hideable" id="full-screen" style="display: block;"> Full-Screen <i class="fas fa-compress"></i></button>
             <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;" >View Poll</button>
           </div>
-          <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
+          <img class="hideable" src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
           
           
         </div>
@@ -106,10 +106,10 @@
         
       </div>
 
-        <button class="nes-btn is-primary control" id="prev-page">&#8249;Prev</button>
-        <button class="nes-btn is-primary control" id="next-page">Next&#8250;</button>    
+        <button class="nes-btn is-primary control hideable" id="prev-page">&#8249;Prev</button>
+        <button class="nes-btn is-primary control hideable" id="next-page">Next&#8250;</button>    
 
-      <progress class="nes-progress is-pattern control" id="progress-bar" value="1"  ></progress>
+      <progress class="nes-progress is-pattern control hideable" id="progress-bar" value="1"  ></progress>
     </div>
 
     <!-- Modal info-->
