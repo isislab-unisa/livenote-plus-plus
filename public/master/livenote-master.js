@@ -33,6 +33,7 @@ const showPrevPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
+  updateMasterStatus();
 };
 
 // Move to next page of presentation
@@ -48,6 +49,7 @@ const showNextPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
+  updateMasterStatus();
 };
 
 // Notify all client that page of presentation has changed
@@ -127,6 +129,31 @@ var socket;
 var counter=0;
 var countFilesIMGMaster=0;
 
+var master_status = {
+  numslides: 1,
+  line_color: mycolor,
+  line_width: myLineWidth,
+}
+
+function updateMasterStatus() {
+  master_status.numslides = pageNum;
+  master_status.line_color = mycolor;
+  master_status.line_width = myLineWidth;
+  localStorage.setItem('master_status', JSON.stringify(master_status));
+};
+
+function loadStoredStatus() {
+  try {
+    master_status = JSON.parse(window.localStorage.getItem('master_status'));
+    console.log(master_status);
+  } catch (error) {
+    console.log(error);
+    localStorage.setItem('master_status', JSON.stringify(master_status));
+  }
+  pageNum = master_status.numslides;
+  mycolor = master_status.line_color;
+  myLineWidth = master_status.myLineWidth;
+}
 /*
 Function called on load of html page
 Set the connection to the socket with with right name
@@ -142,6 +169,9 @@ module.exports = {
       reconnectionDelayMax : 5000,
       reconnectionAttempts: 99999
     });
+
+    //updateMasterStatus()
+    loadStoredStatus();
 
     socket.emit("client_count", true);
 
@@ -523,11 +553,13 @@ module.exports = {
       $("#colorDraw").text(" green"); 
       $("#colorDraw").css("color","green");
     }
+    updateMasterStatus();
   },
 
   changeWidthDrawing:function(){
     var size=changeLineWidth();
     $("#widthDraw").text(size);
+    updateMasterStatus();
   },
 
   showChatLogo:function(){
