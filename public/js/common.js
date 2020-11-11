@@ -137,6 +137,7 @@ document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
 var player;
 
+// manage the creation of Youtube video Iframe
 function loadVideoYt(){
   //console.log("carico il video");
     // Load the IFrame Player API code asynchronously.
@@ -229,6 +230,7 @@ function loadVideoYt(){
     }
 }
 
+// Delete youtube video
 if (document.getElementById("trashYT") != undefined )
   document.getElementById("trashYT").addEventListener('click', function(event){
     player.destroy();

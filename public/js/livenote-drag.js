@@ -60,7 +60,7 @@ if (document.getElementById("playvideo") != undefined )
     }
   });
 /*
-FROM MENU
+interaction with balloon from side menu
 */
 var firstClick = true;
 if (document.getElementById("video-audio") != undefined )
@@ -83,6 +83,7 @@ if (document.getElementById("video-audio") != undefined )
     }
   });
 
+  //Manage size of the balloon
 if (document.getElementById("size") != undefined )
   document.getElementById("size").addEventListener('click', function(event){
     if( $("#liveperson").hasClass("big-video")){

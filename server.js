@@ -189,6 +189,12 @@ color: change color of draw line
 line: change widht of draw line
 connection: when an user connect to the presentation
 counter: keep track of number of partecipants
+ytvid: send link to client to generate ytvideo frame
+yt_start: send command to start the ytvideo
+yt_stop: send command to stop the ytvideo
+yt_destroy: send command to destroy ytvideo
+client_count: master ask client to send ack for counting
+ack_counting: client send ack back
 updatingPollMultiple: update the value of option selected by student of the open poll
 updatingPollRanking: update the value of emoticons selected by student of the ranking poll
 closePoll: notifers users that the poll is close.

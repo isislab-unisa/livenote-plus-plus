@@ -2,6 +2,7 @@ const { functionsIn } = require("lodash");
 
 console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
 
+// Hide all elements on master view
 function hidecontrol() {
 
   var txt = $("#hidetext").text();
@@ -129,12 +130,19 @@ var socket;
 var counter=0;
 var countFilesIMGMaster=0;
 
+// object to keep state on localstorage
 var master_status = {
   numslides: 1,
   line_color: mycolor,
   line_width: myLineWidth,
 }
 
+/*
+  update the json on following case:
+  change slide
+  change line color
+  change line width
+*/
 function updateMasterStatus() {
   master_status.numslides = pageNum;
   master_status.line_color = mycolor;
@@ -142,6 +150,9 @@ function updateMasterStatus() {
   localStorage.setItem('master_status', JSON.stringify(master_status));
 };
 
+/*
+  reload information from localstorage
+*/
 function loadStoredStatus() {
   try {
     master_status = JSON.parse(window.localStorage.getItem('master_status'));
