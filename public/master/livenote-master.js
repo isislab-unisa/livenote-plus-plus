@@ -239,7 +239,7 @@ module.exports = {
         .then(() => {
           socket.emit("offer", id, peerConnection.localDescription);
         });
-  
+      
     });
     
     socket.on("candidate", (id, candidate) => {
@@ -393,7 +393,7 @@ module.exports = {
         openvideo = true;
         function getDevices() {
           $('#startlive').removeClass("nes-logo");
-          $('#liveperson').show();
+          //$('#liveperson').show();
           $('#select-audio').show();
           $('#select-video').show();
           // $('#startlive').addClass("nes-mario");
@@ -447,10 +447,11 @@ module.exports = {
             $('#select-video').show();
             
             $("#mySidenav").removeClass("animation");
-            $('#video-audio').text("Hide video");
+            $('#video-audio').text("You're LIVE!");
+            $('#blockvideo').show();
             $('#startlive').attr("onclick","hideVideoNavbar()").removeAttr("data-toggle").removeAttr("data-target");
             
-           
+            //socket.emit("play_balloon", true);
             // $('#startlive').addClass("nes-mario");
             return navigator.mediaDevices.enumerateDevices();
           }          

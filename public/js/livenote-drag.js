@@ -7,20 +7,16 @@ if (videoNode) {
 }
 
 // Mute/Unmute button
-var volum = false;
+//var volum = false;
 if (document.getElementById("vol") != undefined )
   document.getElementById("vol").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
-    if (volum) {
+    if (myVideo.muted) {
       myVideo.muted = false;
-      volum = false;
       $("#vol").attr("src","../img/volume.png");
-      console.log('not mute')
     } else{
-      volum = true;
       myVideo.muted = true;
       $("#vol").attr("src","../img/mute.png");
-      console.log('mute')
     }    
   });
 
@@ -53,39 +49,37 @@ if (document.getElementById("playvideo") != undefined )
       pauseVideo = false;
       myVideo.play();
       $("#playvideo").attr("src","../img/play.png");
+      socket.emit("play_balloon", true);
     }else{
       pauseVideo = true;
       myVideo.srcObject.getTracks()[1].stop();
       $("#playvideo").attr("src","../img/circled-pause.png");
-    }
-  });
-/*
-interaction with balloon from side menu
-*/
-var firstClick = true;
-if (document.getElementById("video-audio") != undefined )
-  document.getElementById("video-audio").addEventListener('click', function(event){
-    var myVideo = document.getElementsByTagName('video')[0];
-    if (firstClick) {
-      //$('#video-audio').text("Hide video balloon");
-      firstClick = false;
-    } else if (!pauseVideo){
-      myVideo.srcObject.getTracks()[1].stop();
-      $("#playvideo").attr("src","../img/circled-pause.png");
-      pauseVideo = true;
-      $("#liveperson").hide();
-      $('#video-audio').text("Show Video (click on play to start)");
       socket.emit("stop_balloon", true);
-    } else {     
-      pauseVideo = false;
-      myVideo.play();
-      $("#liveperson").show();
-      $('#video-audio').text("Stop Video");
-      socket.emit("play_balloon", true);
     }
   });
 
-  //Manage size of the balloon
+/*
+close connection from menu
+*/
+if (document.getElementById("block-video-span") != undefined )
+  document.getElementById("block-video-span").addEventListener('click', function(event){
+    var myVideo = document.getElementsByTagName('video')[0];
+    
+    console.log("is playing so i stop")
+    //pauseVideo = true;
+    myVideo.srcObject.getTracks()[0].stop();
+    myVideo.srcObject.getTracks()[1].stop();
+    //$("#playvideo").attr("src","../img/circled-pause.png");
+    $("#blockvideo").hide();
+    $("#liveperson").hide();
+    $('#video-audio').text("Show Video (click on play to start)");
+    $('#startlive').attr("data-toggle","modal");
+    $('#startlive').attr("data-target","#dialog-play");
+    socket.emit("close_balloon", true);
+  
+  });
+
+//Manage size of the balloon
 if (document.getElementById("size") != undefined )
   document.getElementById("size").addEventListener('click', function(event){
     if( $("#liveperson").hasClass("big-video")){

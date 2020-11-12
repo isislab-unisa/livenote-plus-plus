@@ -21,6 +21,18 @@ if (ua.indexOf('safari') != -1) {
   }
 }
 
+var timer = true;
+function check(){
+  if ($("#liveperson").is(":visible") && timer) {
+    timer = false;
+    setTimeout(check, 500);
+  } else {
+    $("#liveperson").hide();
+    timer = true;
+  }
+}
+
+
 
 // Render the current page
 module.exports = {
@@ -94,17 +106,37 @@ module.exports = {
     });
 
     socket.on("balloonstopping", (data) => {
-      console.log("balloonstopping")
-      $("#liveperson").hide();
+
       var clientVideo = document.getElementsByTagName('video')[0];
-      clientVideo.muted = true;
+      if (!clientVideo.muted) {
+        clientVideo.muted = true;
+        $("#vol").attr("src","../img/mute.png");
+      } else {
+        $("#vol").attr("src","../img/volume.png");
+      }
+
+      //check();
+
+      $("#liveperson").hide();
     });
     
     socket.on("balloonplaying", (data) => {
-      console.log("balloonplaying")
-      $("#liveperson").show();
+
+      if($("#liveperson").is(':hidden'))
+        $("#liveperson").show();
+
       var clientVideo = document.getElementsByTagName('video')[0];
-      clientVideo.muted = false;
+      if (clientVideo.muted) {
+        clientVideo.muted = false;
+        $("#vol").attr("src","../img/volume.png");
+      } else {
+        $("#vol").attr("src","../img/mute.png");
+      }
+    });
+
+    socket.on("balloonclosing", (data) => {
+      check();
+      $("#liveperson").hide();
     });
 
     socket.on("offer", (id, description) => {
