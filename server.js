@@ -304,6 +304,9 @@ function makeitlive(socket){
   socket.on("close_balloon", (data) => {
     socket.broadcast.emit("balloonclosing", data);
   });
+  socket.on("ended_presentation", (data) => {
+    socket.broadcast.emit("presentation_ending", data);
+  });
 
   // creation of the poll
   socket.on("createPollMultiple",(data,counter)=>{

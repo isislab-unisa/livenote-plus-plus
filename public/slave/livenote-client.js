@@ -139,6 +139,10 @@ module.exports = {
       $("#liveperson").hide();
     });
 
+    socket.on("presentation_ending", (data) => {
+      alert("il master ha chiuso la presentazione");
+    });
+
     socket.on("offer", (id, description) => {
       //console.log(id)
       //console.log(description)

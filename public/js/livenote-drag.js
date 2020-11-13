@@ -65,13 +65,14 @@ if (document.getElementById("block-video-span") != undefined )
   document.getElementById("block-video-span").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
     
-    console.log("is playing so i stop")
+    //console.log("is playing so i stop")
     //pauseVideo = true;
     myVideo.srcObject.getTracks()[0].stop();
     myVideo.srcObject.getTracks()[1].stop();
-    //$("#playvideo").attr("src","../img/circled-pause.png");
     $("#blockvideo").hide();
     $("#liveperson").hide();
+    $("#select-audio").hide();
+    $("#select-video").hide();
     $('#video-audio').text("Show Video (click on play to start)");
     $('#startlive').attr("data-toggle","modal");
     $('#startlive').attr("data-target","#dialog-play");

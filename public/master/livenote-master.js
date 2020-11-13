@@ -34,7 +34,7 @@ const showPrevPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
-  //updateMasterStatus();
+  updateMasterStatus();
 };
 
 // Move to next page of presentation
@@ -50,7 +50,7 @@ const showNextPage = () => {
   $("#colorDraw").css("color","black");
   $("#widthDraw").text(1);
   myLineWidth = 1;
-  //updateMasterStatus();
+  updateMasterStatus();
 };
 
 // Notify all client that page of presentation has changed
@@ -154,17 +154,28 @@ function updateMasterStatus() {
   reload information from localstorage
 */
 function loadStoredStatus() {
-  try {
-    master_status = JSON.parse(window.localStorage.getItem('master_status'));
-    console.log(master_status);
-  } catch (error) {
-    console.log(error);
-    localStorage.setItem('master_status', JSON.stringify(master_status));
-  }
-  pageNum = master_status.numslides;
-  mycolor = master_status.line_color;
-  myLineWidth = master_status.myLineWidth;
+    var master_loaded = JSON.parse(window.localStorage.getItem('master_status'));
+    if (master_loaded != null) {
+      master_status = master_loaded;
+      console.log("load successfull");
+      console.log(master_status);
+      //pageNum = master_status.numslides;
+      //mycolor = master_status.line_color;
+      //myLineWidth = master_status.myLineWidth;
+    } else {
+      console.log("setting master status");
+      localStorage.setItem('master_status', JSON.stringify(master_status));
+    }
 }
+
+document.getElementById("block-Livenote").addEventListener('click', function(event){
+  if (window.confirm("Close Livenote?")) {
+    localStorage.removeItem('master_status');
+    socket.emit("ended_presentation", true);
+    window.close();
+  }
+});
+
 /*
 Function called on load of html page
 Set the connection to the socket with with right name
@@ -182,7 +193,7 @@ module.exports = {
     });
 
     //updateMasterStatus()
-    //loadStoredStatus();
+    loadStoredStatus();
 
     socket.emit("client_count", true);
 
