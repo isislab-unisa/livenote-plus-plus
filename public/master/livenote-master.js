@@ -153,13 +153,30 @@ function updateMasterStatus() {
 /*
   reload information from localstorage
 */
+var timerReload = true;
 function loadStoredStatus() {
     var master_loaded = JSON.parse(window.localStorage.getItem('master_status'));
     if (master_loaded != null) {
       master_status = master_loaded;
-      console.log("load successfull");
       console.log(master_status);
-      //pageNum = master_status.numslides;
+      pageNum = master_status.numslides;
+      
+      checkPage();
+
+      document.getElementById("progress-bar").setAttribute("value", pageNum);
+
+      function checkPage(){
+        if (timerReload) {
+          console.log('waiting')
+          timerReload = false;
+          setTimeout(checkPage, 1000);
+        } else {
+          renderPage(pageNum)
+          sendMasterStatus(pageNum)
+          timerReload = true;
+        }
+      }
+      //renderPage(pageNum);
       //mycolor = master_status.line_color;
       //myLineWidth = master_status.myLineWidth;
     } else {
@@ -437,7 +454,8 @@ module.exports = {
     function handleError(error) {
       console.error("Error: ", error);
     }
-  
+    
+    var secondStart = false;
     function startLive(){
       /*var dial = document.getElementById('dialog-play')
       if (typeof dial.showModal === "function") {
@@ -448,6 +466,20 @@ module.exports = {
       */
       $('#play').click( function()
         { 
+          if (secondStart) {
+            var myVideo = document.getElementsByTagName('video')[0];
+            //pauseVideo = true;
+            getStream()
+            .then(getDevices)
+            
+            myVideo.srcObject.getTracks()[0]
+            myVideo.srcObject.getTracks()[1]
+            
+            //socket.emit("play_balloon", true);
+            // $('#startlive').addClass("nes-mario");
+            return navigator.mediaDevices.enumerateDevices();
+          }
+
           getStream()
           .then(getDevices)
           .then(gotDevices);
@@ -459,9 +491,9 @@ module.exports = {
             
             $("#mySidenav").removeClass("animation");
             $('#video-audio').text("You're LIVE!");
-            $('#blockvideo').show();
+            //$('#blockvideo').show();
             $('#startlive').attr("onclick","hideVideoNavbar()").removeAttr("data-toggle").removeAttr("data-target");
-            
+            secondStart = true;
             //socket.emit("play_balloon", true);
             // $('#startlive').addClass("nes-mario");
             return navigator.mediaDevices.enumerateDevices();

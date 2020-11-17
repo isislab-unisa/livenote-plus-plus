@@ -643,12 +643,12 @@ function initThis(mode, path, slide) {
 
   document.querySelector('#pdf-render').addEventListener('touchend', function(e){
     touchPressed = false;
-    shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
+    shape = {"data":[], "width":canvas.width , "height": canvas.height}
   });
 
   document.querySelector('#pdf-render').addEventListener('touchcancel', function(e){
     touchPressed = false;
-    shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
+    shape = {"data":[], "width":canvas.width , "height": canvas.height}
   });
 
   $('#pdf-render').mousedown(function (e) {
@@ -672,17 +672,17 @@ function initThis(mode, path, slide) {
       socket.emit("shape", JSON.stringify(shape), function (data) {      
         //console.log('Message shape sent! ');
       });
-      shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
+      shape = {"data":[], "width":canvas.width , "height": canvas.height}
   });
   $('#pdf-render').mouseleave(function (e) {
       mousePressed = false;
       socket.emit("shape", JSON.stringify(shape), function (data) {      
         //console.log('Message shape sent! ');
       });
-      shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
+      shape = {"data":[], "width":canvas.width , "height": canvas.height}
   });
 
-  var shape = {"data":[], "width":$(window).width() , "height": $(window).height()}
+  var shape = {"data":[], "width":canvas.width , "height": canvas.height}
 }
   // Get Document
 
@@ -715,8 +715,10 @@ function initThis(mode, path, slide) {
 /* DRAWING */
 
 function loadShape(s){
-  nwidth = $(window).width()
-  nheight = $(window).height()
+  //nwidth = $(window).width()
+  //nheight = $(window).height()
+  nwidth = canvas.width;
+  nheight = canvas.height;
   if (s.data.length == 0) return 
   lastX = (s.data[0].x * nwidth) / s.width;
   lastY = (s.data[0].y * nheight) / s.height;

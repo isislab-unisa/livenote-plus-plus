@@ -61,14 +61,15 @@ if (document.getElementById("playvideo") != undefined )
 /*
 close connection from menu
 */
-if (document.getElementById("block-video-span") != undefined )
-  document.getElementById("block-video-span").addEventListener('click', function(event){
+if (document.getElementById("blockvideo") != undefined )
+  document.getElementById("blockvideo").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
     
     //console.log("is playing so i stop")
     //pauseVideo = true;
     myVideo.srcObject.getTracks()[0].stop();
     myVideo.srcObject.getTracks()[1].stop();
+
     $("#blockvideo").hide();
     $("#liveperson").hide();
     $("#select-audio").hide();
@@ -77,7 +78,6 @@ if (document.getElementById("block-video-span") != undefined )
     $('#startlive').attr("data-toggle","modal");
     $('#startlive').attr("data-target","#dialog-play");
     socket.emit("close_balloon", true);
-  
   });
 
 //Manage size of the balloon

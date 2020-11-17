@@ -122,6 +122,8 @@ module.exports = {
     
     socket.on("balloonplaying", (data) => {
 
+      //window.location.reload(false);
+
       if($("#liveperson").is(':hidden'))
         $("#liveperson").show();
 
@@ -135,6 +137,7 @@ module.exports = {
     });
 
     socket.on("balloonclosing", (data) => {
+      window.location.reload(false);
       check();
       $("#liveperson").hide();
     });
