@@ -158,7 +158,7 @@ function loadStoredStatus() {
     var master_loaded = JSON.parse(window.localStorage.getItem('master_status'));
     if (master_loaded != null) {
       master_status = master_loaded;
-      console.log(master_status);
+      //console.log(master_status);
       pageNum = master_status.numslides;
       
       checkPage();
@@ -167,7 +167,7 @@ function loadStoredStatus() {
 
       function checkPage(){
         if (timerReload) {
-          console.log('waiting')
+          //console.log('waiting')
           timerReload = false;
           setTimeout(checkPage, 1000);
         } else {
@@ -215,7 +215,7 @@ module.exports = {
     socket.emit("client_count", true);
 
     socket.on("ack", (data) => {
-      console.log("counting ack");
+      //console.log("counting ack");
       counter++;
       document.getElementById("counter").innerHTML = counter;      
     });
@@ -378,11 +378,13 @@ module.exports = {
             .catch(err=>{ 
               console.log(err) 
             })
+          $("#vol").attr("src","../img/mute.png");
           openaudio = false;
         } else {
           getStream()
           .then(getDevices)
           openaudio = true;
+          $("#vol").attr("src","../img/volume.png");
           function getDevices() {
             $('#startlive').removeClass("nes-logo");
             $('#liveperson').show();

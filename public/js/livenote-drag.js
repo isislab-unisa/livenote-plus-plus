@@ -11,13 +11,15 @@ if (videoNode) {
 if (document.getElementById("vol") != undefined )
   document.getElementById("vol").addEventListener('click', function(event){
     var myVideo = document.getElementsByTagName('video')[0];
-    if (myVideo.muted) {
-      myVideo.muted = false;
-      $("#vol").attr("src","../img/volume.png");
-    } else{
-      myVideo.muted = true;
-      $("#vol").attr("src","../img/mute.png");
-    }    
+    if (pmode == 1) {
+      if (myVideo.muted) {
+        myVideo.muted = false;
+        $("#vol").attr("src","../img/volume.png");
+      } else{
+        myVideo.muted = true;
+        $("#vol").attr("src","../img/mute.png");
+      }  
+    }  
   });
 
 /*client video

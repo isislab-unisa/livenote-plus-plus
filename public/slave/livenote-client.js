@@ -108,12 +108,12 @@ module.exports = {
     socket.on("balloonstopping", (data) => {
 
       var clientVideo = document.getElementsByTagName('video')[0];
-      if (!clientVideo.muted) {
-        clientVideo.muted = true;
-        $("#vol").attr("src","../img/mute.png");
-      } else {
-        $("#vol").attr("src","../img/volume.png");
-      }
+      // if (!clientVideo.muted) {
+      //   clientVideo.muted = true;
+      //   $("#vol").attr("src","../img/mute.png");
+      // } else {
+      //   $("#vol").attr("src","../img/volume.png");
+      // }
 
       //check();
 
@@ -127,13 +127,13 @@ module.exports = {
       if($("#liveperson").is(':hidden'))
         $("#liveperson").show();
 
-      var clientVideo = document.getElementsByTagName('video')[0];
-      if (clientVideo.muted) {
-        clientVideo.muted = false;
-        $("#vol").attr("src","../img/volume.png");
-      } else {
-        $("#vol").attr("src","../img/mute.png");
-      }
+      // var clientVideo = document.getElementsByTagName('video')[0];
+      // if (clientVideo.muted) {
+      //   clientVideo.muted = false;
+      //   $("#vol").attr("src","../img/volume.png");
+      // } else {
+      //   $("#vol").attr("src","../img/mute.png");
+      // }
     });
 
     socket.on("balloonclosing", (data) => {
