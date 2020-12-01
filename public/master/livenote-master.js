@@ -105,7 +105,8 @@ const config = {
   iceServers: [
     {
       urls: [
-      "stun:isiswork01.di.unisa.it"]
+      "stun:isiswork01.di.unisa.it",
+      "stun:isiswork02.di.unisa.it"]
     }
   ]
 };
