@@ -7,6 +7,7 @@ var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
 
+//const {mdToPdf} = require('md-to-pdf');
 //Template engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -124,6 +125,28 @@ app.post('/', function(req, res) {
   sess.links.push('sessions/'+ sess.id + '/' + id+".pdf");
   sess.ids.push(id)
 
+  // TODO managing md files
+  // if (fileUploaded.name.split('.').pop() == "md") {
+  //   (async () => {
+  //     try {
+  //       var myPath = path.join(session_folder + '/' + id+".md")
+  //       fileUploaded.mv(myPath)
+  //       const pdf = await mdToPdf({ path: myPath}).catch(console.error);
+        
+  //       if (pdf) {
+  //         fs.writeFileSync(path.join(session_folder + '/' + id+".pdf"), pdf.content);
+  //         sess.save(function(err) {
+  //           if (err) throw err;
+  //         })
+  //         createnewlive("/"+sess.id+"/"+id)
+  //       } else {
+  //         //res.redirect(301, 'back');
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }  
+  //   })();
+  // }
   fileUploaded.mv(path.join(session_folder + '/' + id+".pdf"), (err) => {
     if (err) throw err;
     //console.log('file uploaded successfull in folder');
