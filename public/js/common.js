@@ -513,6 +513,7 @@ function changeLineWidth(){
 function updateLine(data){
   if(pmode == 1) {
     ctx.lineWidth = data;
+    myLineWidth = data;
   }
 }
 
@@ -733,7 +734,8 @@ function loadShape(s){
     ctx.beginPath();
     //ctx.strokeStyle = $('#selColor').val();
     ctx.strokeStyle = colors[mycolor];
-    ctx.lineWidth = $('#selWidth').val();
+    //ctx.lineWidth = $('#selWidth').val();
+    ctx.lineWidth = myLineWidth;
     ctx.lineJoin = "round";
     ctx.moveTo(lastX, lastY);
     x = (s.data[point].x * nwidth) / s.width;
@@ -752,7 +754,8 @@ function Draw(x, y, isDown) {
       ctx.beginPath();
       //ctx.strokeStyle = $('#selColor').val();
       ctx.strokeStyle = colors[mycolor];
-      ctx.lineWidth = $('#selWidth').val();
+      //ctx.lineWidth = $('#selWidth').val();
+      ctx.lineWidth = myLineWidth;
       ctx.lineJoin = "round";
       ctx.moveTo(lastX, lastY);
       ctx.lineTo(x, y);

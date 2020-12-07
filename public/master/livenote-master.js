@@ -151,12 +151,6 @@ function updateMasterStatus() {
   localStorage.setItem('master_status', JSON.stringify(master_status));
 };
 
-
-function triggerEvent( elem, event ) {
-  var clickEvent = new Event( event ); // Create the event.
-  elem.dispatchEvent( clickEvent );    // Dispatch the event.
-}
-
 /*
   reload information from localstorage
 */
@@ -167,6 +161,8 @@ function loadStoredStatus() {
       master_status = master_loaded;
       //console.log(master_status);
       pageNum = master_status.numslides;
+      myLineWidth = master_status.line_width-1;
+      //$("#widthDraw").text(myLineWidth);
       checkPage();
 
       document.getElementById("progress-bar").setAttribute("value", pageNum);
@@ -178,12 +174,12 @@ function loadStoredStatus() {
           setTimeout(checkPage, 1000);
         } else {
           for(var i=0; i<master_status.line_color; i++) {
-            console.log("clicking trig");
-            //var elem = document.getElementById('colorNav');
             $('#colorNav').trigger("click");
-            //triggerEvent( elem, 'click' );
           }
+          $('#widthNav').trigger("click");
+          //console.log(myLineWidth);
           socket.emit("color", colors[mycolor]);
+          socket.emit("line", myLineWidth);
           renderPage(pageNum)
           sendMasterStatus(pageNum)
           timerReload = true;
@@ -623,7 +619,7 @@ module.exports = {
       $("#colorDraw").text(" green"); 
       $("#colorDraw").css("color","green");
     }
-    updateMasterStatus();
+    //updateMasterStatus();
   },
 
   changeWidthDrawing:function(){
