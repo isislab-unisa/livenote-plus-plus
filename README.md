@@ -25,13 +25,15 @@ The aim of Livenote++ is to manage lesson/seminars from one person to a large nu
 
 ## Features
 
-For now, the project is full supported on Desktop browser (Chrome 37+, Opera 24+, Firefox54+)
+For now, the project is full supported on Desktop browser (Chrome, Opera, Firefox, Safari)
 All the features are available with a key combo, click on the nes console on the window to see them!
 If you have problem with rendering the graphic, try to disable AdBlocker and retry!
+This project is based on web-rtc, so if you are experiencing issues or bugs with the video/audio communications, try to check your privacy and security settings.
 
 Stable:
 * :zap: Stateless -no personal informations are stored-
 * :fire: LoadAndPlay -load your pdf and start your presentation-
+  * In the next future we are going to support md format!
 * :rocket: Streaming audio and video for the presenter
   * If you don't want to share your webcam, you can use an adorable pokemon as a placeholder!
   * You can temporarily mute you if you need privacy!
@@ -42,11 +44,11 @@ Stable:
   * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons :star: :heart:. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
 * :youtube: Embed your favourite youtube video!
   * You can insert the link of the youtube video you want to show during your presentation and have plenty control on it, synchronously with your watchers!
-
-Unstable:
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
-  * There are minor bugs we are fixing, depending on the browser you are using!
+* :info: Download your presentation status!
+  * You can save your settings! In future you'll have the possibility to upload them!
+  * You can also save your polls data in json format!
 
 Next steps:
 * [ ] Travis
