@@ -632,6 +632,27 @@ module.exports = {
     showChat();
   },
 
+  downloadStatusJson:function(){
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(master_status));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "info_presentazione" + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  },
+
+  downloadPollJson:function(){
+    //console.log(jsonPollObject);
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonPollObject));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "info_poll" + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  },
+
   hideVideoNavbar:function(){
     //makepokemon();
   },
