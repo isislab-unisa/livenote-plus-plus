@@ -487,6 +487,13 @@ function changeColor(){
 function updateColor(data){
   if(pmode == 1) {
     ctx.strokeStyle = data;
+    if (data == "#000000") {
+      mycolor = 0;
+    } else if (data == "#FF0000") {
+      mycolor = 1;
+    } else {
+      mycolor = 2;
+    }
   }
 }
 
@@ -724,7 +731,8 @@ function loadShape(s){
   lastY = (s.data[0].y * nheight) / s.height;
   for (point in s.data) {
     ctx.beginPath();
-    ctx.strokeStyle = $('#selColor').val();
+    //ctx.strokeStyle = $('#selColor').val();
+    ctx.strokeStyle = colors[mycolor];
     ctx.lineWidth = $('#selWidth').val();
     ctx.lineJoin = "round";
     ctx.moveTo(lastX, lastY);
@@ -742,7 +750,8 @@ function loadShape(s){
 function Draw(x, y, isDown) {
   if (isDown) {
       ctx.beginPath();
-      ctx.strokeStyle = $('#selColor').val();
+      //ctx.strokeStyle = $('#selColor').val();
+      ctx.strokeStyle = colors[mycolor];
       ctx.lineWidth = $('#selWidth').val();
       ctx.lineJoin = "round";
       ctx.moveTo(lastX, lastY);

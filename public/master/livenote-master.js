@@ -30,10 +30,10 @@ const showPrevPage = () => {
   (pmode == 0) && sendMasterStatus(pageNum);
   queueRenderPage(pageNum);
   document.getElementById("progress-bar").setAttribute("value", pageNum);
-  $("#colorDraw").text(" black");
-  $("#colorDraw").css("color","black");
-  $("#widthDraw").text(1);
-  myLineWidth = 1;
+  // $("#colorDraw").text(" black");
+  // $("#colorDraw").css("color","black");
+  // $("#widthDraw").text(1);
+  // myLineWidth = 1;
   updateMasterStatus();
 };
 
@@ -46,10 +46,10 @@ const showNextPage = () => {
   (pmode == 0) && sendMasterStatus(pageNum);
   queueRenderPage(pageNum);
   document.getElementById("progress-bar").setAttribute("value", pageNum);
-  $("#colorDraw").text(" black");
-  $("#colorDraw").css("color","black");
-  $("#widthDraw").text(1);
-  myLineWidth = 1;
+  // $("#colorDraw").text(" black");
+  // $("#colorDraw").css("color","black");
+  // $("#widthDraw").text(1);
+  // myLineWidth = 1;
   updateMasterStatus();
 };
 
@@ -151,6 +151,12 @@ function updateMasterStatus() {
   localStorage.setItem('master_status', JSON.stringify(master_status));
 };
 
+
+function triggerEvent( elem, event ) {
+  var clickEvent = new Event( event ); // Create the event.
+  elem.dispatchEvent( clickEvent );    // Dispatch the event.
+}
+
 /*
   reload information from localstorage
 */
@@ -161,7 +167,6 @@ function loadStoredStatus() {
       master_status = master_loaded;
       //console.log(master_status);
       pageNum = master_status.numslides;
-      
       checkPage();
 
       document.getElementById("progress-bar").setAttribute("value", pageNum);
@@ -172,6 +177,13 @@ function loadStoredStatus() {
           timerReload = false;
           setTimeout(checkPage, 1000);
         } else {
+          for(var i=0; i<master_status.line_color; i++) {
+            console.log("clicking trig");
+            //var elem = document.getElementById('colorNav');
+            $('#colorNav').trigger("click");
+            //triggerEvent( elem, 'click' );
+          }
+          socket.emit("color", colors[mycolor]);
           renderPage(pageNum)
           sendMasterStatus(pageNum)
           timerReload = true;
