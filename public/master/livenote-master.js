@@ -623,7 +623,7 @@ module.exports = {
       $("#colorDraw").text(" green"); 
       $("#colorDraw").css("color","green");
     }
-    //updateMasterStatus();
+    updateMasterStatus();
   },
 
   changeWidthDrawing:function(){
