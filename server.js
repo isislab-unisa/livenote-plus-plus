@@ -126,12 +126,23 @@ app.post('/', function(req, res) {
   sess.ids.push(id)
 
   // TODO managing md files
+  /*
+    change permission to .pem file
+    run without sudo
+    or try the config.js for launch
+  */
   // if (fileUploaded.name.split('.').pop() == "md") {
   //   (async () => {
   //     try {
+  //       const config = {
+  //           "launch-options": { 
+  //               "args": ["--no-sandbox"] 
+  //           }
+  //       }
+
   //       var myPath = path.join(session_folder + '/' + id+".md")
   //       fileUploaded.mv(myPath)
-  //       const pdf = await mdToPdf({ path: myPath}).catch(console.error);
+  //       const pdf = await mdToPdf({ path: myPath}, config).catch(console.error);
         
   //       if (pdf) {
   //         fs.writeFileSync(path.join(session_folder + '/' + id+".pdf"), pdf.content);
