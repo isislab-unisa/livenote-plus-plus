@@ -308,6 +308,7 @@ function changepokemon(){
 
 /*CHAT */
 var nickname = '';
+var chatDisplayNotify=false;
 function showChat(){
   if(nickname == ''){
     $('#dialog-nickname').modal('show')
@@ -322,6 +323,7 @@ function showChat(){
             // hide =$('#chat').is(':hidden')
             if(!$("#mysidenavChat").width()==0){
               $("#chatLogo").attr("src","../img/chat.png");
+              chatDisplayNotify=false;
 
               if( window.innerHeight>320 && window.innerWidth<479 ){
                 $("#mysidenavChat").css({
@@ -342,8 +344,9 @@ function showChat(){
               }
               $("#chat-input").val('');
             }else {
-
               $("#chatLogo").attr("src","../img/close.png");
+              $("#wrappeNotification").css("visibility","hidden");
+              chatDisplayNotify=true;
 
               if(window.innerWidth<479 && window.innerHeight>320){
                 $("#mysidenavChat").css({
@@ -376,7 +379,7 @@ function showChat(){
 
     if(!($("#mysidenavChat").width()==0)){
       $("#chatLogo").attr("src","../img/chat.png");
-      
+      chatDisplayNotify=false;
       if(window.innerWidth<479 && window.innerHeight>320){
         $("#mysidenavChat").css({
           width            : "0%",
@@ -396,6 +399,9 @@ function showChat(){
       $("#chat-input").val('');
     }else {
       $("#chatLogo").attr("src","../img/close.png");
+      $("#wrappeNotification").css("visibility","hidden");
+      chatDisplayNotify=true;
+
       if(window.innerWidth<479 && window.innerHeight>320){
         $("#mysidenavChat").css({
           width            : "100%",
@@ -430,6 +436,9 @@ function scrollChatList(){
 var colorTMP=getRandomColor();
 var color;
 function addNewMessage(name, message,mode,colorFrom){
+    if(chatDisplayNotify==false)
+      $("#wrappeNotification").css("visibility","visible");
+
   var colorBalloon="";
     if(booleanBlack)
       colorBalloon="is-dark";

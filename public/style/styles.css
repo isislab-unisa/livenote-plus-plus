@@ -3,6 +3,34 @@ html {
   height: 100%;
 }
 
+@font-face{
+  font-family: BitEight;
+  src: url(8bit/Pixeboy-z8XGD.woff);
+  font-weight: bold;
+}
+
+#notification{
+  font-family: BitEight;
+  position: relative;
+  right: -9px;
+  font-size: 30px;
+  line-height: 26px;
+
+}
+
+#wrappeNotification{
+  visibility: hidden;
+  width: 30px;
+  height: 30px;
+  background-color:#F0BE24;
+  border-radius: 15px;
+  position: absolute;
+  right: 72%;
+  top: -8%;
+  border: 2px solid black;
+}
+
+
 video {
   width: 100%;
   height: 100%;

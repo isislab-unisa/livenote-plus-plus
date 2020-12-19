@@ -35,7 +35,12 @@
 
         <div id="full-chat-slave">
           <button class="poll-slave nes-btn is-warning control" id="full-screen" style="width: auto;"> Full-Screen <i class="fas fa-compress"></i></button>
-          <img  src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
+          <div style="display: inline-block; position: relative; top: 6%;">
+            <img class="hideable" src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
+            <div id="wrappeNotification">
+              <span id="notification">!</span>
+            </div>
+            </div>
           <br>
           <button type="button" class="poll-slave nes-btn" data-toggle="modal" data-target="#dialog-sondaggio" id="click-poll" style="display: none;"  >Vote poll</button>
           <br>
