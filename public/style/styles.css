@@ -78,38 +78,49 @@ body {
 }
 
 #container #next-page {
+  visibility: hidden;
   display: inline-block;
-  opacity: 0.5;
-  font-size: 1em;
-  line-height: 0px;
-  width: 6em;
+  width: 30px;
   margin-right: 0.5%;
   transition: margin-right 0.5s;
   position: absolute;
   top: 50%;
   right: 0%;
+  height: 34px;
 }
 
 #container #prev-page {
+  visibility: hidden;
   display: inline-block;
-  opacity: 0.5;
-  font-size: 1em;
-  line-height: 0px;
-  width: 6em;
+  width: 30px;
   margin-left: 0.5%;
   position: absolute;
   top: 50%;
+  height: 34px;
 }
 
 
+#buttonPrev{
+  font-size: 2em;
+  position: relative;
+  top: -14px;
+  right: 15px;
+}
+
+#buttonNext{
+  font-size: 2em;
+  position: relative;
+  top: -14px;
+  right: 9px;
+}
 
 
 #container #progress-bar {
+  visibility: hidden;
   width: 8em;
   height: 3em;
   position: absolute;
   left: calc(50% - 100px);
-  opacity: 0.5;
   top:85%;
   transition: margin-left 0.5s;
 }
@@ -786,9 +797,3 @@ only screen and (min-device-width : 375px) and (max-device-width : 812px) and (o
     right: -3%;
   }
 }
-
-
-
-
-
- 

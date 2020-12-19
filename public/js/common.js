@@ -135,6 +135,8 @@ document.addEventListener('MSFullscreenChange', closeFullScreen, false);
 document.addEventListener('webkitfullscreenchange', closeFullScreen, false);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
+//listeners on mouse move. When this happens, the buttons are hidden.
+document.getElementsByTagName("BODY")[0].addEventListener("mousemove",visibleButtonPresentation);
 var player;
 
 // manage the creation of Youtube video Iframe
@@ -1062,4 +1064,21 @@ function getLinkYoutube(){
   else{
     return linkYoutube.substr(countStart);
   }
+}
+
+var timeout;
+function visibleButtonPresentation(){
+  clearTimeout(timeout);
+
+  $("#prev-page").css("visibility","visible");
+  $("#next-page").css("visibility","visible");
+  $("#progress-bar").css("visibility","visible");
+
+  timeout=setTimeout(hiddenButtonPresentation,2000);
+}
+
+function hiddenButtonPresentation(){
+  $("#prev-page").css("visibility","hidden");
+  $("#next-page").css("visibility","hidden");
+  $("#progress-bar").css("visibility","hidden");
 }
