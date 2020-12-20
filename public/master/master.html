@@ -27,6 +27,9 @@
         <div id="mySidenav" class="sidenav">
           <h2 id="titleNavbar">Livenote</h1>
           <a href="javascript:void(0)" id="closeBtnFromLeft" class="closebtn glyphicon glyphicon-chevron-left" onclick="toggleHamburger()"></a>
+          <div class="divNavbar" onclick="getLinkPresentation()">
+            <span class="textNavbar">Get Link of presentation</span>
+          </div>
           <div class="divNavbar" data-toggle="modal" data-target="#dialog-info">
             <span class="textNavbar">Shorcut commands</span>
           </div>
@@ -108,9 +111,12 @@
             <button class="nes-btn is-warning control hideable" id="full-screen" style="display: block;"> Full-Screen <i class="fas fa-compress"></i></button>
             <button type="button" class="poll-master nes-btn" data-toggle="modal" data-target="#dialog-pollDynamical" id="viewPollDynamical" style="display: none;" >View Poll</button>
           </div>
-          <img class="hideable" src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
-          
-          
+          <div style="display: inline-block; position: relative; top: 6%;">
+            <img class="hideable" src="../img/chat.png"/ id="chatLogo" onclick="showChatLogo()">
+            <div id="wrappeNotification">
+              <span id="notification">!</span>
+            </div>
+            </div>
         </div>
         
         
@@ -118,8 +124,12 @@
         
       </div>
 
-        <button class="nes-btn is-primary control hideable" id="prev-page">&#8249;Prev</button>
-        <button class="nes-btn is-primary control hideable" id="next-page">Next&#8250;</button>    
+        <button class="nes-btn is-primary control hideable" id="prev-page">
+          <span id="buttonPrev"> &#8249;</span>
+        </button>
+        <button class="nes-btn is-primary control hideable" id="next-page">
+          <span id="buttonNext"> &#8250;</span>
+        </button>    
 
       <progress class="nes-progress is-pattern control hideable" id="progress-bar" value="1"  ></progress>
     </div>

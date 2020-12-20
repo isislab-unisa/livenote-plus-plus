@@ -135,6 +135,8 @@ document.addEventListener('MSFullscreenChange', closeFullScreen, false);
 document.addEventListener('webkitfullscreenchange', closeFullScreen, false);
 document.querySelector('#full-screen').addEventListener('click', goFullScreen);
 
+//listeners on mouse move. When this happens, the buttons are hidden.
+document.getElementsByTagName("BODY")[0].addEventListener("mousemove",visibleButtonPresentation);
 var player;
 
 // manage the creation of Youtube video Iframe
@@ -308,6 +310,7 @@ function changepokemon(){
 
 /*CHAT */
 var nickname = '';
+var chatDisplayNotify=false;
 function showChat(){
   if(nickname == ''){
     $('#dialog-nickname').modal('show')
@@ -322,6 +325,7 @@ function showChat(){
             // hide =$('#chat').is(':hidden')
             if(!$("#mysidenavChat").width()==0){
               $("#chatLogo").attr("src","../img/chat.png");
+              chatDisplayNotify=false;
 
               if( window.innerHeight>320 && window.innerWidth<479 ){
                 $("#mysidenavChat").css({
@@ -342,8 +346,9 @@ function showChat(){
               }
               $("#chat-input").val('');
             }else {
-
               $("#chatLogo").attr("src","../img/close.png");
+              $("#wrappeNotification").css("visibility","hidden");
+              chatDisplayNotify=true;
 
               if(window.innerWidth<479 && window.innerHeight>320){
                 $("#mysidenavChat").css({
@@ -376,7 +381,7 @@ function showChat(){
 
     if(!($("#mysidenavChat").width()==0)){
       $("#chatLogo").attr("src","../img/chat.png");
-      
+      chatDisplayNotify=false;
       if(window.innerWidth<479 && window.innerHeight>320){
         $("#mysidenavChat").css({
           width            : "0%",
@@ -396,6 +401,9 @@ function showChat(){
       $("#chat-input").val('');
     }else {
       $("#chatLogo").attr("src","../img/close.png");
+      $("#wrappeNotification").css("visibility","hidden");
+      chatDisplayNotify=true;
+
       if(window.innerWidth<479 && window.innerHeight>320){
         $("#mysidenavChat").css({
           width            : "100%",
@@ -430,6 +438,9 @@ function scrollChatList(){
 var colorTMP=getRandomColor();
 var color;
 function addNewMessage(name, message,mode,colorFrom){
+    if(chatDisplayNotify==false)
+      $("#wrappeNotification").css("visibility","visible");
+
   var colorBalloon="";
     if(booleanBlack)
       colorBalloon="is-dark";
@@ -1053,4 +1064,21 @@ function getLinkYoutube(){
   else{
     return linkYoutube.substr(countStart);
   }
+}
+
+var timeout;
+function visibleButtonPresentation(){
+  clearTimeout(timeout);
+
+  $("#prev-page").css("visibility","visible");
+  $("#next-page").css("visibility","visible");
+  $("#progress-bar").css("visibility","visible");
+
+  timeout=setTimeout(hiddenButtonPresentation,2000);
+}
+
+function hiddenButtonPresentation(){
+  $("#prev-page").css("visibility","hidden");
+  $("#next-page").css("visibility","hidden");
+  $("#progress-bar").css("visibility","hidden");
 }

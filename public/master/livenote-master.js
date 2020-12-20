@@ -21,24 +21,33 @@ function hidecontrol() {
       }
   });
 }
+
+var timeoutProgress;
 // Move to prev page of presentation
 const showPrevPage = () => {
+  clearTimeout(timeoutProgress);
   if (pageNum <= 1) {
     return;
   }
   pageNum--;
   (pmode == 0) && sendMasterStatus(pageNum);
-  queueRenderPage(pageNum);
+  queueRenderPage(pageNum);  
   document.getElementById("progress-bar").setAttribute("value", pageNum);
   // $("#colorDraw").text(" black");
   // $("#colorDraw").css("color","black");
   // $("#widthDraw").text(1);
   // myLineWidth = 1;
   updateMasterStatus();
+
+  $("#progress-bar").css("visibility","visible");
+  timeoutProgress=setTimeout(function(){
+    $("#progress-bar").css("visibility","hidden");
+  },1500);
 };
 
 // Move to next page of presentation
 const showNextPage = () => {
+  clearTimeout(timeoutProgress);
   if (pageNum >= pdfDoc.numPages) {
     return;
   }
@@ -51,6 +60,11 @@ const showNextPage = () => {
   // $("#widthDraw").text(1);
   // myLineWidth = 1;
   updateMasterStatus();
+
+  $("#progress-bar").css("visibility","visible");
+  timeoutProgress=setTimeout(function(){
+    $("#progress-bar").css("visibility","hidden");
+  },1500);
 };
 
 // Notify all client that page of presentation has changed
@@ -669,7 +683,30 @@ module.exports = {
     hidecontrol();
   },
 
+  getLinkPresentation:function(){
+    const copyURL = document.createElement('textarea');
+    copyURL.value = window.location.href;
+    document.body.appendChild(copyURL);
+    copyURL.select();
+    try {
+      // Now that we've selected the anchor text, execute the copy command
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Copy email command was ' + msg);
+    } catch(err) {
+      console.log('Oops, unable to copy');
+    }
   
+    // Remove the selections - NOTE: Should use
+    // removeRange(range) when it is supported
+    window.getSelection().removeAllRanges();
+  
+    document.body.removeChild(copyURL);
+
+    alert("URL copied");
+  }
+  
+
 };
 
 // Check if the fields are empty. If so, it will view a messagge of error.

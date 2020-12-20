@@ -50,6 +50,11 @@ function loadStatus(s){
   queueRenderPage(s.nslide);
   pageNum = s.nslide
   document.getElementById("progress-bar").setAttribute("value", s.nslide);
+
+  $("#progress-bar").css("visibility","visible");
+  timeoutProgress=setTimeout(function(){
+    $("#progress-bar").css("visibility","hidden");
+  },1500);
 }
 
 /*
