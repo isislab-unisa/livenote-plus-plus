@@ -39,6 +39,7 @@ Stable:
   * You can temporarily mute you if you need privacy!
 * :sparkles: Live chat with your spectators
   * Insert your name and have real time feedback!
+  * You'll get a notify if you've missed a message!
 * :tada: Create real time poll
   * Multiple poll: With the open poll, write the question and various options. Students will choose the option they deem right.
   * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons :star: :heart:. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
@@ -77,6 +78,9 @@ Frontend:
 * ![](https://img.shields.io/badge/nes.css-2.3.0-green)
 * ![](https://img.shields.io/badge/bootstrap-3.4.1-green)
 * ![](https://img.shields.io/badge/jquery-3.5.1-green)
+
+The cookie banner is provided by [dobarkod](https://github.com/dobarkod/cookie-banner) through jsdeliver
+
 # Contributing and Development
 
 ## Installation
@@ -84,6 +88,7 @@ Frontend:
 Start using Node
 
 :see_no_evil: Remember to change the certificate for https and the address of stun server with your own
+You can easily generate your certificate through [certbot](https://certbot.eff.org/)
 
 ```bash
 # Install dependencies for server
