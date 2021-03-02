@@ -1,4 +1,4 @@
-const { type } = require("os");
+//const { type } = require("os");
 console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
 
 function hidecontrol(){

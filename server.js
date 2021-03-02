@@ -6,21 +6,21 @@ var fs = require( 'fs' );
 var path = require('path');
 var shortid = require('shortid');
 var cookieSession = require('cookie-session');
+require('dotenv').config();
 
-//const {mdToPdf} = require('md-to-pdf');
 //Template engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 let broadcaster;
-const port = 443;
+const port = process.env.PORT;
 /*
 Create https server with certificate
 Change with your own if you want https connection
 */
 const server = https.createServer({ 
-  key: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/isiswork00.di.unisa.it/fullchain.pem") 
+  key: fs.readFileSync(process.env.PATHPK),
+  cert: fs.readFileSync(process.env.PATHPC) 
 },app);
 
 const io = require("socket.io")(server);
@@ -85,7 +85,6 @@ app.get('/:session_id/:file_id', function(req, res) {
   }else{
     res.sendFile(path.join(__dirname + '/public/master/master.html'))
   }
-  //res.sendFile(path.join(__dirname + '/public/upload.html'))
 })
 
 /*
@@ -126,38 +125,6 @@ app.post('/', function(req, res) {
   sess.ids.push(id)
 
   // TODO managing md files
-  /*
-    change permission to .pem file
-    run without sudo
-    or try the config.js for launch
-  */
-  // if (fileUploaded.name.split('.').pop() == "md") {
-  //   (async () => {
-  //     try {
-  //       const config = {
-  //           "launch-options": { 
-  //               "args": ["--no-sandbox"] 
-  //           }
-  //       }
-
-  //       var myPath = path.join(session_folder + '/' + id+".md")
-  //       fileUploaded.mv(myPath)
-  //       const pdf = await mdToPdf({ path: myPath}, config).catch(console.error);
-        
-  //       if (pdf) {
-  //         fs.writeFileSync(path.join(session_folder + '/' + id+".pdf"), pdf.content);
-  //         sess.save(function(err) {
-  //           if (err) throw err;
-  //         })
-  //         createnewlive("/"+sess.id+"/"+id)
-  //       } else {
-  //         //res.redirect(301, 'back');
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }  
-  //   })();
-  // }
   fileUploaded.mv(path.join(session_folder + '/' + id+".pdf"), (err) => {
     if (err) throw err;
     //console.log('file uploaded successfull in folder');
@@ -173,7 +140,6 @@ app.post('/', function(req, res) {
 Create livenote for the name specified 
 eg: /abc/def
 */
-
 function createnewlive(name){
   //console.log("New live at "+name)
   const nm = io.of(name);

@@ -1,7 +1,6 @@
 const { functionsIn } = require("lodash");
 
-console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp', 'color: red; font-size: x-large');
-
+console.log('%cAre you looking for bugs? Join us on https://discord.gg/BTt5fUp ', 'color: red; font-size: x-large');
 // Hide all elements on master view
 function hidecontrol() {
 
