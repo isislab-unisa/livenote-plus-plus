@@ -37,5 +37,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# pdf uploaded
+# pdf uploaded and compiled file
 public/sessions/
+public/js/dist
