@@ -43,11 +43,11 @@ Stable:
 * :tada: Create real time poll
   * Multiple poll: With the open poll, write the question and various options. Students will choose the option they deem right.
   * Ranking poll: Do you want to know the reaction of the students to certain things, like whether they liked the lesson or not? Well! Now you can do it. Create a ranking by writing a question and selecting one of the various fancy emoticons :star: :heart:. Students will have the opportunity to express their satisfaction by filling in from 1 to 4 of the selected emoticons.
-* :youtube: Embed your favourite youtube video!
+* :boom: Embed your favourite youtube video!
   * You can insert the link of the youtube video you want to show during your presentation and have plenty control on it, synchronously with your watchers!
 * :pencil2: Draw on your slides with your mouse
   * You can also change the color and the width of the drawings!
-* :info: Download your presentation status!
+* :page_facing_up: Download your presentation status!
   * You can save your settings! In future you'll have the possibility to upload them!
   * You can also save your polls data in json format!
 
