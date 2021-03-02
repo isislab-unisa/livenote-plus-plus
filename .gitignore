@@ -39,4 +39,4 @@ lerna-debug.log*
 
 # pdf uploaded and compiled file
 public/sessions/
-public/js/dist
+public/js/dist/
