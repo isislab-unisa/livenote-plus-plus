@@ -23,7 +23,7 @@
     "express-upload": "^0.1.0",
     "lodash": ">=4.17.19",
     "shortid": "^2.2.15",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0"
   },
