@@ -17,7 +17,7 @@
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.2.0",
     "express-session": "^1.17.1",
     "express-upload": "^0.1.0",
